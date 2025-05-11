@@ -144,6 +144,7 @@ const AuthPage = () => {
   width: 100%;
   min-height: 50vh;
   overflow: hidden;
+   margin-top: 50px;
   display: flex;
   align-items: center;
 }

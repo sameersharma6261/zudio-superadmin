@@ -312,6 +312,7 @@ const BrandDashboard = () => {
     .scroller-wrapper {
       width: 100%;
       min-height: 50vh;
+       margin-top: 50px;
       overflow: hidden;
       display: flex;
       align-items: center;
