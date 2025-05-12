@@ -201,22 +201,6 @@ const BrandDashboard2 = () => {
                 zIndex: "3",
               }}
             >
-               {/* 🔢 Total Malls text*/}
-          <div
-            style={{
-              textAlign: "center",
-              padding: "20px 0",
-              position: "fixed",
-              top: "35px",
-              right: "20px",
-              fontSize: "30px",
-              fontWeight: "bold",
-              color: "white",
-              fontFamily: "Rajdhani, sans-serif",
-            }}
-          >
-            Total Zudio : {shop.menuItems.length}
-          </div>
               {shop.menuItems.map((menuItem, index) => (
                 <div
                   key={index}
