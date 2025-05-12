@@ -1,123 +1,157 @@
 *{
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
-  .contact-form{
-    height: 65vh;
-    width: 100%;
-    overflow: hidden;
-    color: rgb(0, 0, 0);
-    position: absolute;
-    bottom: -30px;
-    left: 0;
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   flex-direction: column;
-   gap: 30px;
-   z-index: 10;
-  }
-  .heading{
-    text-align: center;
-    padding: 5px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: 900;
-    font-size: 33px;
-    background: linear-gradient(90deg, #3498db, #f1c40f, #e74c3c);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .name, .mobile-no, .gmail{
-    height: 45px;
-    width: 85%;
-    /* background-color: red; */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .name input, .mobile-no input, .gmail input{
-    height: 100%;
-    width: 100%;
-    border-radius: 30px;
-    border: none;
-    background: transparent;
-    box-shadow: 1px 3px 5px rgb(58, 58, 58);
-  }
-  .contact-form input::placeholder {
-    text-align: center; /* Center the placeholder text */
-    color: #9e9d9d; /* Optional: Placeholder color */
-  }
-  .buy-pass button{
-    font-size: 1.2 rem;
-    font-weight: bold;
-    font-family: 'Arial', sans-serif;
-    padding: 15px 30px;
-    border: none;
-    border-radius: 50px;
-    background-color: rgb(127, 189, 255);
-    color: #fff; /* Fallback text color */
-    text-transform: uppercase;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(60, 58, 58, 0.3); /* Luxurious glow effect */
-  }
-.gmail{
-  margin-bottom: 0px;
-}
-input{
-  text-align: center;
-  color: rgb(159, 159, 159);
-  font-weight: 900;
-}
-.otp{
+.contact-form{
+  height: 65vh;
   width: 100%;
-  height: 40px;
+  overflow: hidden;
+  color: rgb(0, 0, 0);
+  position: absolute;
+  bottom: -30px;
+  left: 0;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ flex-direction: column;
+ gap: 30px;
+ z-index: 10;
+}
+.heading{
+  text-align: center;
+  padding: 5px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 900;
+  font-size: 33px;
+  background: linear-gradient(90deg, #dad7d7, #ad6749, #c4bfbf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.name, .mobile-no, .gmail{
+  height: 45px;
+  width: 85%;
+  /* background-color: red; */
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.otp input{
-  width: 80%;
+.name input, .mobile-no input, .gmail input{
   height: 100%;
+  width: 100%;
   border-radius: 30px;
   border: none;
-  background-color: transparent;
+  font-family: 'Rajdhani', sans-serif;
+  background: transparent;
   box-shadow: 1px 3px 5px rgb(58, 58, 58);
+}
+.contact-form input::placeholder {
+  text-align: center; /* Center the placeholder text */
+  color: #9e9d9d; /* Optional: Placeholder color */
+}
+.buy-pass{
+  gap: 20px;
+  display: flex;
+  color: rgb(110, 102, 102);
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;;
+}
+.buy-pass button{
+  font-size: 1.2 rem;
+  font-weight: bold;
+  font-family: 'Rajdhani', sans-serif;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 50px;
+  background-color: rgb(66, 54, 46);
+  color: #ffffff; /* Fallback text color */
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(60, 58, 58, 0.3); /* Luxurious glow effect */
+}
+.gmail{
+margin-bottom: 0px;
+}
+input{
+text-align: center;
+color: rgb(159, 159, 159);
+font-weight: 900;
+}
 
+.otp h1{
+  font-family: 'Rajdhani', sans-serif;
+    background: linear-gradient(90deg, #dad7d7, #ad6749, #c4bfbf);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.otp{
+width: 100%;
+height: 90px;
+/* height: 40px; */
+gap: 20px;
+/* background: red; */
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+}
+.otp input{
+width: 80%;
+height: 100%;
+border-radius: 30px;
+border: none;
+background-color: transparent;
+box-shadow: 1px 3px 5px rgb(58, 58, 58);
+
+}
+
+.abcd{
+  background-color: rgb(24, 23, 23);
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  position: absolute;
+  gap: 20px;
+  width: 100vw;
+  
 }
 
 
 .popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1000;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+background: rgba(0, 0, 0, 0.6);
+z-index: 1000;
 }
 
 .popup-content {
-  padding: 20px;
-  background: #fff;
-  border-radius: 10px;
-  font-size: 18px;
-  font-weight: bold;
-  color: #333;
+padding: 20px;
+background: #fff;
+border-radius: 10px;
+font-size: 18px;
+font-weight: bold;
+color: #333;
 }
 @media screen and (max-width: 445px) {
-  .heading{
-      font-size: 25px;
-      padding: 5px;
-  }
-  .name input, .mobile-no input, .gmail input{
-    height: 80%;
-    width: 100%;
-    border-radius: 30px;
-    border: none;
-    background-color: transparent;
-    
-  }
+.heading{
+    font-size: 25px;
+    padding: 5px;
+}
+.name input, .mobile-no input, .gmail input{
+  height: 80%;
+  width: 100%;
+  border-radius: 30px;
+  border: none;
+  background-color: transparent;
+  
+}
 }

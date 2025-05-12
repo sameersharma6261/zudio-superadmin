@@ -135,14 +135,14 @@ function Information() {
       );
 
       if (data.success) {
-      setOtp(data.otp); // OTP ko state me store karna
-    } 
-      localStorage.setItem("phone", data.phone);
-      setStep(2); // Move to OTP input step
+        localStorage.setItem("phone", mobile); // store mobile
+        setStep(2); // move to OTP input step
+      } else {
+        alert("Failed to send OTP");
+      }
     } catch (error) {
       alert("Error sending OTP: " + error.message);
     } finally {
-      // Hide the loading popup once the process is complete
       setIsLoading(false);
     }
   };
@@ -194,8 +194,7 @@ function Information() {
       )}
 
       <div className="contact-form">
-        {/* <div className="heading">WELCOME TO BLUE CART SERVICE</div> */}
-        <div className="heading">Verify Your Self In Blue Cart Service</div>
+        <div className="heading">Register Yourself</div>
 
         {/* Display email error message */}
         {emailError && <div className="error-message">{emailError}</div>}
@@ -254,7 +253,9 @@ function Information() {
 
         {step === 2 && (
           <>
+            <div className="abcd">
             <div className="otp">
+              <h1>Enter your OTP</h1>
               <input
                 type="text"
                 id="otp"
@@ -266,25 +267,15 @@ function Information() {
               />
             </div>
             <div className="buy-pass">
-               <h3>Your OTP: {otp}</h3>
               <button type="button" onClick={verifyOtp}>
                 Verify OTP
               </button>
+            </div>
             </div>
           </>
         )}
       </div>
 
-
-
-
-
-
-
-
-
-
-      
     </>
   );
 }

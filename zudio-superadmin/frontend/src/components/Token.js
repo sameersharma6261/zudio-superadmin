@@ -50,12 +50,12 @@ function Token() {
 
   return (
     <div className="container">
-      <p className="text">Your TOKEN Number has been GENERATED</p>
+       <p className="text">Your Token Number has been Generated</p>
       <div className="circleh">
         {loading ? <span id="token-number">Loading...</span> : <span id="token-number2">{token || "Error"}</span>}
       </div>
       <div className="wave-text">
-        <p>We will send you a MESSAGE when your  counter slot is availabel. Have a Good day!</p>
+         <p>Your Red Carpet is going to open for you shortly! Your exclusive invite will land straight on your mobile through sms.</p>
       </div>
     </div>
   );

@@ -5,10 +5,12 @@
 body {
   margin: 0;
   padding: 0;
+  background-color: red;
   height: 100%;
   width: 100%;
   display: flex;
   justify-content: center;
+  background-color: rgb(24, 23, 23);
   align-items: center;
   font-family: Arial, sans-serif;
   /* background: linear-gradient(45deg, #f7f7f7, #dbeafe, #c7d2fe, #a5b4fc); */

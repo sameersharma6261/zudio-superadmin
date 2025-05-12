@@ -70,7 +70,7 @@ const Counter = () => {
 
 
   // Handle button click
-  const handleClick = async (index) => {
+ const handleClick = async (index) => {
     const newData = JSON.parse(JSON.stringify([...data]));
     newData[index].clicked = true;
     setData(newData);
@@ -79,13 +79,13 @@ const Counter = () => {
     const userMobile = newData[index].mobile;
 
     if (!data[index].clicked) {
-      await handleSendMessage(userMobile);
+      await handleSendMessage(userMobile,newData[index]);
       await startCountdown(userMobile);
     }
   };
 
   // Handle sending the message
-  const handleSendMessage = async (number) => {
+  const handleSendMessage = async (number,newData) => {
     if (!number) {
       alert("Please enter a number!");
       return;
@@ -99,7 +99,7 @@ const Counter = () => {
 
       if (response.data.success) {
         alert("Message Sent Successfully.");
-        navigate("/countdown");
+         navigate(`${id}/countdown?devmode=true&phone=${newData?.mobile}&name=${newData?.name}&email=${newData?.email}&token=${newData?.token}`);
       } else {
         alert("Failed to send message. Please try again.");
       }
@@ -251,22 +251,26 @@ const Counter = () => {
 
 
   // counter Page
-  const tableHeaderStyle = {
-    padding: "12px",
+const tableHeaderStyle = {
+    padding: "15px",
     position: "sticky",
     zIndex: "10",
-    // backgroundColor: "red",
     top: "0",
+    fontFamily: "rajdhani, sans-serif",
     fontSize: "22px",
+    backgroundColor: "transparent",
     fontWeight: "bold",
     whiteSpace: "nowrap", // Prevent text from wrapping
   };
 
   const tableCellStyle = {
     padding: "12px",
+    fontFamily: "rajdhani, sans-serif",
     borderBottom: "1px solid #ddd",
     whiteSpace: "nowrap",
     fontSize: "19px",
+    color: "white",
+    backgroundColor: "rgb(24, 23, 23)",
   };
 
 
@@ -283,16 +287,20 @@ const Counter = () => {
   return (
     <div
       style={{
-        paddingTop: "5px",
+      paddingTop: "5px",
         paddingBottom: "5px",
+        margiLeft: "15px",
         fontFamily: "Arial, sans-serif",
-        backgroundColor: "white",
-        height: "100vh",
-        width: "100%",
+        backgroundColor: "rgb(24, 23, 23)",
+        height: "60%",
+        width: "103%",
         position: "absolute",
-        top: "0",
+        top: "40%",
+        display: "flex",
         left: "0",
+        overflowY: "auto",
         zIndex: "5",
+        // background: "red",
       }}
     >
       <button
@@ -300,16 +308,20 @@ const Counter = () => {
         style={{
           float: "right",
           padding: "10px 18px",
-          backgroundColor: "#ff4d4d",
+          background:
+            "linear-gradient(to right, rgb(83, 55, 55), rgb(59, 54, 48))",
           color: "white",
           border: "none",
           borderRadius: "6px",
+          display: "flex",
           cursor: "pointer",
           fontSize: "16px",
           transition: "0.3s",
+          fontFamily: "rajdhani, sans-serif",
           position: "fixed",
           bottom: "2%",
           left: "2%",
+          overflowY: "auto",
           zIndex: "2",
         }}
         onMouseOver={(e) => (e.target.style.backgroundColor = "#cc0000")}
@@ -349,6 +361,7 @@ const Counter = () => {
             }}
           >
             <table
+            
               style={{
                 width: "100%",
                 minWidth: "600px",
@@ -360,10 +373,12 @@ const Counter = () => {
               <thead>
                 <tr
                   style={{
-                    backgroundColor: "#007bff",
+                    background:
+                      "linear-gradient(90deg,rgb(59, 52, 52),rgb(114, 68, 48),rgb(58, 49, 49))",
                     position: "sticky",
                     zIndex: "10",
                     top: "0",
+                    left: "0",
                     color: "white",
                     textAlign: "left",
                   }}
@@ -394,8 +409,10 @@ const Counter = () => {
                         onClick={() => handleClick(index)}
                         style={{
                           padding: "10px 20px",
-                          backgroundColor: item.clicked ? "#dc3545" : "#28a745",
-                          color: "#fff",
+                          backgroundColor: item.clicked
+                            ? " #dc3545"
+                            : "rgb(118, 184, 133)",
+                          color: "rgb(255, 255, 255)",
                           border: "none",
                           borderRadius: "6px",
                           cursor: "pointer",
@@ -404,16 +421,16 @@ const Counter = () => {
                         }}
                         onMouseOver={(e) =>
                           (e.target.style.backgroundColor = item.clicked
-                            ? "#a71d2a"
-                            : "#1e7e34")
+                             ? " #a71d2a"
+                            : " #1e7e34")
                         }
                         onMouseOut={(e) =>
                           (e.target.style.backgroundColor = item.clicked
-                            ? "#dc3545"
-                            : "#28a745")
+                           ? " #dc3545"
+                            : " rgb(118, 184, 133)")
                         }
                       >
-                        {item.clicked ? "Clicked" : "OK"}
+                         {item.clicked ? "Closed" : "Open"}
                       </button>
                     </td>
                   </tr>

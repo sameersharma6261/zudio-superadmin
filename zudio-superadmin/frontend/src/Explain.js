@@ -53,11 +53,10 @@ function Explain() {
     <div>
       <div className="explaination">
         <div className="text-content">
-          <h2>Welcome To Red Carpet</h2>
+         <h2>Welcome<br></br>To <br></br>ZUDIO Red Carpet</h2>
           <p>
-          We are thrilled to have you here today. This blue cart is a symbol of exclusivity and convenience,
-        specially designed for our valued Rick and Loyal members. Your comfort and satisfaction are our top priority,
-        and we hope this special entry makes your shopping experience even more delightful. Thank you for choosing us.
+          <h1 className="head">Zudio is where fashion meets affordability – and now, we’re turning up the glam.</h1>
+          "Red Carpet Zudio is here – a premium feature for trendsetters. Scan, shop, pay, and glow. It's your moment to shine!"
           </p>
           <Link to={`/${id}/information`}>
             <button id="buyButtonn" onClick={() => (" ")}>

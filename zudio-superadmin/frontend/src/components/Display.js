@@ -174,14 +174,14 @@ function Display() {
   left: 0;
   display: flex;
   justify-content: center;
+  z-index: 2;
   align-items: center;
-  z-index: 1;
 }
  .circle-container {
     margin: 0;
     padding: 0;
     position: relative;
-    height: 35vh;
+    height: 33vh;
     /* background-color: green; */
     width: 85%;
     border-top-right-radius: 150px;
@@ -197,6 +197,7 @@ function Display() {
 
   /* Wrapper to hold two texts */
 .slider-wrapper {
+ font-family: 'Rajdhani', sans-serif;
   display: flex;
   align-items: center;
   width: max-content;
@@ -206,11 +207,12 @@ function Display() {
 /* Sliding Text */
 .slider-text {
   white-space: nowrap;
-  font-size: 260px;
+  font-size: 250px;
   font-weight: 900;
-  opacity: 80%;
+  opacity: 100%;
   line-height: 1;
-  background: linear-gradient(90deg, #f5f3f6, #3498db, #f1c40f, #e74c3c);
+  // background: linear-gradient(90deg, #f5f3f6, #dad7d7, #ad6749, #c4bfbf);
+  background: white;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   padding-right: 50px; /* Space between two texts */
@@ -229,7 +231,7 @@ function Display() {
 
 .circle-container-text{
   /* background-color: rgb(7, 7, 21); */
-  opacity: 90%;
+  opacity: 100%;
   position: absolute;
   height: 100%;
   width: 85%;
@@ -245,11 +247,12 @@ function Display() {
   /* background-color: green; */
   padding: 5px;
   width: 100%;
+  font-style: rajdhani;
   position: absolute;
+  font-family: 'Rajdhani', sans-serif;
   font-weight: 600;    
   height: 35vh;
   color: white;
-  left: 10px;
   font-size: 300px;
   display: flex;
   align-items: center;
@@ -257,24 +260,22 @@ function Display() {
 }
 .royal-pass{
     position: absolute;
-    bottom: 62px;
-    left: 85px;
+    bottom: 60px;
+    left: 70px;
     padding: 0;
     margin: 0;
+    font-family: 'Rajdhani', sans-serif;
     font-size: 45px;
   font-weight: 900;
-  background: linear-gradient(90deg,rgb(226, 241, 15) ,rgb(217, 137, 108),rgb(255, 255, 255));
+  background: linear-gradient(90deg, #f5f3f6, #3498db, #f1c40f );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   overflow: hidden;
 }
-@media screen and (max-width: 646px) {
+@media screen and (max-width: 440px) {
   .royal-pass{
-  position: absolute;
     font-size: 34px;
-    bottom: 50px;
-    left: 83px;
-    // background: red;
+    bottom: 65px;
   }
 }
 
