@@ -189,20 +189,6 @@ io.on("connection", (socket) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Send OTP
 app.post("/api/send-otp", async (req, res) => {
   const { mobile } = req.body;
@@ -242,17 +228,6 @@ app.post("/api/send-otp", async (req, res) => {
     });
   }
 });
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -308,24 +283,6 @@ app.post("/api/verify-otp", (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Retrieve Latest Token
 app.get("/api/get-token", async (req, res) => {
   try {
@@ -345,6 +302,95 @@ app.get("/api/get-token", async (req, res) => {
     res.status(500).json({ message: "Error fetching token", error });
   }
 });
+
+
+
+
+
+
+
+
+
+// real message service which takes rupees
+app.post("/api/send-message", async (req, res) => {
+  const { number } = req.body;
+
+  if (!number) {
+    return res.status(400).json({ error: "Number is required!" });
+  }
+  try {
+    const params = {
+      apikey: process.env.MTALKZ_API_KEY,
+      senderid: "TOBUU",
+      number,
+      // message: `🎉 Congratulations! your token number should be selected, now you can visit your counter visit your countdown undertime ${process.env.REACT_APP_API_BASE_URL}/${id}/countdown`,
+      message: "Hello {#NAME#} welcome to Tobuu! Your OTP for account verification is: {#OPT#}. Enter this code to complete the process",
+      templateid: process.env.MTALKZ_TEMPLATE_ID_MSG,
+      format: "json",
+    };
+    
+    const response = await axios.post(
+      "https://msgn.mtalkz.com/api",
+      // null,
+      params
+    );
+    res.json({
+      success: true,
+      message: "Message sent successfully!",
+      mtalkz_response: response.data,
+    });
+  } catch (error) {
+    console.error("Error sending message:", error);
+    res
+      .status(500)
+      .json({ success: false, error: "Failed to send message." });
+  }
+});
+
+
+
+
+// this service only for test
+// app.post("/api/send-message", async (req, res) => {
+//   const { number } = req.body;
+
+//   if (!number) {
+//     return res.status(400).json({ error: "Number is required!" });
+//   }
+//   try {
+//     const params = {
+//       apikey: process.env.MTALKZ_API_KEY,
+//       senderid: "TOBUU",
+//       number,
+//       // message: `🎉 Congratulations! your token number should be selected, now you can visit your counter visit your countdown undertime ${process.env.REACT_APP_API_BASE_URL}/${id}/countdown`,
+//       message: "Hello {#NAME#} welcome to Tobuu! Your OTP for account verification is: {#OPT#}. Enter this code to complete the process",
+//       templateid: process.env.MTALKZ_TEMPLATE_ID_MSG,
+//       format: "json",
+//     };
+//     let response;
+//     if(process.env.NODE_ENV === "production"){
+//      response = await axios.post(
+//       "https://msgn.mtalkz.com/api",
+//       // null,
+//       params
+//     );
+//   }
+//     res.json({
+//       success: true,
+//       message: "Message sent successfully!",
+//       mtalkz_response: response?.data,
+//     });
+//   } catch (error) {
+//     console.error("Error sending message:", error);
+//     res
+//       .status(500)
+//       .json({ success: false, error: "Failed to send message." });
+//   }
+// });
+
+
+
+
 
 // Send Message
 // app.post("/api/send-message", async (req, res) => {
@@ -372,80 +418,12 @@ app.get("/api/get-token", async (req, res) => {
 //   }
 // });
 
-// real message service which takes rupees
-// app.post("/api/send-message", async (req, res) => {
-//   const { number } = req.body;
-
-//   if (!number) {
-//     return res.status(400).json({ error: "Number is required!" });
-//   }
-//   try {
-//     const params = {
-//       apikey: process.env.MTALKZ_API_KEY,
-//       senderid: "TOBUU",
-//       number,
-//       // message: `🎉 Congratulations! your token number should be selected, now you can visit your counter visit your countdown undertime ${process.env.REACT_APP_API_BASE_URL}/${id}/countdown`,
-//       message: "Hello {#NAME#} welcome to Tobuu! Your OTP for account verification is: {#OPT#}. Enter this code to complete the process",
-//       templateid: process.env.MTALKZ_TEMPLATE_ID_MSG,
-//       format: "json",
-//     };
-    
-//     const response = await axios.post(
-//       "https://msgn.mtalkz.com/api",
-//       // null,
-//       params
-//     );
-//     res.json({
-//       success: true,
-//       message: "Message sent successfully!",
-//       mtalkz_response: response.data,
-//     });
-//   } catch (error) {
-//     console.error("Error sending message:", error);
-//     res
-//       .status(500)
-//       .json({ success: false, error: "Failed to send message." });
-//   }
-// });
 
 
 
-app.post("/api/send-message", async (req, res) => {
-  const { number } = req.body;
 
-  if (!number) {
-    return res.status(400).json({ error: "Number is required!" });
-  }
-  try {
-    const params = {
-      apikey: process.env.MTALKZ_API_KEY,
-      senderid: "TOBUU",
-      number,
-      // message: `🎉 Congratulations! your token number should be selected, now you can visit your counter visit your countdown undertime ${process.env.REACT_APP_API_BASE_URL}/${id}/countdown`,
-      message: "Hello {#NAME#} welcome to Tobuu! Your OTP for account verification is: {#OPT#}. Enter this code to complete the process",
-      templateid: process.env.MTALKZ_TEMPLATE_ID_MSG,
-      format: "json",
-    };
-    let response;
-    if(process.env.NODE_ENV === "production"){
-     response = await axios.post(
-      "https://msgn.mtalkz.com/api",
-      // null,
-      params
-    );
-  }
-    res.json({
-      success: true,
-      message: "Message sent successfully!",
-      mtalkz_response: response?.data,
-    });
-  } catch (error) {
-    console.error("Error sending message:", error);
-    res
-      .status(500)
-      .json({ success: false, error: "Failed to send message." });
-  }
-});
+
+
 
 
 
