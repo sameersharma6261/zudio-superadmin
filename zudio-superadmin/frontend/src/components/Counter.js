@@ -99,7 +99,7 @@ const Counter = () => {
 
       if (response.data.success) {
         alert("Message Sent Successfully.");
-         navigate(`${id}/countdown?devmode=true&phone=${newData?.mobile}&name=${newData?.name}&email=${newData?.email}&token=${newData?.token}`);
+         navigate(`/${id}/countdown?devmode=true&phone=${newData?.mobile}&name=${newData?.name}&email=${newData?.email}&token=${newData?.token}`);
       } else {
         alert("Failed to send message. Please try again.");
       }
@@ -135,115 +135,6 @@ const Counter = () => {
     window.location.reload();
   };
 
-// .............................................................................................................................................................................
-
-
-
-
-
-
-
-
-  // // Login Page
-  // if (!isAuthenticated&&!isFetch) {
-  //   return (
-  //     <div
-  //       style={{
-  //         display: "flex",
-  //         justifyContent: "center",
-  //         alignItems: "center",
-  //         gap: "35px",
-  //         width: "100%",
-  //         height: "60vh",
-  //         backgroundColor: "transparent",
-  //         flexDirection: "column",
-  //         position: "absolute",
-  //         bottom: "0",
-  //         left: "0",
-  //       }}
-  //     >
-  //       <h2
-  //         className="loginbutton"
-  //         style={{
-  //           marginBottom: "20px",
-  //           textAlign: "center",
-  //           color: "#585858",
-  //         }}
-  //       >
-  //         Enter Your Login Details
-  //       </h2>
-
-  //       <form
-  //         onSubmit={handleLogin}
-  //         style={{
-  //           display: "flex",
-  //           flexDirection: "column",
-  //           backgroundColor: "#fff",
-  //           width: "350px",
-  //           padding: "25px",
-  //           borderRadius: "12px",
-  //           boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
-  //           gap: "15px",
-  //         }}
-  //       >
-  //         <input
-  //           type="text"
-  //           placeholder="Enter Name"
-  //           value={name}
-  //           onChange={(e) => setName(e.target.value)}
-  //           required
-  //           style={{
-  //             padding: "12px",
-  //             border: "1px solid #ccc",
-  //             borderRadius: "8px",
-  //             fontSize: "16px",
-  //             outline: "none",
-  //           }}
-  //         />
-  //         <input
-  //           type="email"
-  //           placeholder="Enter Email"
-  //           value={email}
-  //           onChange={(e) => setEmail(e.target.value)}
-  //           required
-  //           style={{
-  //             padding: "12px",
-  //             border: "1px solid #ccc",
-  //             borderRadius: "8px",
-  //             fontSize: "16px",
-  //             outline: "none",
-  //           }}
-  //         />
-  //         <button
-  //           type="submit"
-  //           style={{
-  //             padding: "12px",
-  //             backgroundColor: "#007bff",
-  //             color: "#fff",
-  //             border: "none",
-  //             borderRadius: "8px",
-  //             fontSize: "18px",
-  //             cursor: "pointer",
-  //             fontWeight: "bold",
-  //             transition: "0.3s",
-  //           }}
-  //           onMouseOver={(e) => (e.target.style.backgroundColor = "#0056b3")}
-  //           onMouseOut={(e) => (e.target.style.backgroundColor = "#007bff")}
-  //         >
-  //           Login
-  //         </button>
-  //       </form>
-  //     </div>
-  //   );
-  // }
-
-
-
-
-
-
-
-
 
 
   
@@ -272,13 +163,6 @@ const tableHeaderStyle = {
     color: "white",
     backgroundColor: "rgb(24, 23, 23)",
   };
-
-
-
-
-
-
-
 
 
 

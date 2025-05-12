@@ -82,7 +82,7 @@ const AppRoutes = () => {
             <Route path="/qrcode" element={<QrCode />} />
             <Route path="/:id/counter" element={<Counter />} />
             <Route path="/:id/editdisplay" element={<EditDisplay />} />
-            <Route path="/:id/countdown" element={<Countdown />} />
+            {/* <Route path="/:id/countdown" element={<Countdown />} /> */}
             <Route path="/display" element={<Display />} />
             
           </Route>
@@ -92,6 +92,7 @@ const AppRoutes = () => {
             <Route path="paymentpage" element={<PaymentPage />} />
           </Route>
           <Route path="/:id/token" element={<Token />} />
+           <Route path="/:id/countdown" element={<Countdown />} />
           <Route path="/:id/information" element={<Information />} />
           {/* <Route path="/:id/counter" element={<Counter />} /> */}
           <Route path="/forgotpassword" element={<ForgotPassword />} />

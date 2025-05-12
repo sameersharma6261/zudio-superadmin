@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { io } from "socket.io-client";
+
 
 const socket = io(`${process.env.REACT_APP_API_BASE_URL}`);
 
 const Countdown = () => {
+  const [showButton, setShowButton] = useState(false);
+  const { id } = useParams();
   const [showInfo, setShowInfo] = useState(false);
   const [data, setData] = useState({
     name: "",
@@ -12,10 +15,31 @@ const Countdown = () => {
     email: "",
     token: "",
   });
-  const navigate = useNavigate();
+
   const [timeLeft, setTimeLeft] = useState(180); // Initial 180 seconds
   const [progress, setProgress] = useState(0); // Background fill progress
   const [showMessage, setShowMessage] = useState(false); // Show thank-you message
+
+   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("devmode") === "true") {
+      setShowButton(true);
+    }
+  }, []);
+   const handleClick = () => {
+    window.location.href = `/${id}/counter`;
+  };
+
+
+  useEffect(() => {
+  socket.on("countdown-stop", () => {
+    setTimeLeft(0);
+    setProgress(100);
+    setShowMessage(true);
+  });
+
+  return () => socket.off("countdown-stop");
+}, []);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -31,10 +55,12 @@ const Countdown = () => {
     }
   }, []);
 
-  const handleSecretClick = () => {
-    // Navigate to any route you want
-    navigate("/counter"); // <-- change this to your desired path
-  };
+  const stopCountdownHandler = async () => {
+  await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/stop-countdown`, {
+    method: "POST",
+  });
+  window.location.href = `/${id}/counter`;
+};
 
   useEffect(() => {
     const hasReloaded = sessionStorage.getItem("hasReloaded");
@@ -80,6 +106,7 @@ const Countdown = () => {
   };
 
   return (
+    
     <div
       style={{
         ...styles.container,
@@ -92,6 +119,22 @@ const Countdown = () => {
           <div style={styles.message} className="fade-in">
             Thank's for VISIT
           </div>
+           {showButton && (
+        <button
+          onClick={handleClick}
+          style={{
+            backgroundColor: "#007bff",
+            color: "#fff",
+            padding: "10px 20px",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            zIndex: 1000,
+          }}
+        >
+          Back To Counter
+        </button>
+      )}
         </>
       ) : (
         <>
@@ -115,9 +158,18 @@ const Countdown = () => {
                   </tr>
                 </tbody>
               </table>
-
-              <button className="dev-only-button" onClick={handleSecretClick}>
-                Back To Yoyr Counter
+              <button
+                onClick={stopCountdownHandler}
+                style={{
+                  cursor: "pointer",
+                  backgroundColor: "#ff6600",
+                  color: "white",
+                  border: "none",
+                  padding: "10px 20px",
+                  borderRadius: "5px",
+                }}
+              >
+                Back To Counter
               </button>
             </div>
           )}
@@ -125,6 +177,7 @@ const Countdown = () => {
   width: 100vw;
   overflow-x: auto;
   padding: 20px;
+  margin-bottom: 25px;
 }
 
 .info-table {
@@ -136,6 +189,8 @@ const Countdown = () => {
 .info-table thead {
   background: linear-gradient(to right, #4b3e3e, #6b3f2d);
   color: white;
+  position: relative;
+  z-index: 54555555555;
 }
 
 .info-table th,
@@ -201,7 +256,7 @@ const styles = {
   message: {
     fontSize: "30px",
     fontWeight: "bold",
-    color: "white",
+    color: "rgb(255, 255, 255)",
     textAlign: "center",
     position: "absolute",
     bottom: "28%",

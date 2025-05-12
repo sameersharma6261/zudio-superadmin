@@ -123,18 +123,19 @@ const Countdown = mongoose.model("Countdown", CountdownSchema);
 
 // Start Countdown API
 app.post("/api/start-countdown", async (req, res) => {
-  const { duration, phoneNumber, shopId } = req.body;
+  const { duration, phoneNumber } = req.body;
   const startTime = Date.now();
 
   try {
-    const newCountdown = new Countdown({ startTime, duration, shopId });
+    await Countdown.deleteMany({});
+    const newCountdown = new Countdown({ startTime, duration });
     await newCountdown.save();
 
     // Emit countdown start event
-    io.emit("countdown-start", { startTime, duration, shopId });
+    io.emit("countdown-start", { startTime, duration });
 
     // Twilio SMS Notification
-    const countdownLink = `${process.env.REACT_APP_API_BASE_URL}/countdown/:id`;
+    const countdownLink = `${process.env.REACT_APP_API_BASE_URL}/countdown`;
     await client.messages.create({
       body: `Countdown started! Track live here: ${countdownLink}`,
       from: process.env.TWILIO_PHONE,
@@ -148,6 +149,7 @@ app.post("/api/start-countdown", async (req, res) => {
   }
 });
 
+
 // Get Current Countdown
 app.get("/api/get-countdown", async (req, res) => {
   try {
@@ -157,6 +159,26 @@ app.get("/api/get-countdown", async (req, res) => {
     res.status(500).json({ message: "Error fetching countdown", error });
   }
 });
+
+
+
+app.post("/api/stop-countdown", async (req, res) => {
+  try {
+    // Emit event to all connected clients
+    io.emit("countdown-stop");
+
+    // (Optional) agar DB me koi active countdown save ho raha hai to use hata do ya update karo
+    await Countdown.deleteMany(); // Agar sab countdown entries delete karni ho
+
+    res.json({ message: "Countdown stopped successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error stopping countdown", error });
+  }
+});
+
+
+
+
 
 // WebSocket Connection
 io.on("connection", (socket) => {
@@ -350,6 +372,43 @@ app.get("/api/get-token", async (req, res) => {
 //   }
 // });
 
+// real message service which takes rupees
+// app.post("/api/send-message", async (req, res) => {
+//   const { number } = req.body;
+
+//   if (!number) {
+//     return res.status(400).json({ error: "Number is required!" });
+//   }
+//   try {
+//     const params = {
+//       apikey: process.env.MTALKZ_API_KEY,
+//       senderid: "TOBUU",
+//       number,
+//       // message: `🎉 Congratulations! your token number should be selected, now you can visit your counter visit your countdown undertime ${process.env.REACT_APP_API_BASE_URL}/${id}/countdown`,
+//       message: "Hello {#NAME#} welcome to Tobuu! Your OTP for account verification is: {#OPT#}. Enter this code to complete the process",
+//       templateid: process.env.MTALKZ_TEMPLATE_ID_MSG,
+//       format: "json",
+//     };
+    
+//     const response = await axios.post(
+//       "https://msgn.mtalkz.com/api",
+//       // null,
+//       params
+//     );
+//     res.json({
+//       success: true,
+//       message: "Message sent successfully!",
+//       mtalkz_response: response.data,
+//     });
+//   } catch (error) {
+//     console.error("Error sending message:", error);
+//     res
+//       .status(500)
+//       .json({ success: false, error: "Failed to send message." });
+//   }
+// });
+
+
 
 app.post("/api/send-message", async (req, res) => {
   const { number } = req.body;
@@ -367,15 +426,18 @@ app.post("/api/send-message", async (req, res) => {
       templateid: process.env.MTALKZ_TEMPLATE_ID_MSG,
       format: "json",
     };
-    const response = await axios.post(
+    let response;
+    if(process.env.NODE_ENV === "production"){
+     response = await axios.post(
       "https://msgn.mtalkz.com/api",
       // null,
       params
     );
+  }
     res.json({
       success: true,
       message: "Message sent successfully!",
-      mtalkz_response: response.data,
+      mtalkz_response: response?.data,
     });
   } catch (error) {
     console.error("Error sending message:", error);
