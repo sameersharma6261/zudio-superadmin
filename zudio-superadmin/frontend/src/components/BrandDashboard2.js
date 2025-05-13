@@ -56,6 +56,8 @@ const BrandDashboard2 = () => {
           </div>
         </div>
       </div>
+
+      
       <style>{`
               body{
               overflow: hidden;}
@@ -126,6 +128,11 @@ const BrandDashboard2 = () => {
             }
           }
           }`}</style>
+
+
+
+
+
 
       <h1
         style={{
@@ -212,6 +219,7 @@ const BrandDashboard2 = () => {
                   style={{
                     width: "800px",
                     height: "500px",
+                    border: "1px solid white",
                     borderRadius: "15px",
                     overflow: "hidden",
                     position: "relative",

@@ -100,26 +100,9 @@ const BrandDashboard = () => {
             background: "transparent",
             fontSize: "16px",
           }}
+          
         />
-
-        {/* this is cards div */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexWrap: "wrap",
-            width: "100%",
-            height: "78vh",
-            // background: "red",
-            overflowY: "auto",
-            gap: "60px",
-            zIndex: "2",
-            position: "relative",
-            padding: "20px",
-          }}
-        >
-          {/* 🔢 Total Malls text*/}
+         {/* 🔢 Total Malls text*/}
           <div
             style={{
               textAlign: "center",
@@ -135,16 +118,45 @@ const BrandDashboard = () => {
           >
             Total Zudio : {filteredShops.length}
           </div>
-          {filteredShops.map((shop) => (
+
+
+
+
+
+
+
+
+        {/* this is cards div */}
+        <div
+          style={{
+          flexDirection: "row",
+          overflowX: "auto",
+          overflowY: "hidden",
+          width: "95%",
+          height: "78vh",
+          gap: "60px",
+          zIndex: "2",
+          // background: "rgba(0, 0, 0, 0.58)",
+          backdropFilter: "blur(2px)",
+          display: "flex",
+          alignItems: "center",
+          position: "relative",
+          padding: "20px",
+          scrollbarWidth: "none", // Firefox
+          msOverflowStyle: "none", // IE/Edge
+          }}
+        >
+             {filteredShops.map((shop) => (
             <div
               key={shop._id}
               onClick={() => navigate(`/branddashboard2/${shop._id}`)}
               style={{
                 position: "relative",
                 borderRadius: "15px",
-                width: "100%",
-                maxWidth: "800px",
-                height: "450px",
+                // width: "100%",
+                minWidth: "750px",
+                height: "500px",
+                border: "1px solid white",
                 overflow: "hidden",
                 cursor: "pointer",
                 transition: "transform 0.3s ease, box-shadow 0.3s ease",
@@ -188,7 +200,7 @@ const BrandDashboard = () => {
               >
                 <h3
                   style={{
-                    fontSize: "29px",
+                    fontSize: "50px",
                     margin: "0 0 5px,",
                     fontFamily: "Rajdhani, sans-serif",
                   }}
@@ -197,7 +209,7 @@ const BrandDashboard = () => {
                 </h3>
                 <p
                   style={{
-                    fontSize: "20px",
+                    fontSize: "24px",
                     opacity: 0.9,
                     fontFamily: "Rajdhani, sans-serif",
                   }}
@@ -208,6 +220,12 @@ const BrandDashboard = () => {
             </div>
           ))}
         </div>
+
+
+
+
+
+
 
         <button
           onClick={() => navigate("/qrcode")}
@@ -296,6 +314,7 @@ const BrandDashboard = () => {
           </div>
         </div>
       </div>
+      
       <style>{`
     body{
     overflow: hidden;}

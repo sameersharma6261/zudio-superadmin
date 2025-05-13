@@ -43,9 +43,9 @@ const Counter = () => {
 
   useEffect(() => {
     // if (isAuthenticated) {
-      fetchData();
-      const interval = setInterval(fetchData, 5000);
-      return () => clearInterval(interval);
+    fetchData();
+    const interval = setInterval(fetchData, 5000);
+    return () => clearInterval(interval);
     // }
   }, [fetchData, isAuthenticated]);
 
@@ -64,13 +64,12 @@ const Counter = () => {
     await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/start-countdown`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ duration, phoneNumber, shopId:id }),
+      body: JSON.stringify({ duration, phoneNumber, shopId: id }),
     });
   };
 
-
   // Handle button click
- const handleClick = async (index) => {
+  const handleClick = async (index) => {
     const newData = JSON.parse(JSON.stringify([...data]));
     newData[index].clicked = true;
     setData(newData);
@@ -79,13 +78,13 @@ const Counter = () => {
     const userMobile = newData[index].mobile;
 
     if (!data[index].clicked) {
-      await handleSendMessage(userMobile,newData[index]);
+      await handleSendMessage(userMobile, newData[index]);
       await startCountdown(userMobile);
     }
   };
 
   // Handle sending the message
-  const handleSendMessage = async (number,newData) => {
+  const handleSendMessage = async (number, newData) => {
     if (!number) {
       alert("Please enter a number!");
       return;
@@ -99,7 +98,9 @@ const Counter = () => {
 
       if (response.data.success) {
         alert("Message Sent Successfully.");
-         navigate(`/${id}/countdown?devmode=true&phone=${newData?.mobile}&name=${newData?.name}&email=${newData?.email}&token=${newData?.token}`);
+        navigate(
+          `/${id}/countdown?devmode=true&phone=${newData?.mobile}&name=${newData?.name}&email=${newData?.email}&token=${newData?.token}`
+        );
       } else {
         alert("Failed to send message. Please try again.");
       }
@@ -110,21 +111,6 @@ const Counter = () => {
   };
 
 
-  // Authentication Function
-  // const handleLogin = (e) => {
-  //   e.preventDefault();
-  //   if (
-  //     name.trim() === "itsoftlab" &&
-  //     email.trim().toLowerCase() === "itsoftlab@gmail.com"
-  //   ) {
-  //     setIsAuthenticated(true);
-  //     localStorage.setItem("isAuthenticated", "true"); // Save auth state
-  //   } else {
-  //     alert("Invalid Credentials. Try again!");
-  //   }
-  // };
-  
-  // Logout Function
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem("token");
@@ -135,14 +121,10 @@ const Counter = () => {
     window.location.reload();
   };
 
-
-
-  
-// .............................................................................................................................................................................
-
+  // .............................................................................................................................................................................
 
   // counter Page
-const tableHeaderStyle = {
+  const tableHeaderStyle = {
     padding: "15px",
     position: "sticky",
     zIndex: "10",
@@ -164,14 +146,10 @@ const tableHeaderStyle = {
     backgroundColor: "rgb(24, 23, 23)",
   };
 
-
-
-  
-  
   return (
     <div
       style={{
-      paddingTop: "5px",
+        paddingTop: "5px",
         paddingBottom: "5px",
         margiLeft: "15px",
         fontFamily: "Arial, sans-serif",
@@ -245,7 +223,6 @@ const tableHeaderStyle = {
             }}
           >
             <table
-            
               style={{
                 width: "100%",
                 minWidth: "600px",
@@ -305,16 +282,16 @@ const tableHeaderStyle = {
                         }}
                         onMouseOver={(e) =>
                           (e.target.style.backgroundColor = item.clicked
-                             ? " #a71d2a"
+                            ? " #a71d2a"
                             : " #1e7e34")
                         }
                         onMouseOut={(e) =>
                           (e.target.style.backgroundColor = item.clicked
-                           ? " #dc3545"
+                            ? " #dc3545"
                             : " rgb(118, 184, 133)")
                         }
                       >
-                         {item.clicked ? "Closed" : "Open"}
+                        {item.clicked ? "Closed" : "Open"}
                       </button>
                     </td>
                   </tr>

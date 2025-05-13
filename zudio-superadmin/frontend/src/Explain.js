@@ -1,14 +1,14 @@
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Link, useParams } from "react-router";
 import "./Explain.css";
 
 
 
 function Explain() {
-    const [showQR, setShowQR] = useState(false);
+    // const [showQR, setShowQR] = useState(false);
   const { id } = useParams();
   
   const handleKeyDown = (event) => {

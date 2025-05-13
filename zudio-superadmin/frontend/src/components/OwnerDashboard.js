@@ -103,6 +103,26 @@ const OwnerDashboard = () => {
 
   return (
     <>
+     <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          zIndex: -1,
+        }}
+      >
+        <source
+          src="https://cdn.pixabay.com/video/2020/10/15/52436-468806587_large.mp4"
+          type="video/mp4"
+        />
+      </video>
       <div className="scroller-container">
         <div className="scroller-wrapper">
           <div className="scroller">
@@ -210,11 +230,13 @@ const OwnerDashboard = () => {
           style={{
             padding: "10px",
             position: "fixed",
+            zIndex: "2",
+            border: "1px solid white",
             width: "60%",
             marginTop: "20px",
             borderRadius: "5px",
             color: "white",
-            border: "1px solid #ccc",
+
             marginBottom: "20px",
             background: "transparent",
             fontSize: "16px",
@@ -281,7 +303,7 @@ const OwnerDashboard = () => {
           <button type="submit">{editFood ? "Update Zudio" : "Add Zudio"}</button>
         </form>
 
-        <div className="shop-container">
+
           <div className="scroll-container">
             {filteredShops.map((shop) => (
               <div key={shop._id} className="premium-card">
@@ -323,7 +345,9 @@ const OwnerDashboard = () => {
               </div>
             ))}
           </div>
-          <button
+
+
+         <button
             onClick={() => navigate("/qrcode")}
             style={{
               padding: "10px 15px",
@@ -379,45 +403,36 @@ const OwnerDashboard = () => {
           >
             Switch To View Mode
           </button>
-        </div>
 
         <style>{`
 /* Scrollable row */
 .scroll-container {
   display: flex;
+  justify-content: start;
+   align-items: center;
   overflow-x: auto;
   gap: 24px;
-  // background: rgba(255, 0, 0, 0.86);
+  width: 98%;
+  height: 100vh;
   padding: 20px;
-  // height: 70vh;
-  position: absolute;
-  left: 0;
-  top: -20px;
+  position: relative;
   scroll-behavior: smooth;
   white-space: nowrap;
-   scrollbar-width: none; /* Firefox */
+  scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* IE and Edge */
 }
 
 .scroll-container::-webkit-scrollbar {
-  height: 8px;
   display: none;
-}
-
-.scroll-container::-webkit-scrollbar-thumb {
-  background-color: #888;
-  border-radius: 10px;
-}
-
-.scroll-container::-webkit-scrollbar-thumb:hover {
-  background-color: #555;
 }
 
 /* Premium card */
 .premium-card {
-  min-width: 460px;
+  min-width: 360px;
   max-width: 460px;
-  height: 620px;
+  width: 100%;
+  height: 550px;
+  border: 1px solid white;
   border-radius: 20px;
   overflow: hidden;
   position: relative;
@@ -425,7 +440,7 @@ const OwnerDashboard = () => {
   backdrop-filter: blur(8px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   transition: transform 0.4s ease, backdrop-filter 0.4s ease;
-  display: inline-block; /* key for horizontal layout */
+  display: inline-block;
   white-space: normal;
 }
 
@@ -443,14 +458,14 @@ const OwnerDashboard = () => {
   width: 100%;
   overflow: hidden;
   z-index: 1;
-  opacity: 0.5;
+  // opacity: 0.8;
 }
 
 .card-image {
   height: 100%;
   width: 100%;
   object-fit: cover;
-  filter: brightness(0.9) blur(1px);
+  // filter: brightness(0.9) blur(1px);
   transform: scale(1.1);
 }
 
@@ -459,10 +474,9 @@ const OwnerDashboard = () => {
   position: relative;
   z-index: 2;
   height: 100%;
-  // max-height: 500px;
   padding: 20px;
   color: #fff;
-  backdrop-filter: blur(8px);
+  // backdrop-filter: blur(8px);
   background: rgba(0, 0, 0, 0.45);
   border-radius: 20px;
   display: flex;
@@ -472,9 +486,9 @@ const OwnerDashboard = () => {
 }
 
 .card-content h2 {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 700;
-  color:rgb(143, 86, 43);
+  color: rgb(255, 255, 255);
   margin-bottom: 10px;
 }
 
@@ -500,8 +514,9 @@ const OwnerDashboard = () => {
   padding: 10px;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg,rgba(217, 222, 215, 0.56),rgb(82, 49, 23));
-  color:rgb(182, 190, 186);
+  // background: linear-gradient(135deg, rgb(217, 222, 215), rgb(82, 49, 23));
+  background: white;
+  color: rgb(0, 0, 0);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -511,6 +526,53 @@ const OwnerDashboard = () => {
   background: #fff;
   color: #111;
   transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .premium-card {
+    min-width: 320px;
+    height: auto;
+  }
+
+  .card-content {
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .card-content h2 {
+    font-size: 20px;
+  }
+
+  .card-content p {
+    font-size: 13px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+
+  .action-buttons button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .premium-card {
+    min-width: 280px;
+    max-width: 95vw;
+  }
+
+  .card-content {
+    padding: 10px;
+  }
+
+  .card-content h2 {
+    font-size: 18px;
+  }
+
+  .card-content p {
+    font-size: 12px;
+  }
 }
 
 
