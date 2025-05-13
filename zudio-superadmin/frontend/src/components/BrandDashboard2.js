@@ -172,9 +172,9 @@ const BrandDashboard2 = () => {
           <h1
             style={{
               textAlign: "center",
-              padding: "20px 0",
+              padding: "10px 0",
               position: "fixed",
-              top: "1px",
+              bottom: "1px",
               right: "20px",
               fontSize: "30px",
               fontWeight: "bold",
@@ -191,9 +191,7 @@ const BrandDashboard2 = () => {
                 display: "flex",
                 gap: "20px",
                 width: "100%",
-                display: "flex",
                 justifyContent: "center",
-                alignItems: "center",
                 height: "100vh",
                 overflowX: "auto",
                 alignItems: "center",

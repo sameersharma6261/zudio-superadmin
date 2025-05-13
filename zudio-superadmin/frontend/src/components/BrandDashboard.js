@@ -125,7 +125,7 @@ const BrandDashboard = () => {
               textAlign: "center",
               padding: "20px 0",
               position: "fixed",
-              top: "1px",
+              bottom: "1px",
               right: "20px",
               fontSize: "30px",
               fontWeight: "bold",

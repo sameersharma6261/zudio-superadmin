@@ -114,28 +114,29 @@ const ShopDetail = () => {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.heading}>Shop Details</h2>
+      <h2 style={styles.heading}>Zudio</h2>
       {/* Search Bar */}
       <input
         type="text"
-        placeholder="Search shops..."
+        placeholder="Search Zudio..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         style={{
-          padding: "10px",
-          width: "60%",
-          borderRadius: "5px",
-          border: "1px solid #ccc",
-          marginBottom: "20px",
-          position: "fixed",
-          top: "53px",
-          fontSize: "16px",
-          zIndex: "5"
+         padding: "10px",
+            position: "fixed",
+            width: "60%",
+            marginTop: "20px",
+            borderRadius: "5px",
+            color: "white",
+            border: "1px solid #ccc",
+            marginBottom: "20px",
+            background: "transparent",
+            fontSize: "16px",
         }}
       />
       <div style={{zIndex: "5", position: "fixed", top: "100px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
       <button onClick={() => handleManageMenu(shop)} style={styles.editButton}>
-        Add Shop's
+        Add Zudio's
       </button>
       {selectedFood && (
         <MenuModal shop={selectedFood} onClose={() => setSelectedFood(null)} />
@@ -262,11 +263,15 @@ const styles = {
     zIndex: 1,
   },
   heading: {
-    fontSize: "28px",
-    fontWeight: "bold",
-    marginBottom: "10px",
     color: "white",
-    padding: "15px",
+            fontSize: "48px",
+            fontFamily: "Rajdhani, sans-serif",
+            position: "fixed",
+            left: "20px",
+            top: "10px",
+            padding: "0",
+            margin: "0",
+            zIndex: "200",
   },
 
 

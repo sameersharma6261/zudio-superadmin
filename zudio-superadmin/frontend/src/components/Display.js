@@ -174,7 +174,7 @@ function Display() {
   left: 0;
   display: flex;
   justify-content: center;
-  z-index: 2;
+  // z-index: 2;
   align-items: center;
 }
  .circle-container {
