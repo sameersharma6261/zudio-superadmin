@@ -387,8 +387,6 @@ app.post("/api/send-message", async (req, res) => {
 
 
 
-
-
 // Send Message
 // app.post("/api/send-message", async (req, res) => {
 //   const { number } = req.body;
@@ -414,13 +412,6 @@ app.post("/api/send-message", async (req, res) => {
 //     res.status(500).json({ success: false, error: "Failed to send message." });
 //   }
 // });
-
-
-
-
-
-
-
 
 
 

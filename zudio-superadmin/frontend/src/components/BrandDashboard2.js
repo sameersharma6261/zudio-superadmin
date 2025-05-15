@@ -6,6 +6,7 @@ const BrandDashboard2 = () => {
   const { id } = useParams();
   const [shop, setShop] = useState(null);
   const navigate = useNavigate();
+  
 
   useEffect(() => {
     axios
@@ -301,6 +302,8 @@ const BrandDashboard2 = () => {
                   </div>
                 </div>
               ))}
+
+              
             </div>
           ) : (
             <p

@@ -100,53 +100,45 @@ const BrandDashboard = () => {
             background: "transparent",
             fontSize: "16px",
           }}
-          
         />
-         {/* 🔢 Total Malls text*/}
-          <div
-            style={{
-              textAlign: "center",
-              padding: "20px 0",
-              position: "fixed",
-              bottom: "1px",
-              right: "20px",
-              fontSize: "30px",
-              fontWeight: "bold",
-              color: "white",
-              fontFamily: "Rajdhani, sans-serif",
-            }}
-          >
-            Total Zudio : {filteredShops.length}
-          </div>
-
-
-
-
-
-
-
+        {/* 🔢 Total Malls text*/}
+        <div
+          style={{
+            textAlign: "center",
+            padding: "20px 0",
+            position: "fixed",
+            bottom: "1px",
+            right: "20px",
+            fontSize: "30px",
+            fontWeight: "bold",
+            color: "white",
+            fontFamily: "Rajdhani, sans-serif",
+          }}
+        >
+          Total Zudio : {filteredShops.length}
+        </div>
 
         {/* this is cards div */}
         <div
           style={{
-          flexDirection: "row",
-          overflowX: "auto",
-          overflowY: "hidden",
-          width: "95%",
-          height: "78vh",
-          gap: "60px",
-          zIndex: "2",
-          // background: "rgba(0, 0, 0, 0.58)",
-          backdropFilter: "blur(2px)",
-          display: "flex",
-          alignItems: "center",
-          position: "relative",
-          padding: "20px",
-          scrollbarWidth: "none", // Firefox
-          msOverflowStyle: "none", // IE/Edge
+            flexDirection: "row",
+            overflowX: "auto",
+            overflowY: "hidden",
+            width: "95%",
+            height: "78vh",
+            gap: "60px",
+            zIndex: "2",
+            // background: "rgba(0, 0, 0, 0.58)",
+            backdropFilter: "blur(2px)",
+            display: "flex",
+            alignItems: "center",
+            position: "relative",
+            padding: "20px",
+            scrollbarWidth: "none", // Firefox
+            msOverflowStyle: "none", // IE/Edge
           }}
         >
-             {filteredShops.map((shop) => (
+          {filteredShops.map((shop) => (
             <div
               key={shop._id}
               onClick={() => navigate(`/branddashboard2/${shop._id}`)}
@@ -221,12 +213,6 @@ const BrandDashboard = () => {
           ))}
         </div>
 
-
-
-
-
-
-
         <button
           onClick={() => navigate("/qrcode")}
           style={{
@@ -270,10 +256,9 @@ const BrandDashboard = () => {
             fontWeight: "bold",
             border: " 1px solid rgb(255, 255, 255)",
             background: "transparent",
-            // background: "linear-gradient(to right, #4facfe, #00f2fe)",
-            transform: "skewX(-20deg)", // Parallelogram effect
-            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)", // Depth effect
-            backdropFilter: "blur(5px)", // Glassmorphism effect
+            transform: "skewX(-20deg)",
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
+            backdropFilter: "blur(5px)",
             transition: "0.3s",
             zIndex: "3",
           }}
@@ -288,7 +273,7 @@ const BrandDashboard = () => {
           onClick={handleLogout}
           style={{
             padding: "9px",
-            transform: "skewX(-18deg)", // Parallelogram effect
+            transform: "skewX(-18deg)",
             background: "rgba(231, 119, 115, 0.66)",
             color: "#fff",
             border: " 1px solid rgb(255, 255, 255)",
@@ -314,7 +299,7 @@ const BrandDashboard = () => {
           </div>
         </div>
       </div>
-      
+
       <style>{`
     body{
     overflow: hidden;}

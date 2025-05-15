@@ -12,24 +12,7 @@ router.get("/api/shops", async (req, res) => {
   }
 });
 
-// // ✅ Add new shop item
-// router.post("/shops", async (req, res) => {
-//   const { title, description, image} = req.body;
-  
-//   const shop = new Shop({
-//     title,
-//     description,
-//     image,
-//     menuItems: [],
-//   });
 
-//   try {
-//     const newShop = await shop.save();
-//     res.status(201).json(newShop);
-//   } catch (err) {
-//     res.status(400).json({ message: err.message });
-//   }
-// });
 
 // ✅ Add Menu Item to a Shop
 router.post("/api/shops/:id/menu", async (req, res) => {
@@ -107,5 +90,28 @@ router.put("/api/update-menu-item/:shopId/:menuItemName", async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
+
+
+
+
+
+// // ✅ Add new shop item
+// router.post("/shops", async (req, res) => {
+//   const { title, description, image} = req.body;
+  
+//   const shop = new Shop({
+//     title,
+//     description,
+//     image,
+//     menuItems: [],
+//   });
+
+//   try {
+//     const newShop = await shop.save();
+//     res.status(201).json(newShop);
+//   } catch (err) {
+//     res.status(400).json({ message: err.message });
+//   }
+// });
 
 module.exports = router;

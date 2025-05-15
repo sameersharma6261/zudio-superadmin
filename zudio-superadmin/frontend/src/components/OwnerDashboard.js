@@ -14,6 +14,14 @@ const OwnerDashboard = () => {
     password: "",
     mallconpassword: "",
     role: "",
+     location: {
+    country: "",
+    state: "",
+    city: "",
+    street: "",
+    latitude: Number,
+  longitude: Number
+  },
   });
   const [editFood, setEditFood] = useState(null);
 
@@ -37,9 +45,22 @@ const OwnerDashboard = () => {
     }
   }, [role, navigate]);
 
-  const handleChange = (e) => {
-    setNewFood({ ...newFood, [e.target.name]: e.target.value });
-  };
+ const handleChange = (e) => {
+  const { name, value } = e.target;
+
+  if (name.startsWith("location.")) {
+    const field = name.split(".")[1];
+    setNewFood((prev) => ({
+      ...prev,
+      location: {
+        ...prev.location,
+        [field]: value
+      }
+    }));
+  } else {
+    setNewFood((prev) => ({ ...prev, [name]: value }));
+  }
+};
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -61,6 +82,12 @@ const OwnerDashboard = () => {
             password: "",
             mallconpassword: "",
             role: "",
+            location: {
+            country: "",
+            state: "",
+            city: "",
+            street: "",
+          },
           });
           setEditFood(null);
         });
@@ -77,15 +104,35 @@ const OwnerDashboard = () => {
             password: "",
             mallconpassword: "",
             role: "",
+            location: {
+            country: "",
+            state: "",
+            city: "",
+            street: "",
+          },
           });
         });
     }
   };
 
   const handleEdit = (shop) => {
-    setNewFood(shop);
-    setEditFood(shop);
-  };
+  setNewFood({
+    title: shop.title || "",
+    description: shop.description || "",
+    image: shop.image || "",
+    email: shop.email || "",
+    password: shop.password || "",
+    mallconpassword: shop.mallconpassword || "",
+    role: shop.role || "",
+    location: {
+      country: shop.location?.country || "",
+      state: shop.location?.state || "",
+      city: shop.location?.city || "",
+      street: shop.location?.street || "",
+    },
+  });
+  setEditFood(shop);
+};
 
   const handleDelete = (id) => {
     axios
@@ -103,7 +150,7 @@ const OwnerDashboard = () => {
 
   return (
     <>
-     <video
+      <video
         autoPlay
         muted
         loop
@@ -245,6 +292,84 @@ const OwnerDashboard = () => {
         <form onSubmit={handleSubmit} className="shop-form">
           <input
             type="text"
+            name="country"
+            placeholder="Country"
+            value={newFood.location.country}
+            onChange={(e) =>
+              setNewFood({
+                ...newFood,
+                location: {
+                  ...newFood.location,
+                  country: e.target.value,
+                },
+              })
+            }
+          />
+
+          <input
+            type="text"
+            name="state"
+            placeholder="State"
+            value={newFood.location.state}
+            onChange={(e) =>
+              setNewFood({
+                ...newFood,
+                location: {
+                  ...newFood.location,
+                  state: e.target.value,
+                },
+              })
+            }
+          />
+
+          <input
+            type="text"
+            name="city"
+            placeholder="City"
+            value={newFood.location.city}
+            onChange={(e) =>
+              setNewFood({
+                ...newFood,
+                location: {
+                  ...newFood.location,
+                  city: e.target.value,
+                },
+              })
+            }
+          />
+
+          <input
+            type="text"
+            name="street"
+            placeholder="Street"
+            value={newFood.location.street}
+            onChange={(e) =>
+              setNewFood({
+                ...newFood,
+                location: {
+                  ...newFood.location,
+                  street: e.target.value,
+                },
+              })
+            }
+          />
+          <input
+            type="text"
+            name="location.latitude"
+            placeholder="Latitude"
+            value={newFood.location.latitude}
+            onChange={handleChange}
+          />
+
+          <input
+            type="text"
+            name="location.longitude"
+            placeholder="Longitude"
+            value={newFood.location.longitude}
+            onChange={handleChange}
+          />
+          <input
+            type="text"
             name="title"
             placeholder="Title"
             value={newFood.title}
@@ -300,109 +425,121 @@ const OwnerDashboard = () => {
             required
           />
 
-          <button type="submit">{editFood ? "Update Zudio" : "Add Zudio"}</button>
+          <button type="submit">
+            {editFood ? "Update Zudio" : "Add Zudio"}
+          </button>
         </form>
 
+        <div className="scroll-container">
+          {filteredShops.map((shop) => (
+            <div key={shop._id} className="premium-card">
+              <div className="card-background">
+                <img src={shop.image} alt={shop.title} className="card-image" />
+              </div>
 
-          <div className="scroll-container">
-            {filteredShops.map((shop) => (
-              <div key={shop._id} className="premium-card">
-                <div className="card-background">
-                  <img
-                    src={shop.image}
-                    alt={shop.title}
-                    className="card-image"
-                  />
-                </div>
-
-                <div className="card-content">
-                  <h2>{shop.title}</h2>
-                  <p>{shop.description}</p>
-                  <div className="shop-info">
-                    <p>
-                      <strong>Email:</strong> {shop.email}
-                    </p>
-                    <p>
+              <div className="card-content">
+                <h2>{shop.title}</h2>
+                <p>{shop.description}</p>
+                <div className="shop-info">
+                  <p>
+                    <strong>Country:</strong> {shop.location?.country || "N/A"}
+                  </p>
+                  <p>
+                    <strong>State:</strong> {shop.location?.state || "N/A"}
+                  </p>
+                  <p>
+                    <strong>City:</strong> {shop.location?.city || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Street:</strong> {shop.location?.street || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Latitude:</strong> {shop.location?.latitude || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Longitude:</strong> {shop.location?.longitude || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {shop.email}
+                  </p>
+                  {/* <p>
                       <strong>Password:</strong> {shop.password}
-                    </p>
-                    <p>
-                      <strong>Mall Con Password:</strong> {shop.mallconpassword}
-                    </p>
-                    <p>
-                      <strong>Role:</strong> {shop.role}
-                    </p>
-                  </div>
-                  <div className="action-buttons">
-                    <button onClick={() => navigate(`/shop/${shop._id}`)}>
-                      Visit Zudio
-                    </button>
-                    <button onClick={() => handleEdit(shop)}>Edit</button>
-                    <button onClick={() => handleDelete(shop._id)}>
-                      Delete
-                    </button>
-                  </div>
+                    </p> */}
+                  <p>
+                    <strong>Mall Con Password:</strong> {shop.mallconpassword}
+                  </p>
+                  <p>
+                    <strong>Role:</strong> {shop.role}
+                  </p>
+                </div>
+                <div className="action-buttons">
+                  <button onClick={() => navigate(`/shop/${shop._id}`)}>
+                    Visit Zudio
+                  </button>
+                  <button onClick={() => handleEdit(shop)}>Edit</button>
+                  <button onClick={() => handleDelete(shop._id)}>Delete</button>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
+        </div>
 
-
-         <button
-            onClick={() => navigate("/qrcode")}
-            style={{
-              padding: "10px 15px",
-              borderRadius: "10px",
-              border: " 1px solid rgb(255, 255, 255)",
-              cursor: "pointer",
-              position: "fixed",
-              left: "192px",
-              top: "85px",
-              color: "white",
-              fontSize: "15px",
-              fontWeight: "bold",
-              background: "transparent",
-              transform: "skewX(-20deg)", // Parallelogram effect
-              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)", // Depth effect
-              backdropFilter: "blur(5px)", // Glassmorphism effect
-              transition: "0.3s",
-              zIndex: "3",
-            }}
-            onMouseEnter={(e) =>
-              (e.target.style.transform = "skewX(-20deg) scale(1.1)")
-            }
-            onMouseLeave={(e) => (e.target.style.transform = "skewX(-20deg)")}
-          >
-            QR-Code
-          </button>
-          <button
-            onClick={() => navigate("/branddashboard")}
-            style={{
-              padding: "10px 15px",
-              borderRadius: "10px",
-              cursor: "pointer",
-              position: "fixed",
-              left: "25px",
-              fontFamily: "Rajdhani, sans-serif",
-              top: "85px",
-              color: "white",
-              fontSize: "15px",
-              fontWeight: "bold",
-              border: " 1px solid rgb(255, 255, 255)",
-              background: "transparent",
-              // background: "linear-gradient(to right, #4facfe, #00f2fe)",
-              transform: "skewX(-20deg)", // Parallelogram effect
-              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)", // Depth effect
-              backdropFilter: "blur(5px)", // Glassmorphism effect
-              transition: "0.3s",
-              zIndex: "3",
-            }}
-            onMouseEnter={(e) =>
-              (e.target.style.transform = "skewX(-20deg) scale(1.1)")
-            }
-            onMouseLeave={(e) => (e.target.style.transform = "skewX(-20deg)")}
-          >
-            Switch To View Mode
-          </button>
+        <button
+          onClick={() => navigate("/qrcode")}
+          style={{
+            padding: "10px 15px",
+            borderRadius: "10px",
+            border: " 1px solid rgb(255, 255, 255)",
+            cursor: "pointer",
+            position: "fixed",
+            left: "192px",
+            top: "85px",
+            color: "white",
+            fontSize: "15px",
+            fontWeight: "bold",
+            background: "transparent",
+            transform: "skewX(-20deg)", // Parallelogram effect
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)", // Depth effect
+            backdropFilter: "blur(5px)", // Glassmorphism effect
+            transition: "0.3s",
+            zIndex: "3",
+          }}
+          onMouseEnter={(e) =>
+            (e.target.style.transform = "skewX(-20deg) scale(1.1)")
+          }
+          onMouseLeave={(e) => (e.target.style.transform = "skewX(-20deg)")}
+        >
+          QR-Code
+        </button>
+        <button
+          onClick={() => navigate("/branddashboard")}
+          style={{
+            padding: "10px 15px",
+            borderRadius: "10px",
+            cursor: "pointer",
+            position: "fixed",
+            left: "25px",
+            fontFamily: "Rajdhani, sans-serif",
+            top: "85px",
+            color: "white",
+            fontSize: "15px",
+            fontWeight: "bold",
+            border: " 1px solid rgb(255, 255, 255)",
+            background: "transparent",
+            // background: "linear-gradient(to right, #4facfe, #00f2fe)",
+            transform: "skewX(-20deg)", // Parallelogram effect
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)", // Depth effect
+            backdropFilter: "blur(5px)", // Glassmorphism effect
+            transition: "0.3s",
+            zIndex: "3",
+          }}
+          onMouseEnter={(e) =>
+            (e.target.style.transform = "skewX(-20deg) scale(1.1)")
+          }
+          onMouseLeave={(e) => (e.target.style.transform = "skewX(-20deg)")}
+        >
+          Switch To View Mode
+        </button>
 
         <style>{`
 /* Scrollable row */
@@ -412,7 +549,7 @@ const OwnerDashboard = () => {
    align-items: center;
   overflow-x: auto;
   gap: 24px;
-  width: 98%;
+  width: 96%;
   height: 100vh;
   padding: 20px;
   position: relative;
@@ -617,18 +754,23 @@ const OwnerDashboard = () => {
 
         .shop-form {
           display: flex;
-          width: 100%;
+          width: 97%;
           justify-content: start;
           left: 25px;
           gap: 10px;
-          margin-top: 0;
-          margin-bottom: 20px;
-          position: fixed;
-          bottom: 10px;
+          // margin-top: 0;
+          // margin-bottom: 20px;
+          position: absolute;
+            scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none;  /* IE and Edge */
+          bottom: 60px;
+          overflow-x: auto;
           z-index: 5;
         }
         .shop-form input, .shop-form button {
           padding: 10px;
+          margin-left: 15px;
+          // height: 20px;
           border-radius: 5px;
           transform: skew(-20deg);
           border: 1px solid #ccccc;
@@ -680,7 +822,7 @@ background: linear-gradient(to right, #00f2fe, #4facfe);
             border: " 1px solid rgb(255, 255, 255)",
             position: "fixed",
             right: "30px",
-            bottom: "30px",
+            bottom: "85px",
             fontSize: "15px",
             zIndex: "2",
             borderRadius: "7px",

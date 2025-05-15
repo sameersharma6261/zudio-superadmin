@@ -8,6 +8,14 @@ const ShopSchema = new mongoose.Schema({
   password: String,
   role: String,
   mallconpassword: String,
+  location: {
+    country: String,
+    state: String,
+    city: String,
+    street: String,
+    latitude: Number,
+    longitude: Number,
+  },
   menuItems: [
     {
       name: String,
@@ -15,7 +23,7 @@ const ShopSchema = new mongoose.Schema({
       description: String,
       link: String,
       email: String,
-      password: String,
+      password: String, 
       role: String,
       shopconpassword: String,
     },
