@@ -18,7 +18,7 @@ const bcrypt = require("bcryptjs");
 //     let user = await Food.findOne({ email, role });
 
 //     if (!user) {
-//       user = await Food.findOne({ "menuItems.email": email, "menuItems.role": role });
+//       user = await Food.findOne({ "shopss.email": email, "shopss.role": role });
 //     }
 
 //     if (!user) {
@@ -47,7 +47,7 @@ router.post("/check-user", async (req, res) => {
     let user = await Food.findOne({ email, role });
 
     if (!user) {
-      user = await Food.findOne({ "menuItems.email": email, "menuItems.role": role });
+      user = await Food.findOne({ "shopss.email": email, "shopss.role": role });
     }
 
     if (!user) {
@@ -89,11 +89,11 @@ router.post("/reset-password", async (req, res) => {
 
     if (user) userUpdated = true;
 
-    // 🔍 Step 2: Update inside `menuItems`
+    // 🔍 Step 2: Update inside `shopss`
     if (!userUpdated) {
       user = await Food.findOneAndUpdate(
-        { "menuItems.email": email, "menuItems.role": role },
-        { $set: { "menuItems.$.password": hashedPassword } },
+        { "shopss.email": email, "shopss.role": role },
+        { $set: { "shopss.$.password": hashedPassword } },
         { new: true }
       );
       if (user) userUpdated = true;

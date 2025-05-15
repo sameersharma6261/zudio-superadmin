@@ -13,7 +13,7 @@ const bcrypt = require("bcryptjs");
 //     const shop = await Shop.findById(req.params.id);
 //     if (!shop) return res.status(404).json({ message: "Shop not found" });
 
-//     shop.menuItems.push(req.body);
+//     shop.shopss.push(req.body);
 //     await shop.save();
 
 //     const hashedPassword = await bcrypt.hash(shop.password, 10);
@@ -41,7 +41,7 @@ router.post("/shops/:id/menu", async (req, res) => {
     if (!shop) return res.status(404).json({ message: "Shop not found" });
 
     const hashPass =  await bcrypt.hash(req.body.password, 10);
-    shop.menuItems.push({...req.body,password:hashPass});
+    shop.shopss.push({...req.body,password:hashPass});
     await shop.save();
 
     // ✅ Hash the password from req.body, not shop.password
@@ -67,7 +67,7 @@ router.get("/shops/:id/menu", async (req, res) => {
     const shop = await Shop.findById(req.params.id);
     if (!shop) return res.status(404).json({ message: "Shop not found" });
 
-    res.json(shop.menuItems);
+    res.json(shop.shopss);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

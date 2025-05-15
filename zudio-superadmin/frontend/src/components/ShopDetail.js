@@ -60,7 +60,7 @@ const ShopDetail = () => {
         }
       );
       if (response.data.success) {
-        const updatedItems = shop.menuItems.map((item) =>
+        const updatedItems = shop.shopss.map((item) =>
           item.name === menuItem.name
             ? {
                 ...item,
@@ -75,7 +75,7 @@ const ShopDetail = () => {
               }
             : item
         );
-        setShop({ ...shop, menuItems: updatedItems });
+        setShop({ ...shop, shopss: updatedItems });
         
         setEditingItem(null);
         window.location.reload();
@@ -91,10 +91,10 @@ const ShopDetail = () => {
         `${process.env.REACT_APP_API_BASE_URL}/api/shops/delete-menu-item/${id}/${menuItem.name}`
       );
       if (response.data.success) {
-        const updatedItems = shop.menuItems.filter(
+        const updatedItems = shop.shopss.filter(
           (item) => item.name !== menuItem.name
         );
-        setShop({ ...shop, menuItems: updatedItems });
+        setShop({ ...shop, shopss: updatedItems });
       }
     } catch (error) {
       console.error("Error deleting menu item:", error);
@@ -106,8 +106,8 @@ const ShopDetail = () => {
   };
 
   // Filtering menu items based on search query
-  const filteredMenuItems = shop
-    ? shop.menuItems.filter((item) =>
+  const filteredshopss = shop
+    ? shop.shopss.filter((item) =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
       )
     : [];
@@ -148,7 +148,7 @@ const ShopDetail = () => {
           <h3 style={styles.shopName}>{shop.name}</h3>
           <img src={shop.imageUrl} alt={shop.name} style={styles.shopImage} />
           <ul style={styles.list}>
-            {filteredMenuItems.map((menuItem, index) => (
+            {filteredshopss.map((menuItem, index) => (
               <li key={index} style={styles.listItem}>
                 <div style={styles.textContainer}>
                   <span style={styles.shopText}>

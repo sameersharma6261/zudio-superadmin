@@ -130,11 +130,11 @@ router.post("/login", async (req, res) => {
       user = await Shop.findOne({ email });
 
       if (!user) {
-        // Step 3: Check inside menuItems
-        user = await Shop.findOne({ "menuItems.email": email });
+        // Step 3: Check inside shopss
+        user = await Shop.findOne({ "shopss.email": email });
 
         if (user) {
-          user = user.menuItems.find((item) => item.email === email);
+          user = user.shopss.find((item) => item.email === email);
         }
       }
 
@@ -143,7 +143,7 @@ router.post("/login", async (req, res) => {
         return res.status(400).json({ error: "User not found" });
       }
 
-      // MenuItems ya Shop schema se password match karna
+      // shopss ya Shop schema se password match karna
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) return res.status(400).json({ error: "Invalid password" });
     }

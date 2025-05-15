@@ -16,7 +16,7 @@ const ShopSchema = new mongoose.Schema({
     latitude: Number,
     longitude: Number,
   },
-  menuItems: [
+  shopss: [
     {
       name: String,
       image: String,

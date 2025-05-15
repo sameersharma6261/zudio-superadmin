@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const dataRoutes = require("./routes/dataRoutes");
+const dashboardRoutes = require('./routes/dashboard');
 // const twilio = require("twilio");
 const User = require("./models/data");
 const axios = require("axios");
@@ -27,6 +28,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
+app.use('/api/dashboard', dashboardRoutes);
 
 // import routes (after initializing app)
 app.use(express.urlencoded({ extended: true }));
@@ -475,8 +477,8 @@ app.get("/api/shops", async (req, res) => {
 
 app.get("/api/menus/:id", async (req, res) => {
   try {
-    const menuItems = await Menu.find({ shopId: req.params.id });
-    res.json(menuItems);
+    const shopss = await Menu.find({ shopId: req.params.id });
+    res.json(shopss);
   } catch (error) {
     res.status(500).json({ message: "Error fetching menu" });
   }
@@ -534,25 +536,25 @@ app.put("/api/shops/update-menu-item/:id/:name", async (req, res) => {
         .json({ success: false, message: "Shop not found" });
     }
 
-    const itemIndex = shop.menuItems.findIndex((item) => item.name === name);
+    const itemIndex = shop.shopss.findIndex((item) => item.name === name);
     if (itemIndex === -1) {
       return res
         .status(404)
         .json({ success: false, message: "Menu item not found" });
     }
     // Update the item
-    shop.menuItems[itemIndex].name = newName;
-    shop.menuItems[itemIndex].image = newImage;
-    shop.menuItems[itemIndex].link = newLink;
-    shop.menuItems[itemIndex].description = newDescription;
-    shop.menuItems[itemIndex].email = newEmail;
-    shop.menuItems[itemIndex].shopconpassword = newShopConPassword;
-    shop.menuItems[itemIndex].role = newRole;
+    shop.shopss[itemIndex].name = newName;
+    shop.shopss[itemIndex].image = newImage;
+    shop.shopss[itemIndex].link = newLink;
+    shop.shopss[itemIndex].description = newDescription;
+    shop.shopss[itemIndex].email = newEmail;
+    shop.shopss[itemIndex].shopconpassword = newShopConPassword;
+    shop.shopss[itemIndex].role = newRole;
 
     // ✅ Hash the new password only if provided
     if (newPassword) {
       const hashedPassword = await bcrypt.hash(newPassword, 10);
-      shop.menuItems[itemIndex].password = hashedPassword;
+      shop.shopss[itemIndex].password = hashedPassword;
     }
 
     // Save to database
@@ -578,19 +580,19 @@ app.delete("/api/shops/delete-menu-item/:id/:name", async (req, res) => {
     }
 
     // Filter out the menu item to be deleted
-    const updatedMenuItems = shop.menuItems.filter(
+    const updatedshopss = shop.shopss.filter(
       (item) => item.name !== name
     );
 
     // If no changes were made, return an error
-    if (updatedMenuItems.length === shop.menuItems.length) {
+    if (updatedshopss.length === shop.shopss.length) {
       return res
         .status(404)
         .json({ success: false, message: "Menu item not found" });
     }
 
-    // Update the menuItems array
-    shop.menuItems = updatedMenuItems;
+    // Update the shopss array
+    shop.shopss = updatedshopss;
 
     // Save the updated document
     await shop.save();

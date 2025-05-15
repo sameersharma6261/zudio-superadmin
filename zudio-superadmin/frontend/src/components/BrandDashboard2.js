@@ -193,7 +193,7 @@ const BrandDashboard2 = () => {
             {shop?.title}
           </h1>
 
-          {shop.menuItems && shop.menuItems.length > 0 ? (
+          {shop.shopss && shop.shopss.length > 0 ? (
             <div
               style={{
                 display: "flex",
@@ -207,7 +207,7 @@ const BrandDashboard2 = () => {
                 zIndex: "3",
               }}
             >
-              {shop.menuItems.map((menuItem, index) => (
+              {shop.shopss.map((menuItem, index) => (
                 <div
                   key={index}
                   onClick={() => {

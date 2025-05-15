@@ -65,6 +65,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import PaymentPage from "../components/PaymentPage";
 import ForgotPassword from "../components/ForgotPassword";
 import QrCode from "../components/QrCode";
+import Dashboard from "../pages/Dashboard";
 
 const AppRoutes = () => {
   return (
@@ -94,6 +95,7 @@ const AppRoutes = () => {
           <Route path="/:id/token" element={<Token />} />
            <Route path="/:id/countdown" element={<Countdown />} />
           <Route path="/:id/information" element={<Information />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           {/* <Route path="/:id/counter" element={<Counter />} /> */}
           <Route path="/forgotpassword" element={<ForgotPassword />} />
           {/* Version route do not change this */}

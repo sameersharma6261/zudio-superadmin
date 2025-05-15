@@ -20,12 +20,12 @@ router.post("/api/shops/:id/menu", async (req, res) => {
     const shop = await Shop.findById(req.params.id);
     if (!shop) return res.status(404).json({ message: "Shop not found" });
 
-    // Fix: Ensure menuItems exists
-    if (!shop.menuItems) {
-      shop.menuItems = [];
+    // Fix: Ensure shopss exists
+    if (!shop.shopss) {
+      shop.shopss = [];
     }
 
-    shop.menuItems.push(req.body);
+    shop.shopss.push(req.body);
     await shop.save();
     
     res.json({ message: "Menu item added successfully!", shop });
@@ -40,7 +40,7 @@ router.get("/api/shops/:id/menu", async (req, res) => {
     const shop = await Shop.findById(req.params.id);
     if (!shop) return res.status(404).json({ message: "Shop not found" });
 
-    res.json(shop.menuItems);
+    res.json(shop.shopss);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -55,7 +55,7 @@ router.get("/api/shops/:id", async (req, res) => {
       const shop = await Shop.findById(req.params.id);
       if (!shop) return res.status(404).json({ message: "Shop not found" });
   
-      res.json(shop); // ✅ Send menuItems along with shop details
+      res.json(shop); // ✅ Send shopss along with shop details
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
@@ -63,16 +63,16 @@ router.get("/api/shops/:id", async (req, res) => {
   
 
   // Update Menu Item
-router.put("/api/update-menu-item/:shopId/:menuItemName", async (req, res) => {
+router.put("/api/update-menu-item/:shopId/:menushopssName", async (req, res) => {
   try {
-    const { shopId, menuItemName } = req.params;
+    const { shopId, menushopssName } = req.params;
     const { newName, newLink, newDescription, newEmail, newPassword, newShopConPassword, newRole} = req.body;
 
     const shop = await Shop.findById(shopId);
     if (!shop) return res.status(404).json({ message: "Shop item not found" });
 
     // Update the menu item
-    const menuItem = shop.menuItems.find((item) => item.name === menuItemName);
+    const menuItem = shop.shopss.find((item) => item.name === menushopssName);
     if (!menuItem) return res.status(404).json({ message: "Menu item not found" });
 
     menuItem.name = newName;
@@ -103,7 +103,7 @@ router.put("/api/update-menu-item/:shopId/:menuItemName", async (req, res) => {
 //     title,
 //     description,
 //     image,
-//     menuItems: [],
+//     shopss: [],
 //   });
 
 //   try {
