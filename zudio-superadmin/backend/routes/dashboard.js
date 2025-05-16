@@ -21,15 +21,11 @@ router.get('/stats', async (req, res) => {
     // Total counters count = sum of all nested shops with role 'shop'
     let totalCounters = 0;
 
-    // Counters per mall
-    const countersPerMall = {};
-
     malls.forEach(mall => {
       let count = 0;
       if (Array.isArray(mall.shopss)) {
         count = mall.shopss.filter(s => s.role === 'shop').length;
       }
-      countersPerMall[mall.title || mall._id] = count;
       totalCounters += count;
     });
 
@@ -38,20 +34,21 @@ router.get('/stats', async (req, res) => {
       countries: {},
       states: {},
       cities: {},
+      streets: {},
     };
 
     malls.forEach(mall => {
-      const { country, state, city } = mall.location || {};
+      const { country, state, city, street } = mall.location || {};
       if (country) locations.countries[country] = (locations.countries[country] || 0) + 1;
       if (state) locations.states[state] = (locations.states[state] || 0) + 1;
       if (city) locations.cities[city] = (locations.cities[city] || 0) + 1;
+      if (street) locations.streets[street] = (locations.streets[street] || 0) + 1;
     });
 
     res.json({
       totalMalls,
       totalUsers,
       totalCounters,
-      countersPerMall,
       locations,
     });
 

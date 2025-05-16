@@ -57,6 +57,14 @@ const Dashboard = () => {
               ))}
             </ul>
           </div>
+           <div className="location-block">
+            <h4>Streets</h4>
+            <ul>
+              {Object.entries(stats.locations.streets).map(([key, val]) => (
+                <li key={key}><strong>{key}</strong>: {val}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
       <div className="counters-per-mall" style={{
@@ -65,22 +73,7 @@ const Dashboard = () => {
         borderRadius: '10px',
         padding: '20px'
       }}>
-        <h2 style={{ marginBottom: '15px', color: '#1a73e8' }}>🏬 Malls and Their Counters</h2>
-        <ul style={{ listStyle: 'none', paddingLeft: 0 }}>
-          {Object.entries(stats.countersPerMall || {}).map(([mall, count]) => (
-            <li key={mall} style={{
-              backgroundColor: '#ffffff',
-              marginBottom: '10px',
-              padding: '12px 15px',
-              borderRadius: '6px',
-              boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
-              fontWeight: '600',
-              color: '#0b47a1'
-            }}>
-              <strong>{mall}</strong>: {count} counter{count !== 1 ? 's' : ''}
-            </li>
-          ))}
-        </ul>
+  
       </div>
       <style>{`.dashboard-container {
   padding: 40px;

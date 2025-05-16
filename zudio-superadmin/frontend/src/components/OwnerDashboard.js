@@ -20,7 +20,7 @@ const OwnerDashboard = () => {
     city: "",
     street: "",
     latitude: Number,
-  longitude: Number
+    longitude: Number
   },
   });
   const [editFood, setEditFood] = useState(null);

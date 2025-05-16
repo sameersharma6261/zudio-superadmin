@@ -635,13 +635,13 @@ app.post("/api/shops", async (req, res) => {
 
     await shop.save();
 
-    const user = new ShopUser({
-      email: shop.email,
-      password: hashedPassword, // Hashed password yahan bhi use ho raha
-      role: shop.role,
-    });
+    // const user = new ShopUser({
+    //   email: shop.email,
+    //   password: hashedPassword, // Hashed password yahan bhi use ho raha
+    //   role: shop.role,
+    // });
 
-    await user.save();
+    // await user.save();
 
     res.json(shop);
   } catch (error) {
