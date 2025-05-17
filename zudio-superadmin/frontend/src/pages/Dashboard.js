@@ -6,6 +6,13 @@ const Dashboard = () => {
   const [stats, setStats] = useState(null);
   const [expandedPaths, setExpandedPaths] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
+  const [expandedMalls, setExpandedMalls] = useState({});
+  const toggleMall = (mallId) => {
+    setExpandedMalls((prev) => ({
+      ...prev,
+      [mallId]: !prev[mallId],
+    }));
+  };
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -30,6 +37,16 @@ const Dashboard = () => {
       [path]: !prev[path],
     }));
   };
+
+  const filterMallCounters = (mallCounters) => {
+  return mallCounters.filter((mall) => {
+    const mallTitle = mall.mallTitle.toLowerCase();
+    const counterMatch = mall.counterNames.some((name) =>
+      name.toLowerCase().includes(searchTerm)
+    );
+    return mallTitle.includes(searchTerm) || counterMatch;
+  });
+};
 
   const isExpanded = (path) => expandedPaths[path];
 
@@ -117,11 +134,11 @@ const Dashboard = () => {
   return (
     <>
       <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          style={{
+        autoPlay
+        muted
+        loop
+        playsInline
+        style={{
           position: "fixed",
           top: 0,
           left: 0,
@@ -156,8 +173,39 @@ const Dashboard = () => {
               className="search-input"
             />
           </div>
-          <div className="location-hierarchy">
-            {renderCountries(filterLocations(stats.locations.countries))}
+
+          <div className="leftright">
+            <div className="location-hierarchy">
+              {renderCountries(filterLocations(stats.locations.countries))}
+            </div>
+
+
+
+
+            <div className="mall-section">
+              <h2 className="section-heading">Mall-wise Counters</h2>
+              {filterMallCounters(stats.mallCounters).map((mall) => (
+                <div className="mall-card" key={mall.mallId}>
+                  <h3
+                    onClick={() => toggleMall(mall.mallId)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    🏢 {mall.mallTitle} — {mall.counterCount} Counter(s)
+                  </h3>
+                  {expandedMalls[mall.mallId] && (
+                    <ul className="counter-list">
+                      {mall.counterNames.map((name, idx) => (
+                        <li key={idx}>🛒 {name}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </div>
+
+
+
+
           </div>
         </div>
       </div>
@@ -205,8 +253,29 @@ const Dashboard = () => {
             backdrop-filter: blur(5px);
           // border-radius: 10px;
           padding: 30px;
-          margin-top: 20px;
+          // margin-top: 20px;
           box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+        }
+
+        .leftright{
+        // background: blue;
+        width: 100vw;
+        margin: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: absolute;
+        left: 0;
+        }
+
+
+
+
+
+        .location-hierarchy{
+        // background: red;
+        padding: 10px;
+        width: 67vw;
         }
 
         .location-hierarchy ul {
@@ -286,7 +355,7 @@ const Dashboard = () => {
     }
 
     .location-card {
-      min-width: 200px;
+      min-width: 170px;
       flex: 0 0 auto;
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -375,6 +444,40 @@ const Dashboard = () => {
       scroll-bar-width: none;
       ms-overflow-style: none;
     }
+
+    .mall-section {
+    // margin-top: 30px;
+    padding: 10px;
+    height: 30vh;
+    overflow-y: auto;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: white;
+  }
+
+  .mall-card {
+    // margin-bottom: 15px;
+    padding: 10px;
+    margin-bottom: 5px;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+  }
+
+  .mall-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+
+  .counter-list {
+    list-style-type: none;
+    padding-left: 20px;
+  }
+
+  .counter-list li {
+    padding: 5px 0;
+    font-size: 1rem;
+  }
       `}</style>
     </>
   );

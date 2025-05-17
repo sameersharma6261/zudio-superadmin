@@ -30,34 +30,44 @@ router.get('/stats', async (req, res) => {
     const malls = allShops.filter(shop => shop.role === 'owner');
     const totalMallCount = malls.length;
     const totalUserCount = allUsers.length;
-
     let totalCounterCount = 0;
-    const mallCounters = {}; // <-- New Object
     const locationData = { countries: {} };
 
-    malls.forEach(mall => {
-      let mallCounter = 0;
 
-      if (Array.isArray(mall.shopss)) {
-        mall.shopss.forEach(shop => {
-          if (shop.role === 'shop') {
-            mallCounter++;
-            totalCounterCount++;
 
-            const location = shop.location || mall.location || {};
-            const country = location.country || 'Unknown Country';
-            const state = location.state || 'Unknown State';
-            const city = location.city || 'Unknown City';
-            const street = location.street || 'Unknown Street';
 
-            incrementNestedCount(locationData.countries, [country, state, city, street]);
-          }
-        });
+    const mallCounters = [];
+
+malls.forEach(mall => {
+  let mallCounter = 0;
+  const counterNames = [];
+
+  if (Array.isArray(mall.shopss)) {
+    mall.shopss.forEach(shop => {
+      if (shop.role === 'shop') {
+        mallCounter++;
+        counterNames.push(shop.name || 'Unnamed Shop');
+
+        const location = shop.location || mall.location || {};
+        const country = location.country || 'Unknown Country';
+        const state = location.state || 'Unknown State';
+        const city = location.city || 'Unknown City';
+        const street = location.street || 'Unknown Street';
+
+        incrementNestedCount(locationData.countries, [country, state, city, street]);
       }
-
-      // Add individual mall's counter count
-      mallCounters[mall.title || `Mall ${mall._id}`] = mallCounter;
     });
+  }
+
+  mallCounters.push({
+    mallId: mall._id,
+    mallTitle: mall.title || `Mall ${mall._id}`,
+    counterCount: mallCounter,
+    counterNames: counterNames
+  });
+});
+
+
 
     res.json({
       totalMalls: totalMallCount,
