@@ -13,7 +13,7 @@ const ShopSchema = new mongoose.Schema({
     state: String,
     city: String,
     street: String,
-    latitude: Number,
+    latitude: Number, 
     longitude: Number,
   },
   shopss: [
