@@ -4,6 +4,9 @@ const Shop = require('../models/Shop');
 const PhoenixUser = require('../models/data'); // your user model
 
 
+
+
+
 // Helper function: increment count in a nested object path
 function incrementNestedCount(obj, keys) {
   // keys is an array like [country, state, city, street]
@@ -44,9 +47,10 @@ malls.forEach(mall => {
 
   if (Array.isArray(mall.shopss)) {
     mall.shopss.forEach(shop => {
-      if (shop.role === 'shop') {
-        mallCounter++;
-        counterNames.push(shop.name || 'Unnamed Shop');
+if (shop.role === 'shop') {
+  mallCounter++;
+  totalCounterCount++; // <-- ✅ Add this line
+  counterNames.push(shop.name || 'Unnamed Shop');
 
         const location = shop.location || mall.location || {};
         const country = location.country || 'Unknown Country';

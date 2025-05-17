@@ -38,6 +38,8 @@ const Dashboard = () => {
     }));
   };
 
+  
+
   const filterMallCounters = (mallCounters) => {
   return mallCounters.filter((mall) => {
     const mallTitle = mall.mallTitle.toLowerCase();
@@ -460,7 +462,7 @@ const Dashboard = () => {
     // margin-bottom: 15px;
     padding: 10px;
     margin-bottom: 5px;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(151, 151, 151, 0.4);
     border-radius: 8px;
   }
 
