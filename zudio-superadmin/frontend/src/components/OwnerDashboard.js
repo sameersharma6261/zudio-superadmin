@@ -511,6 +511,26 @@ const OwnerDashboard = () => {
         >
           QR-Code
         </button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <button
           onClick={() => navigate("/branddashboard")}
           style={{

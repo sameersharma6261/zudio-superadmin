@@ -76,6 +76,7 @@ router.get("/stats", async (req, res) => {
         mallId: mall._id,
         mallTitle: mall.title || `Mall ${mall._id}`,
         counterCount: mallCounter,
+        location: mall.location,
         counters: counterDetails, // 👈 contains each shop and userCount
       });
     }

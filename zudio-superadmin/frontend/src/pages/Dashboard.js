@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
   LabelList,
 } from "recharts";
+import MallMap from "../components/MallMap";
 
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
@@ -25,9 +26,6 @@ const Dashboard = () => {
     }));
   };
 
-
-
-  
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -59,22 +57,24 @@ const Dashboard = () => {
   };
 
   const allCounters = stats.mallCounters?.flatMap((mall) =>
-  mall.counters.map((counter) => ({
-    name: counter.name,
-    userCount: counter.userCount,
-    mallTitle: mall.mallTitle,
-  }))
-);
+    mall.counters.map((counter) => ({
+      name: counter.name,
+      userCount: counter.userCount,
+      mallTitle: mall.mallTitle,
+    }))
+  );
 
-// Filter based on search
-const filteredCounters = allCounters.filter(
-  (item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.mallTitle.toLowerCase().includes(searchTerm.toLowerCase())
-);
+  // Filter based on search
+  const filteredCounters = allCounters.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.mallTitle.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-// Sort by user count descending
-const sortedCounters = filteredCounters.sort((a, b) => b.userCount - a.userCount);
+  // Sort by user count descending
+  const sortedCounters = filteredCounters.sort(
+    (a, b) => b.userCount - a.userCount
+  );
   const filterMallCounters = (mallCounters) => {
     return mallCounters.filter((mall) => {
       const mallTitle = mall.mallTitle.toLowerCase();
@@ -91,8 +91,6 @@ const sortedCounters = filteredCounters.sort((a, b) => b.userCount - a.userCount
       return mallTitle.includes(searchTerm.toLowerCase()) || counterMatch;
     });
   };
-
-  
 
   const isExpanded = (path) => expandedPaths[path];
 
@@ -179,29 +177,11 @@ const sortedCounters = filteredCounters.sort((a, b) => b.userCount - a.userCount
   };
   return (
     <>
-      {/* <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          zIndex: -1,
-        }}
-      >
-        <source
-          src="https://cdn.pixabay.com/video/2020/10/15/52436-468806587_large.mp4"
-          type="video/mp4"
-        />
-      </video> */}
       <div className="dashboard-container">
-        <h1 className="dashboard-heading">Dashboard For Zudio</h1>
-
+        {/* <h1 className="dashboard-heading">Dashboard For Zudio</h1> */}
+        <h1 className="dashboard-heading">
+          Records For Malls Users & Counters
+        </h1>
         {/* Chart Section graph */}
         <div
           className="chart-container"
@@ -262,7 +242,9 @@ const sortedCounters = filteredCounters.sort((a, b) => b.userCount - a.userCount
         </div>
 
         <div className="location-section">
-          <h2 className="section-heading">Locations Of Zudio's</h2>
+          <h2 className="section-heading">
+            Locations Of Zudio's Where Which Exist
+          </h2>
           <div className="search-bar-container">
             <input
               type="text"
@@ -346,11 +328,30 @@ const sortedCounters = filteredCounters.sort((a, b) => b.userCount - a.userCount
           </div>
         </div>
       </div>
+      <div style={{ position: "relative", bottom: "1px", marginTop: "400px" }}>
+        {stats.mallCounters && (
+          <>
+            <h2
+              style={{
+                marginTop: "35px",
+                marginBottom: "10px",
+                color: "white",
+                textAlign: "center",
+                fontFamily: "rajdhani",
+                fontSize: "2.4rem",
+              }}
+            >
+              Mall Locations on Map
+            </h2>
+            <MallMap mallCounters={stats.mallCounters} />
+          </>
+        )}
+      </div>
       <style>{`
         .dashboard-container {
           // padding: 40px;
           backdrop-filter: blur(5px);
-          min-height: 100vh;
+          // min-height: 100vh;
           width: 100vw;
           font-family: "rajdhan";
         }

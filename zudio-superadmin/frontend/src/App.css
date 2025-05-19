@@ -18,7 +18,7 @@ body {
   animation: gradientMove 8s ease infinite;
 
 }
-
+@import 'leaflet/dist/leaflet.css';
 /* Gradient Background Animation */
 @keyframes gradientMove {
   0% { background-position: 0% 50%; }

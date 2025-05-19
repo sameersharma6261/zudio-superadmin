@@ -241,6 +241,62 @@ const BrandDashboard = () => {
           QR-Code
         </button>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          <button
+          onClick={() => navigate("/dashboard")}
+          style={{
+            padding: "10px 15px",
+            borderRadius: "10px",
+            border: " 1px solid rgb(255, 255, 255)",
+            cursor: "pointer",
+            position: "fixed",
+            left: "25px",
+            bottom: "65px",
+            color: "white",
+            fontSize: "15px",
+            fontWeight: "bold",
+            background: "transparent",
+            transform: "skewX(-20deg)", // Parallelogram effect
+            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)", // Depth effect
+            backdropFilter: "blur(5px)", // Glassmorphism effect
+            transition: "0.3s",
+            zIndex: "3",
+          }}
+          onMouseEnter={(e) =>
+            (e.target.style.transform = "skewX(-20deg) scale(1.1)")
+          }
+          onMouseLeave={(e) => (e.target.style.transform = "skewX(-20deg)")}
+        >
+          Dashboard
+        </button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <button
           onClick={() => navigate("/ownerdashboard")}
           style={{
