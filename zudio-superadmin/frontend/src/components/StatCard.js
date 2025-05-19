@@ -5,7 +5,7 @@ const StatCard = ({ title, value }) => {
     <div style={{
       background: " #ffffff",
       borderRadius: "16px",
-      padding: "25px",
+      padding: "15px",
       boxShadow: "0 8px 16px rgba(0,0,0,0.08)",
       textAlign: "center",
       flex: "1",
@@ -17,7 +17,7 @@ const StatCard = ({ title, value }) => {
         fontSize: "2rem",
         fontWeight: "bold",
         color: "#007bff",
-        marginTop: "10px"
+        marginTop: "5px"
       }}>{value}</p>
     </div>
   );

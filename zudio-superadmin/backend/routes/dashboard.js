@@ -1,11 +1,7 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Shop = require('../models/Shop');
-const PhoenixUser = require('../models/data'); // your user model
-
-
-
-
+const Shop = require("../models/Shop");
+const PhoenixUser = require("../models/data"); // your user model
 
 // Helper function: increment count in a nested object path
 function incrementNestedCount(obj, keys) {
@@ -14,7 +10,7 @@ function incrementNestedCount(obj, keys) {
   keys.forEach((key, index) => {
     if (!key) return; // skip if key is undefined or null
     if (!current[key]) {
-      current[key] = (index === keys.length - 1) ? 0 : {};
+      current[key] = index === keys.length - 1 ? 0 : {};
     }
     if (index === keys.length - 1) {
       // last key, increment count
@@ -25,62 +21,72 @@ function incrementNestedCount(obj, keys) {
   });
 }
 
-router.get('/stats', async (req, res) => {
+router.get("/stats", async (req, res) => {
   try {
     const allShops = await Shop.find();
     const allUsers = await PhoenixUser.find();
 
-    const malls = allShops.filter(shop => shop.role === 'owner');
+    const malls = allShops.filter((shop) => shop.role === "owner");
     const totalMallCount = malls.length;
     const totalUserCount = allUsers.length;
     let totalCounterCount = 0;
     const locationData = { countries: {} };
 
-
-
-
     const mallCounters = [];
 
-malls.forEach(mall => {
-  let mallCounter = 0;
-  const counterNames = [];
+    // Loop through each mall
+    for (const mall of malls) {
+      let mallCounter = 0;
+      const counterDetails = [];
 
-  if (Array.isArray(mall.shopss)) {
-    mall.shopss.forEach(shop => {
-if (shop.role === 'shop') {
-  mallCounter++;
-  totalCounterCount++; // <-- ✅ Add this line
-  counterNames.push(shop.name || 'Unnamed Shop');
+      if (Array.isArray(mall.shopss)) {
+        for (const shop of mall.shopss) {
+          if (shop.role === "shop") {
+            mallCounter++;
+            totalCounterCount++;
 
-        const location = shop.location || mall.location || {};
-        const country = location.country || 'Unknown Country';
-        const state = location.state || 'Unknown State';
-        const city = location.city || 'Unknown City';
-        const street = location.street || 'Unknown Street';
+            // 🧠 Count users with this shop's _id
+            const shopIdStr = shop._id?.toString();
+            const userCount = await PhoenixUser.countDocuments({ shopid: shopIdStr });
 
-        incrementNestedCount(locationData.countries, [country, state, city, street]);
+            counterDetails.push({
+              shopId: shopIdStr,
+              name: shop.name || "Unnamed Shop",
+              userCount: userCount,
+            });
+
+            // Location data
+            const location = shop.location || mall.location || {};
+            const country = location.country || "Unknown Country";
+            const state = location.state || "Unknown State";
+            const city = location.city || "Unknown City";
+            const street = location.street || "Unknown Street";
+
+            incrementNestedCount(locationData.countries, [
+              country,
+              state,
+              city,
+              street,
+            ]);
+          }
+        }
       }
-    });
-  }
 
-  mallCounters.push({
-    mallId: mall._id,
-    mallTitle: mall.title || `Mall ${mall._id}`,
-    counterCount: mallCounter,
-    counterNames: counterNames
-  });
-});
-
-
+      mallCounters.push({
+        mallId: mall._id,
+        mallTitle: mall.title || `Mall ${mall._id}`,
+        counterCount: mallCounter,
+        counters: counterDetails, // 👈 contains each shop and userCount
+      });
+    }
 
     res.json({
       totalMalls: totalMallCount,
       totalUsers: totalUserCount,
       totalCounters: totalCounterCount,
-      mallCounters, // 👈 Added here
+      mallCounters,
       locations: locationData,
     });
-
   } catch (error) {
     console.error("Error fetching dashboard stats:", error);
     res.status(500).json({ message: error.message });

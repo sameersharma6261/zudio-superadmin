@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from "react";
 import StatCard from "../components/StatCard";
 import axios from "axios";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+  Legend,
+  LabelList,
+} from "recharts";
 
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
@@ -30,6 +41,12 @@ const Dashboard = () => {
 
   if (!stats) return <p className="loading">Loading...</p>;
 
+  const chartData = [
+    { name: "Malls", value: stats.totalMalls },
+    { name: "Users", value: stats.totalUsers },
+    { name: "Counters", value: stats.totalCounters },
+  ];
+
   // Utility: toggle visibility for a path
   const toggleExpand = (path) => {
     setExpandedPaths((prev) => ({
@@ -38,17 +55,22 @@ const Dashboard = () => {
     }));
   };
 
-  
-
   const filterMallCounters = (mallCounters) => {
-  return mallCounters.filter((mall) => {
-    const mallTitle = mall.mallTitle.toLowerCase();
-    const counterMatch = mall.counterNames.some((name) =>
-      name.toLowerCase().includes(searchTerm)
-    );
-    return mallTitle.includes(searchTerm) || counterMatch;
-  });
-};
+    return mallCounters.filter((mall) => {
+      const mallTitle = mall.mallTitle.toLowerCase();
+
+      // get array of shop names safely, fallback to empty array
+      const shopNames = mall.counters
+        ? mall.counters.map((c) => c.name.toLowerCase())
+        : [];
+
+      const counterMatch = shopNames.some((name) =>
+        name.includes(searchTerm.toLowerCase())
+      );
+
+      return mallTitle.includes(searchTerm.toLowerCase()) || counterMatch;
+    });
+  };
 
   const isExpanded = (path) => expandedPaths[path];
 
@@ -158,7 +180,59 @@ const Dashboard = () => {
       <div className="dashboard-container">
         <h1 className="dashboard-heading">Dashboard For Zudio</h1>
 
-        <div className="cards-container">
+        {/* Chart Section */}
+        <div
+          className="chart-container"
+          style={{
+            background: "#fff",
+            // borderRadius: "16px",
+            padding: "20px",
+            boxShadow: "0 6px 18px rgba(0, 0, 0, 0.05)",
+            // maxWidth: "800px",
+            margin: "0 auto",
+          }}
+        >
+          <h3
+            style={{ marginBottom: "20px", color: "#444", textAlign: "center" }}
+          >
+            Summary Chart
+          </h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart
+              data={chartData}
+              margin={{ top: 20, right: 30, left: 10, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis allowDecimals={false} />
+              <Tooltip />
+              {/* <Legend /> */}
+              <Bar
+                dataKey="value"
+                fill="#4A90E2"
+                barSize={50}
+                radius={[10, 10, 0, 0]}
+              >
+                <LabelList
+                  dataKey="value"
+                  position="top"
+                  style={{ fill: "#000", fontWeight: "bold" }}
+                />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+        {/* Stat Cards Section */}
+        <div
+          className="cards-container"
+          style={{
+            display: "flex",
+            gap: "10px",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            // marginBottom: "40px",
+          }}
+        >
           <StatCard title="Total Malls" value={stats.totalMalls} />
           <StatCard title="Total Users" value={stats.totalUsers} />
           <StatCard title="Total Counters" value={stats.totalCounters} />
@@ -181,33 +255,33 @@ const Dashboard = () => {
               {renderCountries(filterLocations(stats.locations.countries))}
             </div>
 
-
-
-
             <div className="mall-section">
               <h2 className="section-heading">Mall-wise Counters</h2>
               {filterMallCounters(stats.mallCounters).map((mall) => (
                 <div className="mall-card" key={mall.mallId}>
-                  <h3
+                  <h2
+                    className="mall-title"
                     onClick={() => toggleMall(mall.mallId)}
                     style={{ cursor: "pointer" }}
                   >
-                    🏢 {mall.mallTitle} — {mall.counterCount} Counter(s)
-                  </h3>
-                  {expandedMalls[mall.mallId] && (
-                    <ul className="counter-list">
-                      {mall.counterNames.map((name, idx) => (
-                        <li key={idx}>🛒 {name}</li>
+                    🏬 {mall.mallTitle}
+                  </h2>
+
+                  <ul
+                    className={`counter-list-container ${
+                      expandedMalls[mall.mallId] ? "expanded" : ""
+                    }`}
+                  >
+                    {mall.counters &&
+                      mall.counters.map((shop) => (
+                        <li className="counter-list" key={shop.shopId}>
+                          {shop.name} - Users: {shop.userCount}
+                        </li>
                       ))}
-                    </ul>
-                  )}
+                  </ul>
                 </div>
               ))}
             </div>
-
-
-
-
           </div>
         </div>
       </div>
@@ -223,7 +297,7 @@ const Dashboard = () => {
         .dashboard-heading {
           font-size: 2.4rem;
           font-weight: bold;
-          margin-bottom: 30px;
+          // margin-bottom: 30px;
            background:rgba(44, 44, 44, 0.55);
             backdrop-filter: blur(5px);
             padding: 15px;
@@ -236,14 +310,14 @@ const Dashboard = () => {
           display: flex;
           gap: 20px;
           // width: 95%;
-          padding: 20px;
+          padding: 10px 0px;
           justify-content: center;
           flex-wrap: wrap;
         }
 
         .section-heading {
           font-size: 1.8rem;
-          margin-top: 10px;
+          // margin-top: 10px;
           margin-bottom: 20px;
           color:rgb(255, 255, 255);
           font-family: 'rajdhan', sans-serif;
@@ -447,39 +521,52 @@ const Dashboard = () => {
       ms-overflow-style: none;
     }
 
-    .mall-section {
-    // margin-top: 30px;
-    padding: 10px;
-    height: 30vh;
-    overflow-y: auto;
-    width: 100%;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    color: white;
-  }
+.mall-section{
+width: 100%;
+height: 32vh;
+margin: 10px;
+padding: 10px;
+overflow-y: scroll;
+scrollbar-width: none; /* For Firefox */
+scrollbar-color: #ccc #f9f9f9; /* For Chrome and Safari */
+}
 
-  .mall-card {
-    // margin-bottom: 15px;
-    padding: 10px;
-    margin-bottom: 5px;
-    background-color: rgba(151, 151, 151, 0.4);
-    border-radius: 8px;
-  }
+.mall-card {
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 15px;
+  background-color: #f9f9f9;
+}
 
-  .mall-card h3 {
-    font-size: 1.2rem;
-    margin-bottom: 8px;
-  }
+.mall-title {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  transition: color 0.3s;
+}
 
-  .counter-list {
-    list-style-type: none;
-    padding-left: 20px;
-  }
+.mall-title:hover {
+  color: #007bff;
+}
 
-  .counter-list li {
-    padding: 5px 0;
-    font-size: 1rem;
-  }
+.counter-list-container {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease-in-out, padding 0.3s;
+  padding: 0 10px;
+}
+
+.counter-list-container.expanded {
+  max-height: 500px; /* Enough height to show all items */
+  padding: 10px;
+}
+
+.counter-list {
+  list-style: none;
+  padding: 6px 0;
+  border-bottom: 1px solid #ddd;
+}
+
       `}</style>
     </>
   );
