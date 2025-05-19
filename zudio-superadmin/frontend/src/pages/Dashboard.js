@@ -9,7 +9,6 @@ import {
   Tooltip,
   CartesianGrid,
   ResponsiveContainer,
-  Legend,
   LabelList,
 } from "recharts";
 
@@ -17,6 +16,7 @@ const Dashboard = () => {
   const [stats, setStats] = useState(null);
   const [expandedPaths, setExpandedPaths] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
+
   const [expandedMalls, setExpandedMalls] = useState({});
   const toggleMall = (mallId) => {
     setExpandedMalls((prev) => ({
@@ -25,6 +25,9 @@ const Dashboard = () => {
     }));
   };
 
+
+
+  
   useEffect(() => {
     const fetchStats = async () => {
       try {
@@ -55,6 +58,23 @@ const Dashboard = () => {
     }));
   };
 
+  const allCounters = stats.mallCounters?.flatMap((mall) =>
+  mall.counters.map((counter) => ({
+    name: counter.name,
+    userCount: counter.userCount,
+    mallTitle: mall.mallTitle,
+  }))
+);
+
+// Filter based on search
+const filteredCounters = allCounters.filter(
+  (item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.mallTitle.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
+// Sort by user count descending
+const sortedCounters = filteredCounters.sort((a, b) => b.userCount - a.userCount);
   const filterMallCounters = (mallCounters) => {
     return mallCounters.filter((mall) => {
       const mallTitle = mall.mallTitle.toLowerCase();
@@ -71,6 +91,8 @@ const Dashboard = () => {
       return mallTitle.includes(searchTerm.toLowerCase()) || counterMatch;
     });
   };
+
+  
 
   const isExpanded = (path) => expandedPaths[path];
 
@@ -157,7 +179,7 @@ const Dashboard = () => {
   };
   return (
     <>
-      <video
+      {/* <video
         autoPlay
         muted
         loop
@@ -176,11 +198,11 @@ const Dashboard = () => {
           src="https://cdn.pixabay.com/video/2020/10/15/52436-468806587_large.mp4"
           type="video/mp4"
         />
-      </video>
+      </video> */}
       <div className="dashboard-container">
         <h1 className="dashboard-heading">Dashboard For Zudio</h1>
 
-        {/* Chart Section */}
+        {/* Chart Section graph */}
         <div
           className="chart-container"
           style={{
@@ -222,6 +244,7 @@ const Dashboard = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
+
         {/* Stat Cards Section */}
         <div
           className="cards-container"
@@ -255,32 +278,70 @@ const Dashboard = () => {
               {renderCountries(filterLocations(stats.locations.countries))}
             </div>
 
-            <div className="mall-section">
-              <h2 className="section-heading">Mall-wise Counters</h2>
-              {filterMallCounters(stats.mallCounters).map((mall) => (
-                <div className="mall-card" key={mall.mallId}>
-                  <h2
-                    className="mall-title"
-                    onClick={() => toggleMall(mall.mallId)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    🏬 {mall.mallTitle}
-                  </h2>
+            {/* mall counters and users */}
+            <div
+              style={{
+                width: "100%",
+                height: "490px",
+                maxWidth: "100%",
+                paddingRight: "1.5rem",
+                paddingTop: "1rem",
+              }}
+            >
+              <h2
+                style={{
+                  textAlign: "center",
+                  color: "white",
+                  fontFamily: "rajdhani",
+                  marginTop: "1rem",
+                  fontSize: "clamp(1.2rem, 2vw, 2rem)",
+                }}
+              >
+                🛍️ Counter-wise User Chart
+              </h2>
 
-                  <ul
-                    className={`counter-list-container ${
-                      expandedMalls[mall.mallId] ? "expanded" : ""
-                    }`}
-                  >
-                    {mall.counters &&
-                      mall.counters.map((shop) => (
-                        <li className="counter-list" key={shop.shopId}>
-                          {shop.name} - Users: {shop.userCount}
-                        </li>
-                      ))}
-                  </ul>
-                </div>
-              ))}
+              <ResponsiveContainer width="100%" height={530}>
+                <BarChart
+                  data={sortedCounters}
+                  margin={{ top: 30, right: 30, left: 10, bottom: 100 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+
+                  <XAxis
+                    dataKey="name"
+                    interval={0}
+                    height={100}
+                    tick={{ fontSize: 15 }}
+                    textAnchor="end"
+                  />
+
+                  <YAxis />
+
+                  <Tooltip
+                    formatter={(value) => [`${value} users`, "Users"]}
+                    labelFormatter={(label, payload) =>
+                      `Counter: ${label}\nMall: ${payload[0]?.payload?.mallTitle}`
+                    }
+                  />
+
+                  <Bar dataKey="userCount" fill="#00c49f" radius={[8, 8, 0, 0]}>
+                    <LabelList
+                      dataKey="mallTitle"
+                      position="insideTop"
+                      style={{
+                        fill: "white",
+                        fontSize: "14px",
+                      }}
+                    />
+                    <LabelList
+                      dataKey="userCount"
+                      position="top"
+                      formatter={(value) => `${value} users`}
+                      style={{ fill: "white", fontSize: "14px" }}
+                    />
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </div>
         </div>
@@ -291,18 +352,18 @@ const Dashboard = () => {
           backdrop-filter: blur(5px);
           min-height: 100vh;
           width: 100vw;
-          font-family: 'Segoe UI', sans-serif;
+          font-family: "rajdhan";
         }
 
         .dashboard-heading {
           font-size: 2.4rem;
           font-weight: bold;
           // margin-bottom: 30px;
-           background:rgba(44, 44, 44, 0.55);
+           background:rgba(141, 140, 140, 0.33);
             backdrop-filter: blur(5px);
             padding: 15px;
           text-align: center;
-          font-family: 'rajdhan', sans-serif;
+          font-family: "rajdhan";
           color:rgb(255, 255, 255);
         }
 
@@ -320,8 +381,8 @@ const Dashboard = () => {
           // margin-top: 10px;
           margin-bottom: 20px;
           color:rgb(255, 255, 255);
-          font-family: 'rajdhan', sans-serif;
           text-align: center;
+          font-family: "rajdhan";
         }
 
         .location-section {
@@ -450,7 +511,7 @@ const Dashboard = () => {
 
     /* Color-coded */
       .location-card.country {
-      font-family: 'rajdhan', sans-serif;
+      font-family: "rajdhan";
       color:rgb(49, 49, 49);
       background-color:rgb(253, 250, 249); /* Medium Brown (natural blend) */
     }
@@ -498,7 +559,7 @@ const Dashboard = () => {
       margin: 0 0 8px 0;
       font-weight: bold;
       color: white;
-      font-family: 'rajdhan', sans-serif;
+      font-family: "rajdhan";
     }
 
     .location-card p {
