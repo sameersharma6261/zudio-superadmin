@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import StatCard from "../components/StatCard";
+import "./Dashboard.css";
 import axios from "axios";
 import {
   BarChart,
@@ -30,7 +31,7 @@ const Dashboard = () => {
     const fetchStats = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/dashboard/stats"
+          `${process.env.REACT_APP_API_BASE_URL}/api/dashboard/stats`
         );
         setStats(res.data);
       } catch (err) {
@@ -175,72 +176,150 @@ const Dashboard = () => {
 
     return filtered;
   };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <>
-      <div className="dashboard-container">
-        {/* <h1 className="dashboard-heading">Dashboard For Zudio</h1> */}
-        <h1 className="dashboard-heading">
-          Records For Malls Users & Counters
-        </h1>
-        {/* Chart Section graph */}
-        <div
-          className="chart-container"
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          zIndex: -1,
+        }}
+      >
+        <source
+          src="https://cdn.pixabay.com/video/2020/10/15/52436-468806587_large.mp4"
+          type="video/mp4"
+        />
+      </video>
+      <div className="whole">
+        <p
           style={{
-            background: "#fff",
-            // borderRadius: "16px",
-            padding: "20px",
-            boxShadow: "0 6px 18px rgba(0, 0, 0, 0.05)",
-            // maxWidth: "800px",
-            margin: "0 auto",
+            color: "white",
+            position: "absolute",
+            top: "5px",
+            left: "20px",
+            zIndex: "1",
+            fontSize: "50px",
+            fontFamily: "rajdhani",
+            fontWeight: "900",
           }}
         >
-          <h3
-            style={{ marginBottom: "20px", color: "#444", textAlign: "center" }}
+          Zudio
+        </p>
+        {/* first section */}
+        <div className="dashboard-container">
+          {/* <h1 className="dashboard-heading">Dashboard For Zudio</h1> */}
+          <h1 className="dashboard-heading">
+            Records For Malls Users & Counters
+          </h1>
+
+          {/* Chart Section graph */}
+          <div
+            className="chart-container"
+            style={{
+              background: "#fff",
+              margin: "20px",
+              boxShadow: "0 6px 18px rgba(0, 0, 0, 0.05)",
+              // margin: "0 auto",
+              width: "60vw",
+            }}
           >
-            Summary Chart
-          </h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart
-              data={chartData}
-              margin={{ top: 20, right: 30, left: 10, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis allowDecimals={false} />
-              <Tooltip />
-              {/* <Legend /> */}
-              <Bar
-                dataKey="value"
-                fill="#4A90E2"
-                barSize={50}
-                radius={[10, 10, 0, 0]}
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart
+                data={chartData}
+                margin={{ top: 20, right: 30, left: 10, bottom: 5 }}
               >
-                <LabelList
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                {/* <Legend /> */}
+                <Bar
                   dataKey="value"
-                  position="top"
-                  style={{ fill: "#000", fontWeight: "bold" }}
-                />
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+                  fill="#4A90E2"
+                  barSize={50}
+                  radius={[10, 10, 0, 0]}
+                >
+                  <LabelList
+                    dataKey="value"
+                    position="top"
+                    style={{ fill: "#000", fontWeight: "bold" }}
+                  />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Stat Cards Section */}
+          <div
+            className="cards-container"
+            style={{
+              display: "flex",
+              gap: "10px",
+              width: "60vw",
+              padding: "20px",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              // marginBottom: "40px",
+            }}
+          >
+            <StatCard title="Total Malls" value={stats.totalMalls} />
+            <StatCard title="Total Users" value={stats.totalUsers} />
+            <StatCard title="Total Counters" value={stats.totalCounters} />
+          </div>
+
+          <div className="circle">
+            <div className="scroll-track">
+              <div className="scroll-text">ZUDIO ZUDIO ZUDIO ZUDIO</div>
+              <div className="scroll-text">ZUDIO ZUDIO ZUDIO ZUDIO</div>
+            </div>
+          </div>
         </div>
 
-        {/* Stat Cards Section */}
-        <div
-          className="cards-container"
-          style={{
-            display: "flex",
-            gap: "10px",
-            flexWrap: "wrap",
-            justifyContent: "center",
-            // marginBottom: "40px",
-          }}
-        >
-          <StatCard title="Total Malls" value={stats.totalMalls} />
-          <StatCard title="Total Users" value={stats.totalUsers} />
-          <StatCard title="Total Counters" value={stats.totalCounters} />
-        </div>
-
+        {/* second section */}
         <div className="location-section">
           <h2 className="section-heading">
             Locations Of Zudio's Where Which Exist
@@ -254,117 +333,140 @@ const Dashboard = () => {
               className="search-input"
             />
           </div>
-
-          <div className="leftright">
-            <div className="location-hierarchy">
-              {renderCountries(filterLocations(stats.locations.countries))}
-            </div>
-
-            {/* mall counters and users */}
-            <div
-              style={{
-                width: "100%",
-                height: "490px",
-                maxWidth: "100%",
-                paddingRight: "1.5rem",
-                paddingTop: "1rem",
-              }}
-            >
-              <h2
-                style={{
-                  textAlign: "center",
-                  color: "white",
-                  fontFamily: "rajdhani",
-                  marginTop: "1rem",
-                  fontSize: "clamp(1.2rem, 2vw, 2rem)",
-                }}
-              >
-                🛍️ Counter-wise User Chart
-              </h2>
-
-              <ResponsiveContainer width="100%" height={530}>
-                <BarChart
-                  data={sortedCounters}
-                  margin={{ top: 30, right: 30, left: 10, bottom: 100 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-
-                  <XAxis
-                    dataKey="name"
-                    interval={0}
-                    height={100}
-                    tick={{ fontSize: 15 }}
-                    textAnchor="end"
-                  />
-
-                  <YAxis />
-
-                  <Tooltip
-                    formatter={(value) => [`${value} users`, "Users"]}
-                    labelFormatter={(label, payload) =>
-                      `Counter: ${label}\nMall: ${payload[0]?.payload?.mallTitle}`
-                    }
-                  />
-
-                  <Bar dataKey="userCount" fill="#00c49f" radius={[8, 8, 0, 0]}>
-                    <LabelList
-                      dataKey="mallTitle"
-                      position="insideTop"
-                      style={{
-                        fill: "white",
-                        fontSize: "14px",
-                      }}
-                    />
-                    <LabelList
-                      dataKey="userCount"
-                      position="top"
-                      formatter={(value) => `${value} users`}
-                      style={{ fill: "white", fontSize: "14px" }}
-                    />
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
         </div>
-      </div>
-      <div style={{ position: "relative", bottom: "1px", marginTop: "400px" }}>
-        {stats.mallCounters && (
-          <>
+
+        {/*third part...............................................cart and counter wise user chart part */}
+        <div className="leftright">
+          <div className="location-hierarchy">
+            {renderCountries(filterLocations(stats.locations.countries))}
+          </div>
+
+          {/* mall counters and users */}
+          <div
+            style={{
+              width: "100%",
+              height: "490px",
+              maxWidth: "100%",
+              paddingRight: "1.5rem",
+              paddingTop: "1rem",
+            }}
+          >
             <h2
               style={{
-                marginTop: "35px",
-                marginBottom: "10px",
-                color: "white",
                 textAlign: "center",
+                color: "white",
                 fontFamily: "rajdhani",
-                fontSize: "2.4rem",
+                marginTop: "1rem",
+                fontSize: "clamp(1.2rem, 2vw, 2rem)",
               }}
             >
-              Mall Locations on Map
+              🛍️ Counter-wise User Chart
             </h2>
-            <MallMap mallCounters={stats.mallCounters} />
-          </>
-        )}
+
+            <ResponsiveContainer width="100%" height={530}>
+              <BarChart
+                data={sortedCounters}
+                margin={{ top: 30, right: 30, left: 10, bottom: 100 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+
+                <XAxis
+                  dataKey="name"
+                  interval={0}
+                  height={100}
+                  tick={{ fontSize: 15 }}
+                  textAnchor="end"
+                />
+
+                <YAxis />
+
+                <Tooltip
+                  formatter={(value) => [`${value} users`, "Users"]}
+                  labelFormatter={(label, payload) =>
+                    `Counter: ${label}\nMall: ${payload[0]?.payload?.mallTitle}`
+                  }
+                />
+
+                <Bar dataKey="userCount" fill="#00c49f" radius={[8, 8, 0, 0]}>
+                  <LabelList
+                    dataKey="mallTitle"
+                    position="insideTop"
+                    style={{
+                      fill: "white",
+                      fontSize: "14px",
+                    }}
+                  />
+                  <LabelList
+                    dataKey="userCount"
+                    position="top"
+                    formatter={(value) => `${value} users`}
+                    style={{ fill: "white", fontSize: "14px" }}
+                  />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        {/* forth part */}
+        <div className="whole-map">
+          {stats.mallCounters && (
+            <>
+              <h2
+                style={{
+                  marginTop: "10px",
+                  // marginBottom: "10px",
+                  color: "white",
+                  textAlign: "center",
+                  fontFamily: "rajdhani",
+                  fontSize: "2.4rem",
+                }}
+              >
+                Mall Locations on Map
+              </h2>
+              <MallMap mallCounters={stats.mallCounters} />
+            </>
+          )}
+        </div>
       </div>
+
       <style>{`
+        .whole{
+        backdrop-filter: blur(10px);
+        width: 100vw;
+        // background: linear-gradient( #78350f11, #78350f00);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        // background: #78350f11;
+        }
+
+
         .dashboard-container {
-          // padding: 40px;
           backdrop-filter: blur(5px);
-          // min-height: 100vh;
+          // background: gray;
           width: 100vw;
-          font-family: "rajdhan";
+          padding-top: 15px;
+          font-family: "rajdhani";
+          // padding-top: 74px;
+          margin-top: 74px;
+          border-radius: 20px;
+          margin-left: 20px;
+          margin-right: 20px;
+          margin-bottom: 20px;
         }
 
         .dashboard-heading {
           font-size: 2.4rem;
+           font-family: "rajdhani";
           font-weight: bold;
-          // margin-bottom: 30px;
-           background:rgba(141, 140, 140, 0.33);
             backdrop-filter: blur(5px);
-            padding: 15px;
+           background: linear-gradient(90deg, rgba(0, 0, 0, 0.301), rgba(159, 159, 159, 0.334));
+          margin-left: 20px;
           text-align: center;
-          font-family: "rajdhan";
+          width: 60vw;
           color:rgb(255, 255, 255);
         }
 
@@ -383,35 +485,40 @@ const Dashboard = () => {
           margin-bottom: 20px;
           color:rgb(255, 255, 255);
           text-align: center;
-          font-family: "rajdhan";
+          font-family: "rajdhani";
         }
 
         .location-section {
-           background:rgba(44, 44, 44, 0.55);
-            backdrop-filter: blur(5px);
-          // border-radius: 10px;
-          padding: 30px;
-          // margin-top: 20px;
+          // background: gray;
+          width: 100vw;
+          margin: auto;
+          backdrop-filter: blur(5px);
+          border-radius: 20px;
+          padding-top: 20px;
+          padding-bottom: 20px;
+          padding-right: 0px;
+          padding-left: 0px;
           box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
         }
 
         .leftright{
-        // background: blue;
+        // background: gray;
         width: 100vw;
-        margin: 0;
+        border-radius: 20px;
+        margin-top: 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        position: absolute;
-        left: 0;
+
         }
+
+
 
 
 
 
 
         .location-hierarchy{
-        // background: red;
         padding: 10px;
         width: 67vw;
         }
@@ -464,15 +571,18 @@ const Dashboard = () => {
         .search-bar-container {
         text-align: center;
         margin-top: 30px;
+        width: 100%;
       }
 
       .search-input {
-        width: 60%;
-        max-width: 500px;
+        width: 90%;
+        // max-width: 800px;
         padding: 12px 16px;
         border-radius: 8px;
         border: 1px solid #ccc;
         font-size: 1rem;
+        color: white;
+        background-color: transparent;
         outline: none;
         box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         transition: 0.3s ease;
@@ -492,7 +602,12 @@ const Dashboard = () => {
       ms-overflow-style: none;
     }
 
-    .location-card {
+  
+    /* Color-coded */
+
+  
+
+  .location-card {
       min-width: 170px;
       flex: 0 0 auto;
       border-radius: 10px;
@@ -509,31 +624,6 @@ const Dashboard = () => {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       cursor: default;
     }
-
-    /* Color-coded */
-      .location-card.country {
-      font-family: "rajdhan";
-      color:rgb(49, 49, 49);
-      background-color:rgb(253, 250, 249); /* Medium Brown (natural blend) */
-    }
-
-    .location-card.state {
-      background-color:rgba(109, 76, 65, 0.59); /* Earthy Walnut */
-    }
-
-    .location-card.city {
-      background-color:rgba(139, 127, 123, 0.73); /* Warm Mocha */
-    }
-
-    .location-card.street {
-      background-color:rgba(141, 110, 99, 0.6); /* Soft Cocoa */
-    }
-
-    .location-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
-    }
-
 
 
 
@@ -554,13 +644,14 @@ const Dashboard = () => {
   border-color:rgba(168, 168, 168, 0.76);
 }
     /* Text inside */
+    .location-card h2,
     .location-card h3,
     .location-card h4,
     .location-card h5 {
       margin: 0 0 8px 0;
       font-weight: bold;
       color: white;
-      font-family: "rajdhan";
+      font-family: "rajdhani";
     }
 
     .location-card p {
@@ -629,6 +720,59 @@ scrollbar-color: #ccc #f9f9f9; /* For Chrome and Safari */
   border-bottom: 1px solid #ddd;
 }
 
+
+
+
+
+
+
+
+
+.circle {
+  width: 35vw;
+  // height: 290px;
+  height: 500px;
+  border: 4px solid white;
+  overflow: hidden;
+  position: absolute;
+  // border-top-right-radius: 50px;
+  // border-bottom-right-radius: 50px;
+  // padding: 20px;
+  top: 16px;
+  right: 0;
+  margin-right: 20px;
+  // background-color: #111;
+  background-image: url("https://cdn.pixabay.com/photo/2017/07/31/11/33/people-2557483_960_720.jpg");
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.scroll-track {
+  display: flex;
+  white-space: nowrap;
+  animation: scroll 70s linear infinite;
+}
+
+.scroll-text {
+  font-size: 410px;
+  color: white;
+  font-family: "rajdhani";
+  font-weight: bold;
+  padding-right: 60px; /* small space between repeated blocks */
+}
+
+/* Scroll animation */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
       `}</style>
     </>
   );

@@ -1,0 +1,50 @@
+.whole{
+    background-color: rgba(0, 0, 0, 0.631);
+}
+
+.dashboard-container{
+
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.301), rgba(159, 159, 159, 0.334));
+}
+
+.location-section{
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.301), rgba(159, 159, 159, 0.334));
+}
+
+.leftright{
+   background: linear-gradient(90deg, rgba(0, 0, 0, 0.301), rgba(159, 159, 159, 0.334));
+}
+
+.whole-map{
+    width: 100vw;
+    border-radius: 20px;
+    margin-top: 20px;
+   background: linear-gradient(90deg, rgba(0, 0, 0, 0.301), rgba(159, 159, 159, 0.334));
+}
+
+
+
+      .location-card.country {
+      font-family: "rajdhani";
+      color:rgb(49, 49, 49);
+      background-color:rgba(253, 250, 249, 0.502); /* Medium Brown (natural blend) */
+    }
+
+
+  .location-card.state {
+      background-color:rgba(109, 76, 65, 0.59); /* Earthy Walnut */
+    }
+
+    .location-card.city {
+      background-color:rgba(139, 127, 123, 0.73); /* Warm Mocha */
+    }
+
+    .location-card.street {
+      background-color:rgba(141, 110, 99, 0.6); /* Soft Cocoa */
+    }
+
+    .location-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    }
+

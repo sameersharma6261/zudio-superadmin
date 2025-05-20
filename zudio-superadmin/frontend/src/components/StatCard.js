@@ -3,7 +3,7 @@ import React from 'react';
 const StatCard = ({ title, value }) => {
   return (
     <div style={{
-      background: " #ffffff",
+      background: "#ffffff",
       borderRadius: "16px",
       padding: "15px",
       boxShadow: "0 8px 16px rgba(0,0,0,0.08)",

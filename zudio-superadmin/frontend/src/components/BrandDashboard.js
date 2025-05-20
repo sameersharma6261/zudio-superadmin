@@ -275,10 +275,6 @@ const BrandDashboard = () => {
             transition: "0.3s",
             zIndex: "3",
           }}
-          onMouseEnter={(e) =>
-            (e.target.style.transform = "skewX(-20deg) scale(1.1)")
-          }
-          onMouseLeave={(e) => (e.target.style.transform = "skewX(-20deg)")}
         >
           Dashboard
         </button>
