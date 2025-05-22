@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import StatCard from "../components/StatCard";
+import { PieChart, Pie, Cell, Legend } from "recharts";
 import "./Dashboard.css";
 import axios from "axios";
 import {
@@ -14,12 +15,16 @@ import {
 } from "recharts";
 import MallMap from "../components/MallMap";
 
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
   const [expandedPaths, setExpandedPaths] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [data, setData] = useState([]);
   const [expandedMalls, setExpandedMalls] = useState({});
+  const [filterType, setFilterType] = useState("all");
+  const [filterValue, setFilterValue] = useState("");
+
   const toggleMall = (mallId) => {
     setExpandedMalls((prev) => ({
       ...prev,
@@ -27,19 +32,43 @@ const Dashboard = () => {
     }));
   };
 
+  // its for pi-chart
   useEffect(() => {
-    const fetchStats = async () => {
+    async function fetchStats() {
       try {
         const res = await axios.get(
           `${process.env.REACT_APP_API_BASE_URL}/api/dashboard/stats`
-        );
+        ); // replace with actual endpoint
+        const { totalMalls, totalUsers, totalCounters } = res.data;
+
+        setData([
+          { name: "Malls", value: totalMalls },
+          { name: "Users", value: totalUsers },
+          { name: "Counters", value: totalCounters },
+        ]);
+      } catch (error) {
+        console.error("Failed to fetch stats:", error);
+      }
+    }
+
+    fetchStats();
+  }, []);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        let url = `${process.env.REACT_APP_API_BASE_URL}/api/dashboard/stats`;
+        if (filterType !== "all" && filterValue) {
+          url += `?type=${filterType}&value=${filterValue}`;
+        }
+        const res = await axios.get(url);
         setStats(res.data);
       } catch (err) {
         console.error("Dashboard error:", err);
       }
     };
     fetchStats();
-  }, []);
+  }, [filterType, filterValue]);
 
   if (!stats) return <p className="loading">Loading...</p>;
 
@@ -57,13 +86,14 @@ const Dashboard = () => {
     }));
   };
 
-  const allCounters = stats.mallCounters?.flatMap((mall) =>
-    mall.counters.map((counter) => ({
-      name: counter.name,
-      userCount: counter.userCount,
-      mallTitle: mall.mallTitle,
-    }))
-  );
+  const allCounters =
+    stats.mallCounters?.flatMap((mall) =>
+      mall.counters.map((counter) => ({
+        name: counter.name,
+        userCount: counter.userCount,
+        mallTitle: mall.mallTitle,
+      }))
+    ) || [];
 
   // Filter based on search
   const filteredCounters = allCounters.filter(
@@ -76,24 +106,33 @@ const Dashboard = () => {
   const sortedCounters = filteredCounters.sort(
     (a, b) => b.userCount - a.userCount
   );
+
   const filterMallCounters = (mallCounters) => {
     return mallCounters.filter((mall) => {
       const mallTitle = mall.mallTitle.toLowerCase();
-
-      // get array of shop names safely, fallback to empty array
       const shopNames = mall.counters
         ? mall.counters.map((c) => c.name.toLowerCase())
         : [];
-
       const counterMatch = shopNames.some((name) =>
         name.includes(searchTerm.toLowerCase())
       );
-
       return mallTitle.includes(searchTerm.toLowerCase()) || counterMatch;
     });
   };
 
   const isExpanded = (path) => expandedPaths[path];
+
+
+
+
+
+
+
+
+
+
+  
+
 
   const renderStreets = (streets) => (
     <div className="scroll-container">
@@ -139,6 +178,7 @@ const Dashboard = () => {
     </div>
   );
 
+
   const filterLocations = (locations) => {
     const filtered = {};
 
@@ -183,35 +223,6 @@ const Dashboard = () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   return (
     <>
       <video
@@ -249,75 +260,277 @@ const Dashboard = () => {
         >
           Zudio
         </p>
+
         {/* first section */}
-        <div className="dashboard-container">
-          {/* <h1 className="dashboard-heading">Dashboard For Zudio</h1> */}
-          <h1 className="dashboard-heading">
-            Records For Malls Users & Counters
+        <div
+          className="dashboard-container"
+          style={{
+            // maxWidth: "95%",
+            margin: "40px auto",
+            fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+            color: "#333",
+            // padding: "20px",
+            margin: "0",
+          }}
+        >
+          <h1
+            style={{
+              textAlign: "center",
+              marginBottom: "15px",
+              marginTop: "15px",
+              color: "white",
+              fontFamily: "rajdhani",
+            }}
+          >
+            Dashboard For Zudio
           </h1>
 
-          {/* Chart Section graph */}
+          {/* Filter Controls */}
           <div
-            className="chart-container"
-            style={{
-              background: "#fff",
-              margin: "20px",
-              boxShadow: "0 6px 18px rgba(0, 0, 0, 0.05)",
-              // margin: "0 auto",
-              width: "60vw",
-            }}
-          >
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart
-                data={chartData}
-                margin={{ top: 20, right: 30, left: 10, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis allowDecimals={false} />
-                <Tooltip />
-                {/* <Legend /> */}
-                <Bar
-                  dataKey="value"
-                  fill="#4A90E2"
-                  barSize={50}
-                  radius={[10, 10, 0, 0]}
-                >
-                  <LabelList
-                    dataKey="value"
-                    position="top"
-                    style={{ fill: "#000", fontWeight: "bold" }}
-                  />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Stat Cards Section */}
-          <div
-            className="cards-container"
             style={{
               display: "flex",
-              gap: "10px",
-              width: "60vw",
-              padding: "20px",
+              gap: "15px",
               flexWrap: "wrap",
               justifyContent: "center",
-              // marginBottom: "40px",
+              marginBottom: "30px",
+              marginLeft: "50px",
+              marginRight: "50px",
             }}
           >
-            <StatCard title="Total Malls" value={stats.totalMalls} />
-            <StatCard title="Total Users" value={stats.totalUsers} />
-            <StatCard title="Total Counters" value={stats.totalCounters} />
+            <select
+              onChange={(e) => setFilterType(e.target.value)}
+              style={{
+                padding: "8px 12px",
+                borderRadius: "6px",
+                border: "1px solid #ccc",
+                minWidth: "120px",
+                cursor: "pointer",
+              }}
+            >
+              <option value="all">All</option>
+              <option value="day">Day</option>
+              <option value="month">Month</option>
+              <option value="year">Year</option>
+            </select>
+
+            {/* for all,day,month,year */}
+            {filterType !== "all" && (
+              <>
+                <input
+                  type={
+                    filterType === "day"
+                      ? "date"
+                      : filterType === "month"
+                      ? "month"
+                      : "number"
+                  }
+                  placeholder="Enter value"
+                  onChange={(e) => setFilterValue(e.target.value)}
+                  style={{
+                    padding: "8px 12px",
+                    borderRadius: "6px",
+                    border: "1px solid #ccc",
+                    minWidth: filterType === "year" ? "80px" : "150px",
+                  }}
+                />
+
+                {filterType === "month" && (
+                  <p
+                    style={{
+                      fontSize: "16px",
+                      color: "#888",
+                      padding: "8px 12px",
+                      border: "1px solid #ccc",
+                      borderRadius: "6px",
+                    }}
+                  >
+                    YYYY-MM
+                  </p>
+                )}
+              </>
+            )}
+
+            <input
+              type="text"
+              placeholder="Search Counter or Mall"
+              onChange={(e) => setSearchTerm(e.target.value)}
+              style={{
+                padding: "8px 12px",
+                borderRadius: "6px",
+                border: "1px solid #ccc",
+                flexGrow: 1,
+                minWidth: "220px",
+                color: "white",
+                background: "transparent",
+              }}
+            />
           </div>
 
-          <div className="circle">
-            <div className="scroll-track">
-              <div className="scroll-text">ZUDIO ZUDIO ZUDIO ZUDIO</div>
-              <div className="scroll-text">ZUDIO ZUDIO ZUDIO ZUDIO</div>
+          {/* Chart */}
+          <div
+            style={{
+              // background: "red",
+              width: "100vw",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <div
+              style={{
+                width: "70vw",
+                // background: "red",
+                height: "320px",
+                borderRadius: "10px",
+                boxShadow: "0 6px 18px rgba(0, 0, 0, 0.1)",
+                marginBottom: "20px",
+              }}
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis allowDecimals={false} />
+                  <Tooltip />
+                  <Bar dataKey="value" fill="#00c49f" radius={[8, 8, 0, 0]}>
+                    <LabelList
+                      dataKey="value"
+                      position="top"
+                      style={{
+                        fill: "white",
+                        fontSize: "20px",
+                        fontWeight: "bold",
+                      }}
+                    />
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div
+              style={{
+                width: "30vw",
+                height: "280px",
+                marginRight: "50px",
+                background: "rgba(128, 128, 128, 0.527)",
+                marginBottom: "50px",
+              }}
+            >
+              <h2
+                style={{
+                  color: "white",
+                  textAlign: "center",
+                  fontFamily: "rajdhani",
+                }}
+              >
+                Overall Stats
+              </h2>
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    data={data}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    fill="#8884d8"
+                    label
+                  >
+                    {data.map((entry, index) => (
+                      <Cell
+                        key={entry.name}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
           </div>
+
+          {/* Sorted/Filtered Results */}
+          <div>
+            {sortedCounters.length === 0 ? (
+              <p style={{ textAlign: "center", color: "#777" }}>
+                No matching counters found.
+              </p>
+            ) : (
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+                  gap: "20px",
+                }}
+              >
+                {sortedCounters.map((counter, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      background: "rgba(128, 128, 128, 0.527)",
+                      borderRadius: "12px",
+                      padding: "15px 20px",
+                      margin: "10px",
+                      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
+                      transition: "transform 0.2s ease, box-shadow 0.2s ease",
+                      cursor: "default",
+                      border: "1.5px solid #ccc",
+                      color: "white",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = "translateY(-5px)";
+                      e.currentTarget.style.boxShadow =
+                        "0 8px 20px rgba(0, 0, 0, 0.12)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = "translateY(0)";
+                      e.currentTarget.style.boxShadow =
+                        "0 4px 12px rgba(0, 0, 0, 0.05)";
+                    }}
+                  >
+                    <h4
+                      style={{
+                        marginBottom: "4px",
+                        color: "#4A90E2",
+                        fontSize: "19px",
+                      }}
+                    >
+                      {counter.name}
+                    </h4>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: "16px",
+                        color: "white",
+                        fontFamily: "rajdhani",
+                      }}
+                    >
+                      Mall: <strong>{counter.mallTitle}</strong>
+                    </p>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: "16px",
+                        color: "white",
+                        fontFamily: "rajdhani",
+                      }}
+                    >
+                      Users: <strong>{counter.userCount}</strong>
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
+
+
+
+
+
 
         {/* second section */}
         <div className="location-section">
@@ -348,7 +561,6 @@ const Dashboard = () => {
               height: "490px",
               maxWidth: "100%",
               paddingRight: "1.5rem",
-              paddingTop: "1rem",
             }}
           >
             <h2
@@ -408,6 +620,20 @@ const Dashboard = () => {
           </div>
         </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         {/* forth part */}
         <div className="whole-map">
           {stats.mallCounters && (
@@ -448,6 +674,9 @@ const Dashboard = () => {
           backdrop-filter: blur(5px);
           // background: gray;
           width: 100vw;
+          display: flex;
+          flex-direction: column;
+          justify-content: start;
           padding-top: 15px;
           font-family: "rajdhani";
           // padding-top: 74px;
@@ -466,7 +695,7 @@ const Dashboard = () => {
            background: linear-gradient(90deg, rgba(0, 0, 0, 0.301), rgba(159, 159, 159, 0.334));
           margin-left: 20px;
           text-align: center;
-          width: 60vw;
+          // width: 80vw;
           color:rgb(255, 255, 255);
         }
 
@@ -492,10 +721,11 @@ const Dashboard = () => {
           // background: gray;
           width: 100vw;
           margin: auto;
+          margin-top: 20px;
           backdrop-filter: blur(5px);
           border-radius: 20px;
-          padding-top: 20px;
-          padding-bottom: 20px;
+          padding-top: 15px;
+          // padding-bottom: 20px;
           padding-right: 0px;
           padding-left: 0px;
           box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
@@ -505,7 +735,7 @@ const Dashboard = () => {
         // background: gray;
         width: 100vw;
         border-radius: 20px;
-        margin-top: 20px;
+        // margin-top: 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;

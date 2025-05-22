@@ -64,7 +64,8 @@ const userTokenSchema = new mongoose.Schema({
 },
 {
   timestamps:true
-});
+}
+);
 
 const User = mongoose.model('PhoenixUser', userTokenSchema);
 module.exports = User;

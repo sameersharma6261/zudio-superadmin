@@ -23,8 +23,28 @@ function incrementNestedCount(obj, keys) {
 
 router.get("/stats", async (req, res) => {
   try {
-    const allShops = await Shop.find();
-    const allUsers = await PhoenixUser.find();
+    const { type, value } = req.query;
+
+    let startDate, endDate;
+
+    if (type === "day") {
+      startDate = new Date(value);
+      endDate = new Date(startDate);
+      endDate.setDate(endDate.getDate() + 1);
+    } else if (type === "month") {
+      startDate = new Date(`${value}-01`);
+      endDate = new Date(startDate);
+      endDate.setMonth(endDate.getMonth() + 1);
+    } else if (type === "year") {
+      startDate = new Date(`${value}-01-01`);
+      endDate = new Date(`${parseInt(value) + 1}-01-01`);
+    }
+
+    const shopFilter = startDate && endDate ? { createdAt: { $gte: startDate, $lt: endDate } } : {};
+    const userFilter = startDate && endDate ? { createdAt: { $gte: startDate, $lt: endDate } } : {};
+
+    const allShops = await Shop.find(shopFilter);
+    const allUsers = await PhoenixUser.find(userFilter);
 
     const malls = allShops.filter((shop) => shop.role === "owner");
     const totalMallCount = malls.length;
@@ -34,7 +54,6 @@ router.get("/stats", async (req, res) => {
 
     const mallCounters = [];
 
-    // Loop through each mall
     for (const mall of malls) {
       let mallCounter = 0;
       const counterDetails = [];
@@ -42,10 +61,12 @@ router.get("/stats", async (req, res) => {
       if (Array.isArray(mall.shopss)) {
         for (const shop of mall.shopss) {
           if (shop.role === "shop") {
+            // Filter counter by date
+            if (startDate && endDate && !(shop.createdAt >= startDate && shop.createdAt < endDate)) continue;
+
             mallCounter++;
             totalCounterCount++;
 
-            // 🧠 Count users with this shop's _id
             const shopIdStr = shop._id?.toString();
             const userCount = await PhoenixUser.countDocuments({ shopid: shopIdStr });
 
@@ -55,19 +76,13 @@ router.get("/stats", async (req, res) => {
               userCount: userCount,
             });
 
-            // Location data
             const location = shop.location || mall.location || {};
             const country = location.country || "Unknown Country";
             const state = location.state || "Unknown State";
             const city = location.city || "Unknown City";
             const street = location.street || "Unknown Street";
 
-            incrementNestedCount(locationData.countries, [
-              country,
-              state,
-              city,
-              street,
-            ]);
+            incrementNestedCount(locationData.countries, [country, state, city, street]);
           }
         }
       }
@@ -77,7 +92,7 @@ router.get("/stats", async (req, res) => {
         mallTitle: mall.title || `Mall ${mall._id}`,
         counterCount: mallCounter,
         location: mall.location,
-        counters: counterDetails, // 👈 contains each shop and userCount
+        counters: counterDetails,
       });
     }
 
