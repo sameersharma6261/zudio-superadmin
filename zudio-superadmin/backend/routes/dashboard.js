@@ -3,6 +3,7 @@ const router = express.Router();
 const Shop = require("../models/Shop");
 const PhoenixUser = require("../models/data"); // your user model
 
+
 // Helper function: increment count in a nested object path
 function incrementNestedCount(obj, keys) {
   // keys is an array like [country, state, city, street]
@@ -42,10 +43,8 @@ router.get("/stats", async (req, res) => {
 
     const shopFilter = startDate && endDate ? { createdAt: { $gte: startDate, $lt: endDate } } : {};
     const userFilter = startDate && endDate ? { createdAt: { $gte: startDate, $lt: endDate } } : {};
-
     const allShops = await Shop.find(shopFilter);
     const allUsers = await PhoenixUser.find(userFilter);
-
     const malls = allShops.filter((shop) => shop.role === "owner");
     const totalMallCount = malls.length;
     const totalUserCount = allUsers.length;

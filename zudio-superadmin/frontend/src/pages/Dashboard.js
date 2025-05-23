@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import StatCard from "../components/StatCard";
 import { PieChart, Pie, Cell, Legend } from "recharts";
 import "./Dashboard.css";
 import axios from "axios";
@@ -15,22 +14,25 @@ import {
 } from "recharts";
 import MallMap from "../components/MallMap";
 
+
+
+
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
+
+
 const Dashboard = () => {
-  const [stats, setStats] = useState(null);
-  const [expandedPaths, setExpandedPaths] = useState({});
+  
+  const [stats, setStats] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [data, setData] = useState([]);
-  const [expandedMalls, setExpandedMalls] = useState({});
   const [filterType, setFilterType] = useState("all");
   const [filterValue, setFilterValue] = useState("");
 
-  const toggleMall = (mallId) => {
-    setExpandedMalls((prev) => ({
-      ...prev,
-      [mallId]: !prev[mallId],
-    }));
-  };
+  const locationTree = stats.locations?.countries || {};
+  const calculateCounters = (location) => {
+  if (typeof location === "number") return location; // street count
+  return Object.values(location).reduce((sum, val) => sum + calculateCounters(val), 0);
+};
 
   // its for pi-chart
   useEffect(() => {
@@ -78,13 +80,7 @@ const Dashboard = () => {
     { name: "Counters", value: stats.totalCounters },
   ];
 
-  // Utility: toggle visibility for a path
-  const toggleExpand = (path) => {
-    setExpandedPaths((prev) => ({
-      ...prev,
-      [path]: !prev[path],
-    }));
-  };
+
 
   const allCounters =
     stats.mallCounters?.flatMap((mall) =>
@@ -107,120 +103,50 @@ const Dashboard = () => {
     (a, b) => b.userCount - a.userCount
   );
 
-  const filterMallCounters = (mallCounters) => {
-    return mallCounters.filter((mall) => {
-      const mallTitle = mall.mallTitle.toLowerCase();
-      const shopNames = mall.counters
-        ? mall.counters.map((c) => c.name.toLowerCase())
-        : [];
-      const counterMatch = shopNames.some((name) =>
-        name.includes(searchTerm.toLowerCase())
-      );
-      return mallTitle.includes(searchTerm.toLowerCase()) || counterMatch;
-    });
-  };
-
-  const isExpanded = (path) => expandedPaths[path];
 
 
+const filterLocationTree = (tree, searchTerm) => {
+  if (!searchTerm) return tree;
 
+  const lowerSearch = searchTerm.toLowerCase();
 
+  const result = {};
 
+  for (const [country, states] of Object.entries(tree)) {
+    const matchedStates = {};
 
+    for (const [state, cities] of Object.entries(states)) {
+      const matchedCities = {};
 
+      for (const [city, streets] of Object.entries(cities)) {
+        const matchedStreets = {};
 
-
-
-  
-
-
-  const renderStreets = (streets) => (
-    <div className="scroll-container">
-      {Object.entries(streets).map(([street, count]) => (
-        <div className="location-card street" key={street}>
-          <h5>🏠 {street}</h5>
-          <p>Counters: {count}</p>
-        </div>
-      ))}
-    </div>
-  );
-
-  const renderCities = (cities) => (
-    <div className="scroll-container">
-      {Object.entries(cities).map(([city, streets]) => (
-        <div className="location-card city" key={city}>
-          <h4>🏙️ {city}</h4>
-          {renderStreets(streets)}
-        </div>
-      ))}
-    </div>
-  );
-
-  const renderStates = (states) => (
-    <div className="scroll-container">
-      {Object.entries(states).map(([state, cities]) => (
-        <div className="location-card state" key={state}>
-          <h3>🗺️ {state}</h3>
-          {renderCities(cities)}
-        </div>
-      ))}
-    </div>
-  );
-
-  const renderCountries = (countries) => (
-    <div className="scroll-container">
-      {Object.entries(countries).map(([country, states]) => (
-        <div className="location-card country" key={country}>
-          <h2>🌎 {country}</h2>
-          {renderStates(states)}
-        </div>
-      ))}
-    </div>
-  );
-
-
-  const filterLocations = (locations) => {
-    const filtered = {};
-
-    for (const [country, states] of Object.entries(locations)) {
-      const filteredStates = {};
-
-      for (const [state, cities] of Object.entries(states)) {
-        const filteredCities = {};
-
-        for (const [city, streets] of Object.entries(cities)) {
-          const filteredStreets = {};
-
-          for (const [street, count] of Object.entries(streets)) {
-            const searchString =
-              `${country} ${state} ${city} ${street}`.toLowerCase();
-            if (searchString.includes(searchTerm)) {
-              filteredStreets[street] = count;
-            }
-          }
-
-          if (Object.keys(filteredStreets).length > 0) {
-            filteredCities[city] = filteredStreets;
+        for (const [street, count] of Object.entries(streets)) {
+          const fullPath = `${country} ${state} ${city} ${street}`.toLowerCase();
+          if (fullPath.includes(lowerSearch)) {
+            matchedStreets[street] = count;
           }
         }
 
-        if (Object.keys(filteredCities).length > 0) {
-          filteredStates[state] = filteredCities;
+        if (Object.keys(matchedStreets).length > 0) {
+          matchedCities[city] = matchedStreets;
         }
       }
 
-      if (Object.keys(filteredStates).length > 0) {
-        filtered[country] = filteredStates;
+      if (Object.keys(matchedCities).length > 0) {
+        matchedStates[state] = matchedCities;
       }
     }
 
-    return filtered;
-  };
+    if (Object.keys(matchedStates).length > 0) {
+      result[country] = matchedStates;
+    }
+  }
 
+  return result;
+};
 
-
-
-
+  const filteredTree = filterLocationTree(locationTree, searchTerm);
 
 
   return (
@@ -261,15 +187,17 @@ const Dashboard = () => {
           Zudio
         </p>
 
+
+
+
+
+
         {/* first section */}
         <div
           className="dashboard-container"
           style={{
-            // maxWidth: "95%",
-            margin: "40px auto",
             fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
             color: "#333",
-            // padding: "20px",
             margin: "0",
           }}
         >
@@ -284,87 +212,6 @@ const Dashboard = () => {
           >
             Dashboard For Zudio
           </h1>
-
-          {/* Filter Controls */}
-          <div
-            style={{
-              display: "flex",
-              gap: "15px",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              marginBottom: "30px",
-              marginLeft: "50px",
-              marginRight: "50px",
-            }}
-          >
-            <select
-              onChange={(e) => setFilterType(e.target.value)}
-              style={{
-                padding: "8px 12px",
-                borderRadius: "6px",
-                border: "1px solid #ccc",
-                minWidth: "120px",
-                cursor: "pointer",
-              }}
-            >
-              <option value="all">All</option>
-              <option value="day">Day</option>
-              <option value="month">Month</option>
-              <option value="year">Year</option>
-            </select>
-
-            {/* for all,day,month,year */}
-            {filterType !== "all" && (
-              <>
-                <input
-                  type={
-                    filterType === "day"
-                      ? "date"
-                      : filterType === "month"
-                      ? "month"
-                      : "number"
-                  }
-                  placeholder="Enter value"
-                  onChange={(e) => setFilterValue(e.target.value)}
-                  style={{
-                    padding: "8px 12px",
-                    borderRadius: "6px",
-                    border: "1px solid #ccc",
-                    minWidth: filterType === "year" ? "80px" : "150px",
-                  }}
-                />
-
-                {filterType === "month" && (
-                  <p
-                    style={{
-                      fontSize: "16px",
-                      color: "#888",
-                      padding: "8px 12px",
-                      border: "1px solid #ccc",
-                      borderRadius: "6px",
-                    }}
-                  >
-                    YYYY-MM
-                  </p>
-                )}
-              </>
-            )}
-
-            <input
-              type="text"
-              placeholder="Search Counter or Mall"
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{
-                padding: "8px 12px",
-                borderRadius: "6px",
-                border: "1px solid #ccc",
-                flexGrow: 1,
-                minWidth: "220px",
-                color: "white",
-                background: "transparent",
-              }}
-            />
-          </div>
 
           {/* Chart */}
           <div
@@ -406,6 +253,69 @@ const Dashboard = () => {
                   </Bar>
                 </BarChart>
               </ResponsiveContainer>
+
+              {/* for all,day,month,year */}
+              {filterType !== "all" && (
+                <>
+                  <input
+                    type={
+                      filterType === "day"
+                        ? "date"
+                        : filterType === "month"
+                        ? "month"
+                        : "number"
+                    }
+                    placeholder="Enter value"
+                    onChange={(e) => setFilterValue(e.target.value)}
+                    style={{
+                      padding: "8px 12px",
+                      position: "relative",
+                      bottom: "305px",
+                      left: "70px",
+                      borderRadius: "6px",
+                      border: "1px solid #ccc",
+                      minWidth: filterType === "year" ? "80px" : "150px",
+                    }}
+                  />
+                  {filterType === "month" && (
+                    <p
+                      style={{
+                        fontSize: "16px",
+                        color: "#888",
+                          position: "relative",
+                      bottom: "305px",
+                        width: "80px",
+                        padding: "4px 12px",
+                         left: "70px",
+                        margin: "5px",
+                        border: "1px solid #ccc",
+                        borderRadius: "6px",
+                      }}
+                    >
+                      YYYY-MM
+                    </p>
+                  )}
+                </>
+              )}
+              <select
+                onChange={(e) => setFilterType(e.target.value)}
+                style={{
+                  padding: "8px 12px",
+                  marginLeft: "15px",
+                  position: "relative",
+                  bottom: "305px",
+                  left: "60px",
+                  borderRadius: "6px",
+                  border: "1px solid #ccc",
+                  minWidth: "120px",
+                  cursor: "pointer",
+                }}
+              >
+                <option value="all">All</option>
+                <option value="day">Day</option>
+                <option value="month">Month</option>
+                <option value="year">Year</option>
+              </select>
             </div>
 
             <div
@@ -422,6 +332,8 @@ const Dashboard = () => {
                   color: "white",
                   textAlign: "center",
                   fontFamily: "rajdhani",
+                  fontSize: "30px",
+                  marginTop: "3px",
                 }}
               >
                 Overall Stats
@@ -434,7 +346,7 @@ const Dashboard = () => {
                     nameKey="name"
                     cx="50%"
                     cy="50%"
-                    outerRadius={80}
+                    outerRadius={95}
                     fill="#8884d8"
                     label
                   >
@@ -532,11 +444,20 @@ const Dashboard = () => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
         {/* second section */}
         <div className="location-section">
-          <h2 className="section-heading">
-            Locations Of Zudio's Where Which Exist
-          </h2>
+          <h2 className="section-heading">🛍️ Counter-wise User Chart</h2>
           <div className="search-bar-container">
             <input
               type="text"
@@ -548,19 +469,27 @@ const Dashboard = () => {
           </div>
         </div>
 
+
+
+
+
+
+
         {/*third part...............................................cart and counter wise user chart part */}
         <div className="leftright">
-          <div className="location-hierarchy">
-            {renderCountries(filterLocations(stats.locations.countries))}
-          </div>
-
-          {/* mall counters and users */}
+          {/* here is pichart ishi ka */}
           <div
             style={{
-              width: "100%",
-              height: "490px",
+              width: "40%",
               maxWidth: "100%",
               paddingRight: "1.5rem",
+              // marginTop: "2rem",
+              background: "rgba(128, 128, 128, 0.527)",
+              height: "340px",
+              position: "relative",
+              bottom: "43px",
+              marginLeft: "15px",
+              // paddingTop: "1rem",
             }}
           >
             <h2
@@ -568,14 +497,56 @@ const Dashboard = () => {
                 textAlign: "center",
                 color: "white",
                 fontFamily: "rajdhani",
-                marginTop: "1rem",
                 fontSize: "clamp(1.2rem, 2vw, 2rem)",
               }}
             >
-              🛍️ Counter-wise User Chart
+              🥧 User Distribution by Counter
             </h2>
 
-            <ResponsiveContainer width="100%" height={530}>
+            <ResponsiveContainer width="100%" height={290}>
+              <PieChart>
+                <Pie
+                  data={sortedCounters}
+                  dataKey="userCount"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  fill="#00c49f"
+                  label={({ name, percent }) =>
+                    `${name} (${(percent * 100).toFixed(1)}%)`
+                  }
+                >
+                  {sortedCounters.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={
+                        ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#AA00FF"][
+                          index % 5
+                        ]
+                      }
+                    />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(value) => [`${value} users`, "Users"]}
+                  labelFormatter={(label) => `Counter: ${label}`}
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* here is second part */}
+          <div
+            style={{
+              width: "90%",
+              height: "490px",
+              // background: "rgba(128, 128, 128, 0.527)",
+              maxWidth: "100%",
+              paddingRight: "1.5rem",
+            }}
+          >
+            <ResponsiveContainer width="102%" height={570}>
               <BarChart
                 data={sortedCounters}
                 margin={{ top: 30, right: 30, left: 10, bottom: 100 }}
@@ -621,16 +592,48 @@ const Dashboard = () => {
         </div>
 
 
-
-
-
-
-
-
-
-
-
-
+<div className="location-card-grid">
+   {Object.entries(filteredTree).map(([country, states]) => {
+    const countryCount = calculateCounters(states);
+    return (
+      <div className="location-card" key={country}>
+        <h2 className="card-title">
+          {/* 🌍 {country} — <span className="counter-count">{countryCount} Counters</span> */}
+          🌍 {country} — <span className="counter-count">Counters</span>
+        </h2>
+        {Object.entries(states).map(([state, cities]) => {
+          const stateCount = calculateCounters(cities);
+          return (
+            <div className="state-block" key={state}>
+              <h3 className="state-title">
+                {/* 🏙️ {state} — <span className="counter-count">{stateCount} Counters</span> */}
+                 🏙️ {state} — <span className="counter-count">Counters</span>
+              </h3>
+              {Object.entries(cities).map(([city, streets]) => {
+                const cityCount = calculateCounters(streets);
+                return (
+                  <div className="city-block" key={city}>
+                    <h4 className="city-title">
+                      {/* 📌 {city} — <span className="counter-count">{cityCount} Counters</span> */}
+                       📌 {city} — <span className="counter-count">Counters</span>
+                    </h4>
+                    <div className="street-badges">
+                      {Object.entries(streets).map(([street, count]) => (
+                    <div key={street} className="street-badge">
+                      {street} - {count} Counters
+                    </div>
+                   ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+    );
+  })}
+</div>
 
 
 
@@ -656,6 +659,9 @@ const Dashboard = () => {
         </div>
       </div>
 
+
+      
+
       <style>{`
         .whole{
         backdrop-filter: blur(10px);
@@ -677,7 +683,7 @@ const Dashboard = () => {
           display: flex;
           flex-direction: column;
           justify-content: start;
-          padding-top: 15px;
+          // padding-top: 15px;
           font-family: "rajdhani";
           // padding-top: 74px;
           margin-top: 74px;
@@ -721,7 +727,7 @@ const Dashboard = () => {
           // background: gray;
           width: 100vw;
           margin: auto;
-          margin-top: 20px;
+          // margin-top: 20px;
           backdrop-filter: blur(5px);
           border-radius: 20px;
           padding-top: 15px;
@@ -737,6 +743,7 @@ const Dashboard = () => {
         border-radius: 20px;
         // margin-top: 20px;
         display: flex;
+        overflow: hidden;
         justify-content: space-between;
         align-items: center;
 
@@ -807,10 +814,10 @@ const Dashboard = () => {
       .search-input {
         width: 90%;
         // max-width: 800px;
-        padding: 12px 16px;
+        padding: 9px 16px;
         border-radius: 8px;
         border: 1px solid #ccc;
-        font-size: 1rem;
+        font-size: 0.8rem;
         color: white;
         background-color: transparent;
         outline: none;

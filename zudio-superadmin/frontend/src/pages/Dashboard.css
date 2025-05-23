@@ -17,6 +17,8 @@
 
 .whole-map{
     width: 100vw;
+    position: relative;
+    bottom: 90px;
     border-radius: 20px;
     margin-top: 20px;
     background-color: rgba(66, 66, 66, 0.527);
@@ -49,3 +51,106 @@
       box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
     }
 
+.location-card-grid {
+  display: flex;
+  gap: 30px;
+  margin: 50px auto;
+  padding: 10px;
+  max-width: 100vw;
+  position: relative;
+  top: -120px;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.location-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-left: 6px solid #3498db;
+}
+
+.location-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+.state-block {
+  margin-bottom: 20px;
+}
+
+.state-title {
+  font-size: 17px;
+  color: #2980b9;
+  margin-bottom: 10px;
+}
+
+.city-title {
+  font-size: 15px;
+  color: #34495e;
+  margin-bottom: 8px;
+}
+
+.street-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.street-badges {
+  margin-top: 10px;
+  overflow-x: auto;       /* Enable horizontal scroll */
+  white-space: nowrap;    /* Prevent wrapping */
+  padding-bottom: 5px;
+  scrollbar-width: thin;  /* Firefox scrollbar styling */
+  scrollbar-color: #2980b9 #e0e0e0;
+}
+
+.street-badge {
+  display: inline-block;  /* Make badges inline so they line up horizontally */
+  background: #2980b9;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  margin-right: 10px;
+  font-size: 0.85rem;
+  cursor: default;
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+.street-badge:hover {
+  background: #1c5980;
+}
+
+/* Optional scrollbar style for Webkit browsers */
+.street-badges::-webkit-scrollbar {
+  height: 6px;
+}
+
+.street-badges::-webkit-scrollbar-thumb {
+  background-color: #2980b9;
+  border-radius: 10px;
+}
+.counter-count {
+  font-weight: 600;
+  color: #2980b9;
+  font-size: 0.9rem;
+  margin-left: 10px;
+}
