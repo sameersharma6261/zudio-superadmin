@@ -76,7 +76,7 @@ const ShopDetail = () => {
             : item
         );
         setShop({ ...shop, shopss: updatedItems });
-        
+
         setEditingItem(null);
         window.location.reload();
       }
@@ -122,25 +122,41 @@ const ShopDetail = () => {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         style={{
-         padding: "10px",
-            position: "fixed",
-            width: "60%",
-            marginTop: "20px",
-            borderRadius: "5px",
-            color: "white",
-            border: "1px solid #ccc",
-            marginBottom: "20px",
-            background: "transparent",
-            fontSize: "16px",
+          padding: "10px",
+          position: "fixed",
+          width: "60%",
+          marginTop: "20px",
+          borderRadius: "5px",
+          color: "white",
+          border: "1px solid #ccc",
+          marginBottom: "20px",
+          background: "transparent",
+          fontSize: "16px",
         }}
       />
-      <div style={{zIndex: "5", position: "fixed", top: "100px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
-      <button onClick={() => handleManageMenu(shop)} style={styles.editButton}>
-        Add Zudio's
-      </button>
-      {selectedFood && (
-        <MenuModal shop={selectedFood} onClose={() => setSelectedFood(null)} />
-      )}
+      <div
+        style={{
+          zIndex: "5",
+          position: "fixed",
+          top: "100px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <button
+          onClick={() => handleManageMenu(shop)}
+          style={styles.editButton}
+        >
+          Add Zudio's
+        </button>
+        {selectedFood && (
+          <MenuModal
+            shop={selectedFood}
+            onClose={() => setSelectedFood(null)}
+          />
+        )}
       </div>
 
       {shop ? (
@@ -152,7 +168,9 @@ const ShopDetail = () => {
               <li key={index} style={styles.listItem}>
                 <div style={styles.textContainer}>
                   <span style={styles.shopText}>
-                    {menuItem.name} - {menuItem.description} - {menuItem.image} - {menuItem.email} - {menuItem.password} - {menuItem.shopconpassword} - {menuItem.role}
+                    {menuItem.name} - {menuItem.description} - {menuItem.image}{" "}
+                    - {menuItem.email} - {menuItem.password} -{" "}
+                    {menuItem.shopconpassword} - {menuItem.role}
                   </span>
                 </div>
                 <div style={styles.actionContainer}>
@@ -197,7 +215,9 @@ const ShopDetail = () => {
                         type="text"
                         placeholder="conferm password"
                         value={editedShopConPassword}
-                        onChange={(e) => setEditedShopConPassword(e.target.value)}
+                        onChange={(e) =>
+                          setEditedShopConPassword(e.target.value)
+                        }
                         style={styles.input}
                       />
                       <input
@@ -264,21 +284,20 @@ const styles = {
   },
   heading: {
     color: "white",
-            fontSize: "48px",
-            fontFamily: "Rajdhani, sans-serif",
-            position: "fixed",
-            left: "20px",
-            top: "10px",
-            padding: "0",
-            margin: "0",
-            zIndex: "200",
+    fontSize: "48px",
+    fontFamily: "Rajdhani, sans-serif",
+    position: "fixed",
+    left: "20px",
+    top: "10px",
+    padding: "0",
+    margin: "0",
+    zIndex: "200",
   },
-
 
   card: {
     backdropFilter: "blur(10px)",
-    background: "white",
-    boxShadow: "0 10px 30px rgba(0, 0, 0, 0.3)",
+    // background: "white",
+    boxShadow: "0 10px 30px gray",
     padding: "20px",
     backgroundAttachment: "fixed",
     overflow: "auto",

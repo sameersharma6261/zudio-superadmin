@@ -15,8 +15,6 @@ import {
 import MallMap from "../components/MallMap";
 
 
-
-
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
 
 
@@ -27,6 +25,7 @@ const Dashboard = () => {
   const [data, setData] = useState([]);
   const [filterType, setFilterType] = useState("all");
   const [filterValue, setFilterValue] = useState("");
+  const [mallInfo, setMallInfo] = useState([]);
 
   const locationTree = stats.locations?.countries || {};
   const calculateCounters = (location) => {
@@ -55,6 +54,18 @@ const Dashboard = () => {
 
     fetchStats();
   }, []);
+
+  useEffect(() => {
+  const fetchMallInfo = async () => {
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/dashboard/malls-info`);
+      setMallInfo(res.data.mallDetails || []);
+    } catch (err) {
+      console.error("Error fetching mall info:", err);
+    }
+  };
+  fetchMallInfo();
+}, []);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -149,6 +160,25 @@ const filterLocationTree = (tree, searchTerm) => {
   const filteredTree = filterLocationTree(locationTree, searchTerm);
 
 
+  const filteredMallInfo = mallInfo
+  .map((mall) => {
+    const filteredShops = mall.shopDetails.filter((shop) =>
+      shop.shopName.toLowerCase().includes(searchTerm) ||
+      shop.description.toLowerCase().includes(searchTerm)
+    );
+
+    const matchesMall = mall.mallName.toLowerCase().includes(searchTerm);
+
+    if (matchesMall || filteredShops.length > 0) {
+      return {
+        ...mall,
+        shopDetails: matchesMall ? mall.shopDetails : filteredShops,
+      };
+    }
+
+    return null;
+  })
+  .filter((mall) => mall !== null);
   return (
     <>
       <video
@@ -452,9 +482,6 @@ const filterLocationTree = (tree, searchTerm) => {
 
 
 
-
-
-
         {/* second section */}
         <div className="location-section">
           <h2 className="section-heading">🛍️ Counter-wise User Chart</h2>
@@ -590,50 +617,193 @@ const filterLocationTree = (tree, searchTerm) => {
             </ResponsiveContainer>
           </div>
         </div>
+        <div className="location-card-grid">
+          {Object.entries(filteredTree).map(([country, states]) => {
+            // const countryCount = calculateCounters(states);
+            return (
+              <div className="location-card" key={country}>
+                <h2 className="card-title">
+                  {/* 🌍 {country} — <span className="counter-count">{countryCount} Counters</span> */}
+                  {/* 🌍 {country} — <span className="counter-count">Counters</span> */}
+                  🌍 {country}
+                </h2>
+                {Object.entries(states).map(([state, cities]) => {
+                  // const stateCount = calculateCounters(cities);
+                  return (
+                    <div className="state-block" key={state}>
+                      <h3 className="state-title">
+                        {/* 🏙️ {state} — <span className="counter-count">{stateCount} Counters</span> */}
+                        {/* 🏙️ {state} — <span className="counter-count">Counters</span> */}
+                        🏙️ {state}
+                      </h3>
+                      {Object.entries(cities).map(([city, streets]) => {
+                        // const cityCount = calculateCounters(streets);
+                        return (
+                          <div className="city-block" key={city}>
+                            <h4 className="city-title">
+                              {/* 📌 {city} — <span className="counter-count">{cityCount} Counters</span> */}
+                              {/* 📌 {city} — <span className="counter-count">Counters</span> */}
+                              📌 {city}
+                            </h4>
+                            <div className="street-badges">
+                              {Object.entries(streets).map(([street, count]) => (
+                            <div key={street} className="street-badge">
+                              {/* {street} - {count} Counter */}
+                              {street} - Counter
+                            </div>
+                          ))}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
 
 
-<div className="location-card-grid">
-   {Object.entries(filteredTree).map(([country, states]) => {
-    const countryCount = calculateCounters(states);
-    return (
-      <div className="location-card" key={country}>
-        <h2 className="card-title">
-          {/* 🌍 {country} — <span className="counter-count">{countryCount} Counters</span> */}
-          🌍 {country} — <span className="counter-count">Counters</span>
-        </h2>
-        {Object.entries(states).map(([state, cities]) => {
-          const stateCount = calculateCounters(cities);
-          return (
-            <div className="state-block" key={state}>
-              <h3 className="state-title">
-                {/* 🏙️ {state} — <span className="counter-count">{stateCount} Counters</span> */}
-                 🏙️ {state} — <span className="counter-count">Counters</span>
-              </h3>
-              {Object.entries(cities).map(([city, streets]) => {
-                const cityCount = calculateCounters(streets);
-                return (
-                  <div className="city-block" key={city}>
-                    <h4 className="city-title">
-                      {/* 📌 {city} — <span className="counter-count">{cityCount} Counters</span> */}
-                       📌 {city} — <span className="counter-count">Counters</span>
-                    </h4>
-                    <div className="street-badges">
-                      {Object.entries(streets).map(([street, count]) => (
-                    <div key={street} className="street-badge">
-                      {street} - {count} Counters
-                    </div>
-                   ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
+
+
+
+
+
+<div className="mall-info-section">
+  <div className="mall-cards">
+    {filteredMallInfo.map((mall) => (
+      <div className="mall-cardd" key={mall.mallId}>
+        <h3>{mall.mallName}</h3>
+        <ul>
+          {mall.shopDetails.map((shop) => (
+            <li key={shop.shopId}>
+              <strong>{shop.shopName}</strong><br />
+              <span>{shop.description}</span><br />
+              <a
+                href={`/${shop.shopId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Visit Shop
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
-    );
-  })}
+    ))}
+  </div>
 </div>
+<style>
+  {`
+  .mall-info-section {
+  padding: 0.2rem;
+  background-color: rgba(183, 183, 183, 0.227);
+  width: 100vw;
+  position: relative;
+  bottom: 160px;
+}
+
+.mall-info-section h2 {
+  font-size: 1.8rem;
+  // margin-bottom: 1rem;
+  text-align: center;
+  color: #333;
+}
+
+.mall-cards {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  align-item: center;
+  justify-content: start;
+  padding-left: 0.8rem;
+  gap: 2.6rem;
+  // padding-bottom: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+}
+
+.mall-cards::-webkit-scrollbar {
+  height: 8px;
+}
+.mall-cards::-webkit-scrollbar-thumb {
+  // background-color: #bbb;
+  border-radius: 10px;
+}
+
+.mall-cardd {
+  flex: 0 0 auto;
+  width: 411px;
+  background-color: rgba(183, 183, 183, 0.427);
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.mall-cardd:hover {
+  transform: translateY(-5px);
+}
+
+.mall-cardd h3 {
+  font-size: 1.4rem;
+  margin-bottom: 0.2rem;
+  color: rgb(74, 144, 226);
+}
+
+.mall-cardd p {
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  color: #666;
+}
+
+.mall-cardd ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mall-cardd li {
+  // margin-bottom: 0.5rem;
+  border-top: 1px solid #eee;
+  // padding-top: 0.5rem;
+}
+
+.mall-cardd strong {
+  font-size: 1rem;
+  color: white;
+}
+
+.mall-cardd span {
+  font-size: 0.9rem;
+  color: white;
+}
+
+.mall-cardd a {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 6px 12px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  transition: background-color 0.3s ease;
+}
+
+.mall-cardd a:hover {
+  background-color: #0056b3;
+}`
+}
+</style>
+
+
+
+
+
 
 
 
@@ -840,18 +1010,45 @@ const filterLocationTree = (tree, searchTerm) => {
     }
 
   
-    /* Color-coded */
+    .state-block{
+      // background: red;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
 
-  
+    .city-block{
+     display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .street-badge{
+     display: flex;
+     margin: 0;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
 
   .location-card {
       min-width: 170px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 150px;
+      align-items: center;
       flex: 0 0 auto;
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       scroll-snap-align: start;
       background: rgba(255, 255, 255, 0.12); /* translucent white */
-      padding: 2px 20px;
+      // padding: 30px 20px;
       margin: 12px;
       color: #F1E6D8;
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
@@ -885,11 +1082,15 @@ const filterLocationTree = (tree, searchTerm) => {
     .location-card h3,
     .location-card h4,
     .location-card h5 {
-      margin: 0 0 8px 0;
+      margin: 0 0 2px 0;
       font-weight: bold;
       color: white;
       font-family: "rajdhani";
     }
+
+     .location-card h2{
+     margin-top: 20px;
+     }
 
     .location-card p {
       margin: 0;

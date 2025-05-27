@@ -515,22 +515,6 @@ const OwnerDashboard = () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         <button
           onClick={() => navigate("/branddashboard")}
           style={{
@@ -585,10 +569,10 @@ const OwnerDashboard = () => {
 
 /* Premium card */
 .premium-card {
-  min-width: 360px;
-  max-width: 460px;
-  width: 100%;
-  height: 550px;
+  min-width: 700px;
+  // max-width: 460px;
+  // width: 100%;
+  height: 510px;
   border: 1px solid white;
   border-radius: 20px;
   overflow: hidden;

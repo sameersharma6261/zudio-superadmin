@@ -9,18 +9,18 @@ function incrementNestedCount(obj, keys) {
   // keys is an array like [country, state, city, street]
   let current = obj;
   keys.forEach((key, index) => {
-    if (!key) return; // skip if key is undefined or null
+    if (!key) return;
     if (!current[key]) {
       current[key] = index === keys.length - 1 ? 0 : {};
     }
     if (index === keys.length - 1) {
-      // last key, increment count
       current[key]++;
     } else {
       current = current[key];
     }
   });
 }
+
 
 router.get("/stats", async (req, res) => {
   try {
@@ -52,6 +52,7 @@ router.get("/stats", async (req, res) => {
     const locationData = { countries: {} };
 
     const mallCounters = [];
+    
 
     for (const mall of malls) {
       let mallCounter = 0;
@@ -75,7 +76,7 @@ router.get("/stats", async (req, res) => {
               userCount: userCount,
             });
 
-            const location = shop.location || mall.location || {};
+            const location = mall.location || {};
             const country = location.country || "Unknown Country";
             const state = location.state || "Unknown State";
             const city = location.city || "Unknown City";
@@ -105,6 +106,49 @@ router.get("/stats", async (req, res) => {
   } catch (error) {
     console.error("Error fetching dashboard stats:", error);
     res.status(500).json({ message: error.message });
+  }
+});
+
+
+
+
+
+
+// GET Mall and Shop Information for Dashboard
+router.get("/malls-info", async (req, res) => {
+  try {
+    const malls = await Shop.find({ role: "owner" });
+
+    const mallDetails = malls.map((mall) => {
+      console.log("Mall:", mall.title, "Shops:", mall.shopss); // debug log
+
+      let shops = [];
+
+      if (Array.isArray(mall.shopss)) {
+        shops = mall.shopss.filter((shop) => shop && shop.role === "shop");
+      }
+
+      return {
+        mallId: mall._id,
+        mallName: mall.title || "Unnamed Mall",
+        totalShops: shops.length,
+        shopDetails: shops.map((shop) => ({
+          shopId: shop._id,
+          shopName: shop.name || "Unnamed Shop",
+          email: shop.email || "",
+          description: shop.description || "",
+          link: shop.link || "",
+        })),
+      };
+    });
+
+    res.json({
+      totalMalls: mallDetails.length,
+      mallDetails,
+    });
+  } catch (error) {
+    console.error("Error fetching mall info:", error);
+    res.status(500).json({ message: "Server Error", error: error.message });
   }
 });
 
