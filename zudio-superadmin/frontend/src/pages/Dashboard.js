@@ -28,10 +28,10 @@ const Dashboard = () => {
   const [mallInfo, setMallInfo] = useState([]);
 
   const locationTree = stats.locations?.countries || {};
-  const calculateCounters = (location) => {
-  if (typeof location === "number") return location; // street count
-  return Object.values(location).reduce((sum, val) => sum + calculateCounters(val), 0);
-};
+//   const calculateCounters = (location) => {
+//   if (typeof location === "number") return location; // street count
+//   return Object.values(location).reduce((sum, val) => sum + calculateCounters(val), 0);
+// };
 
   // its for pi-chart
   useEffect(() => {

@@ -16,6 +16,13 @@ const displayRoutes = require("./routes/displayRoutes"); // ✅ Add this line
 const forgotPasswordRoutes = require("./routes/forgotPasswordRoutes"); // Ensure path is correct
 const utilityRoutes = require("./routes/utilityRoute"); // Ensure path is correct
 
+const allowedOrigins = [
+  'https://zudio-superadmin.netlify.app',
+  'http://localhost:3000',
+  // aur koi frontend origins ho toh yahan add karo
+];
+
+
 const bcrypt = require("bcryptjs");
 
 // load enviromental variables
@@ -25,7 +32,18 @@ require("dotenv").config();
 const app = express();
 
 // middleware
-app.use(cors());
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json());
 app.use(bodyParser.json());
 app.use('/api/dashboard', dashboardRoutes);
