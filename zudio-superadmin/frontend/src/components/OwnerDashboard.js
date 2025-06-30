@@ -205,7 +205,8 @@ const OwnerDashboard = () => {
     }
 
     .scroller {
-    overflow: hidden;
+    // overflow: hidden;
+    // background: red;
       display: flex;
       white-space: nowrap;
       animation: scroll-left 90s linear infinite;
@@ -269,26 +270,13 @@ const OwnerDashboard = () => {
         >
           zudio
         </h1>
-        <input
-          type="text"
-          placeholder="Search Zudio..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          style={{
-            padding: "10px",
-            position: "fixed",
-            zIndex: "2",
-            border: "1px solid white",
-            width: "60%",
-            marginTop: "20px",
-            borderRadius: "5px",
-            color: "white",
-
-            marginBottom: "20px",
-            background: "transparent",
-            fontSize: "16px",
-          }}
-        />
+      <input
+  type="text"
+  placeholder="Search Zudio..."
+  value={search}
+  onChange={(e) => setSearch(e.target.value)}
+  className="search-input"
+/>
         <form onSubmit={handleSubmit} className="shop-form">
           <input
             type="text"
@@ -484,243 +472,324 @@ const OwnerDashboard = () => {
           ))}
         </div>
 
-        <button
-          onClick={() => navigate("/qrcode")}
-          style={{
-            padding: "10px 15px",
-            borderRadius: "10px",
-            border: " 1px solid rgb(255, 255, 255)",
-            cursor: "pointer",
-            position: "fixed",
-            left: "192px",
-            top: "85px",
-            color: "white",
-            fontSize: "15px",
-            fontWeight: "bold",
-            background: "transparent",
-            transform: "skewX(-20deg)", // Parallelogram effect
-            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)", // Depth effect
-            backdropFilter: "blur(5px)", // Glassmorphism effect
-            transition: "0.3s",
-            zIndex: "3",
-          }}
-          onMouseEnter={(e) =>
-            (e.target.style.transform = "skewX(-20deg) scale(1.1)")
-          }
-          onMouseLeave={(e) => (e.target.style.transform = "skewX(-20deg)")}
-        >
-          QR-Code
+       <button
+  onClick={() => navigate("/qrcode")}
+  className="qr-button"
+  onMouseEnter={(e) =>
+    (e.target.style.transform = "skewX(-20deg) scale(1.1)")
+  }
+  onMouseLeave={(e) =>
+    (e.target.style.transform = "skewX(-20deg)")
+  }
+>
+  QR-Code
         </button>
 
 
 
 
         <button
-          onClick={() => navigate("/branddashboard")}
-          style={{
-            padding: "10px 15px",
-            borderRadius: "10px",
-            cursor: "pointer",
-            position: "fixed",
-            left: "25px",
-            fontFamily: "Rajdhani, sans-serif",
-            top: "85px",
-            color: "white",
-            fontSize: "15px",
-            fontWeight: "bold",
-            border: " 1px solid rgb(255, 255, 255)",
-            background: "transparent",
-            // background: "linear-gradient(to right, #4facfe, #00f2fe)",
-            transform: "skewX(-20deg)", // Parallelogram effect
-            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)", // Depth effect
-            backdropFilter: "blur(5px)", // Glassmorphism effect
-            transition: "0.3s",
-            zIndex: "3",
-          }}
-          onMouseEnter={(e) =>
-            (e.target.style.transform = "skewX(-20deg) scale(1.1)")
-          }
-          onMouseLeave={(e) => (e.target.style.transform = "skewX(-20deg)")}
-        >
-          Switch To View Mode
+  onClick={() => navigate("/branddashboard")}
+  className="switch-button"
+  onMouseEnter={(e) =>
+    (e.target.style.transform = "skewX(-20deg) scale(1.1)")
+  }
+  onMouseLeave={(e) =>
+    (e.target.style.transform = "skewX(-20deg)")
+  }
+>
+  Switch To View Mode
         </button>
 
+
+
+
+        <button
+  onClick={handleLogout}
+  className="logout-button"
+>
+  Logout
+</button>
+      </div>
+      
         <style>{`
-/* Scrollable row */
-.scroll-container {
-  display: flex;
-  justify-content: start;
-   align-items: center;
-  overflow-x: auto;
-  gap: 24px;
-  width: 96%;
-  height: 100vh;
-  padding: 20px;
-  position: relative;
-  scroll-behavior: smooth;
-  white-space: nowrap;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE and Edge */
-}
 
-.scroll-container::-webkit-scrollbar {
-  display: none;
-}
+       
 
-/* Premium card */
-.premium-card {
-  min-width: 700px;
-  // max-width: 460px;
-  // width: 100%;
-  height: 510px;
-  border: 1px solid white;
-  border-radius: 20px;
-  overflow: hidden;
-  position: relative;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  transition: transform 0.4s ease, backdrop-filter 0.4s ease;
-  display: inline-block;
-  white-space: normal;
-}
+      .switch-button {
+        padding: 10px 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        position: fixed;
+        left: 25px;
+        top: 85px;
+        font-family: 'Rajdhani', sans-serif;
+        color: white;
+        font-size: 15px;
+        font-weight: bold;
+        border: 1px solid rgb(255, 255, 255);
+        background: transparent;
+        transform: skewX(-20deg);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(5px);
+        transition: 0.3s;
+        z-index: 3;
+      }
 
-.premium-card:hover {
-  transform: scale(1.03);
-  backdrop-filter: blur(2px);
-}
+      .qr-button {
+        padding: 10px 15px;
+        border-radius: 10px;
+        border: 1px solid rgb(255, 255, 255);
+        cursor: pointer;
+        position: fixed;
+        left: 192px;
+        top: 85px;
+        color: white;
+        font-size: 15px;
+        font-weight: bold;
+        background: transparent;
+        transform: skewX(-20deg);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(5px);
+        transition: 0.3s;
+        z-index: 3;
+      }
 
-/* Image background */
-.card-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-  z-index: 1;
-  // opacity: 0.8;
-}
+       .search-input {
+        padding: 10px;
+        position: fixed;
+        z-index: 2;
+        border: 1px solid white;
+        width: 60%;
+        margin-top: 20px;
+        border-radius: 5px;
+        color: white;
+        margin-bottom: 20px;
+        background: transparent;
+        font-size: 16px;
+        left: 53%;
+        transform: translateX(-50%);
+      }
 
-.card-image {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  // filter: brightness(0.9) blur(1px);
-  transform: scale(1.1);
-}
+      .logout-button {
+      padding: 9px;
+      transform: skewX(-18deg);
+      background: rgba(231, 119, 115, 0.66);
+      color: #fff;
+      border: 1px solid rgb(255, 255, 255);
+      position: fixed;
+      right: 30px;
+      top: 82px;
+      font-size: 15px;
+      z-index: 2;
+      border-radius: 7px;
+      cursor: pointer;
+    }
 
-/* Foreground content */
-.card-content {
-  position: relative;
-  z-index: 2;
-  height: 100%;
-  padding: 20px;
-  color: #fff;
-  // backdrop-filter: blur(8px);
-  background: rgba(0, 0, 0, 0.45);
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 20px;
-}
-
-.card-content h2 {
-  font-size: 22px;
-  font-weight: 700;
-  color: rgb(255, 255, 255);
-  margin-bottom: 10px;
-}
-
-.card-content p {
-  font-size: 14px;
-  margin: 4px 0;
-}
-
-.shop-info {
-  margin-top: 10px;
-}
-
-/* Buttons */
-.action-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.action-buttons button {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  border-radius: 12px;
-  // background: linear-gradient(135deg, rgb(217, 222, 215), rgb(82, 49, 23));
-  background: white;
-  color: rgb(0, 0, 0);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.action-buttons button:hover {
-  background: #fff;
-  color: #111;
-  transform: translateY(-2px);
-}
-
-@media (max-width: 768px) {
-  .premium-card {
-    min-width: 320px;
-    height: auto;
-  }
-
-  .card-content {
-    padding: 15px;
-    gap: 15px;
-  }
-
-  .card-content h2 {
-    font-size: 20px;
-  }
-
-  .card-content p {
-    font-size: 13px;
-  }
-
-  .action-buttons {
-    flex-direction: column;
-  }
-
-  .action-buttons button {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .premium-card {
-    min-width: 280px;
-    max-width: 95vw;
-  }
-
-  .card-content {
-    padding: 10px;
-  }
-
-  .card-content h2 {
-    font-size: 18px;
-  }
-
-  .card-content p {
-    font-size: 12px;
-  }
-}
+      /* ✅ Mobile Responsive View */
+      @media only screen and (max-width: 600px) {
+        .switch-button {
+          font-size: 12px;
+          padding: 8px 12px;
+          top: 100px;
+          left: 10px;
+        }
+          .qr-button {
+          font-size: 12px;
+          padding: 8px 12px;
+          top: 100px;
+          left: 145px; /* Adjusted for mobile screen */
+        }
+          .search-input {
+        width: 250px;
+        // margin: 0;
+        font-size: 14px;
+        left: 155px;
+        top: 38px;
+      }
+        .logout-button {
+        font-size: 12px;
+        padding: 7px;
+        right: 9px;
+        top: 100px;
+        height: 32px;
+      }
+      }
 
 
 
 
+      /* Scrollable row */
+      .scroll-container {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        overflow-x: auto;
+        gap: 24px;
+        width: 96%;
+        height: 100vh;
+        padding: 20px;
+        position: relative;
+        scroll-behavior: smooth;
+        white-space: nowrap;
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none;  /* IE and Edge */
+      }
 
+      .scroll-container::-webkit-scrollbar {
+        display: none;
+      }
 
+      /* Premium card */
+      .premium-card {
+        min-width: 700px;
+        // max-width: 460px;
+        // width: 100%;
+        height: 510px;
+        border: 1px solid white;
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        transition: transform 0.4s ease, backdrop-filter 0.4s ease;
+        display: inline-block;
+        white-space: normal;
+      }
+
+      .premium-card:hover {
+        transform: scale(1.03);
+        backdrop-filter: blur(2px);
+      }
+
+      /* Image background */
+      .card-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        z-index: 1;
+        // opacity: 0.8;
+      }
+
+      .card-image {
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+        // filter: brightness(0.9) blur(1px);
+        transform: scale(1.1);
+      }
+
+      /* Foreground content */
+      .card-content {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        padding: 20px;
+        color: #fff;
+        // backdrop-filter: blur(8px);
+        background: rgba(0, 0, 0, 0.45);
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      .card-content h2 {
+        font-size: 22px;
+        font-weight: 700;
+        color: rgb(255, 255, 255);
+        margin-bottom: 10px;
+      }
+
+      .card-content p {
+        font-size: 14px;
+        margin: 4px 0;
+      }
+
+      .shop-info {
+        margin-top: 10px;
+      }
+
+      /* Buttons */
+      .action-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .action-buttons button {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 12px;
+        // background: linear-gradient(135deg, rgb(217, 222, 215), rgb(82, 49, 23));
+        background: white;
+        color: rgb(0, 0, 0);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .action-buttons button:hover {
+        background: #fff;
+        color: #111;
+        transform: translateY(-2px);
+      }
+
+      @media (max-width: 768px) {
+        .premium-card {
+          min-width: 380px;
+          height: auto;
+        }
+
+        .card-content {
+          padding: 15px;
+          gap: 15px;
+        }
+
+        .card-content h2 {
+          font-size: 20px;
+        }
+
+        .card-content p {
+          font-size: 13px;
+        }
+
+        .action-buttons {
+          flex-direction: column;
+        }
+
+        .action-buttons button {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .premium-card {
+          min-width: 380px;
+          max-width: 95vw;
+        }
+
+        .card-content {
+          padding: 10px;
+        }
+
+        .card-content h2 {
+          font-size: 18px;
+        }
+
+        .card-content p {
+          font-size: 12px;
+          margin: 0;
+          padding: 5px;
+        }
+      }
 
         .dashboard-container {
           display: flex;
@@ -812,30 +881,10 @@ const OwnerDashboard = () => {
         }
 
 
-background: linear-gradient(to right, #00f2fe, #4facfe);
+      background: linear-gradient(to right, #00f2fe, #4facfe);
         }
       `}</style>
 
-        <button
-          onClick={handleLogout}
-          style={{
-            padding: "9px",
-            transform: "skewX(-18deg)", // Parallelogram effect
-            background: "rgba(231, 119, 115, 0.66)",
-            color: "#fff",
-            border: " 1px solid rgb(255, 255, 255)",
-            position: "fixed",
-            right: "30px",
-            bottom: "85px",
-            fontSize: "15px",
-            zIndex: "2",
-            borderRadius: "7px",
-            cursor: "pointer",
-          }}
-        >
-          Logout
-        </button>
-      </div>
     </>
   );
 };

@@ -394,6 +394,26 @@ const filterLocationTree = (tree, searchTerm) => {
             </div>
           </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
           {/* Sorted/Filtered Results */}
           <div>
             {sortedCounters.length === 0 ? (
@@ -403,11 +423,18 @@ const filterLocationTree = (tree, searchTerm) => {
             ) : (
               <div
                 style={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-                  gap: "20px",
+                    display: "flex",
+                    overflowX: "auto",                // ✅ allow horizontal scroll if needed
+                    gap: "20px",
+                    paddingTop: "20px",
+                    scrollBehavior: "smooth",
+                    flexWrap: "nowrap",              // ✅ important for horizontal layout
+                    width: "100%",
                 }}
               >
+
+
+                
                 {sortedCounters.map((counter, idx) => (
                   <div
                     key={idx}
@@ -421,6 +448,7 @@ const filterLocationTree = (tree, searchTerm) => {
                       cursor: "default",
                       border: "1.5px solid #ccc",
                       color: "white",
+                      minWidth: "300px",
                     }}
                     onMouseEnter={(e) => {
                       e.currentTarget.style.transform = "translateY(-5px)";
@@ -468,6 +496,11 @@ const filterLocationTree = (tree, searchTerm) => {
             )}
           </div>
         </div>
+
+
+
+
+
 
 
 
@@ -697,7 +730,7 @@ const filterLocationTree = (tree, searchTerm) => {
 <style>
   {`
   .mall-info-section {
-  padding: 0.2rem;
+  // padding: 0.2rem;
   background-color: rgba(183, 183, 183, 0.227);
   width: 100vw;
   position: relative;
@@ -794,9 +827,19 @@ const filterLocationTree = (tree, searchTerm) => {
   transition: background-color 0.3s ease;
 }
 
+.location-card-grid{
+margin: 0;
+padding-top: 50px;
+padding-bottom: 50px;
+padding-left: 0;
+padding-right: 0;
+}
+
 .mall-cardd a:hover {
   background-color: #0056b3;
 }`
+
+
 }
 </style>
 

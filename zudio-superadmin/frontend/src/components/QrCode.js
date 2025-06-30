@@ -160,7 +160,7 @@ const QRGenerator = () => {
       textAlign: "center",
       padding: "20px",
       fontFamily: "Arial, sans-serif",
-    //   background: "linear-gradient(135deg, #1e3c72, #2a5298)",
+      background: "linear-gradient(135deg, #1e1c22, #2a5998)",
       height: "100vh",
       width: "100vw",
       display: "flex",

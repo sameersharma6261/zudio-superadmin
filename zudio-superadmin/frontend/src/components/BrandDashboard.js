@@ -55,6 +55,7 @@ const BrandDashboard = () => {
           type="video/mp4"
         />
       </video>
+
       <div
         style={{
           position: "absolute",
@@ -89,34 +90,10 @@ const BrandDashboard = () => {
           placeholder="Search Zudio..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          style={{
-            padding: "10px",
-            width: "60%",
-            marginTop: "20px",
-            borderRadius: "5px",
-            color: "white",
-            border: "1px solid #ccc",
-            marginBottom: "20px",
-            background: "transparent",
-            fontSize: "16px",
-          }}
+          className="search-input"
         />
         {/* 🔢 Total Malls text*/}
-        <div
-          style={{
-            textAlign: "center",
-            padding: "20px 0",
-            position: "fixed",
-            bottom: "1px",
-            right: "20px",
-            fontSize: "30px",
-            fontWeight: "bold",
-            color: "white",
-            fontFamily: "Rajdhani, sans-serif",
-          }}
-        >
-          Total Zudio : {filteredShops.length}
-        </div>
+        <div className="total-count">Total Zudio : {filteredShops.length}</div>
 
         {/* this is cards div */}
         <div
@@ -125,7 +102,7 @@ const BrandDashboard = () => {
             overflowX: "auto",
             overflowY: "hidden",
             width: "95%",
-            height: "78vh",
+            height: "74vh",
             gap: "60px",
             zIndex: "2",
             // background: "rgba(0, 0, 0, 0.58)",
@@ -213,134 +190,39 @@ const BrandDashboard = () => {
           ))}
         </div>
 
-        <button
-          onClick={() => navigate("/qrcode")}
-          style={{
-            padding: "10px 15px",
-            borderRadius: "10px",
-            border: " 1px solid rgb(255, 255, 255)",
-            cursor: "pointer",
-            position: "fixed",
-            left: "192px",
-            bottom: "17px",
-            color: "white",
-            fontSize: "15px",
-            fontWeight: "bold",
-            background: "transparent",
-            transform: "skewX(-20deg)", // Parallelogram effect
-            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)", // Depth effect
-            backdropFilter: "blur(5px)", // Glassmorphism effect
-            transition: "0.3s",
-            zIndex: "3",
-          }}
-          onMouseEnter={(e) =>
-            (e.target.style.transform = "skewX(-20deg) scale(1.1)")
-          }
-          onMouseLeave={(e) => (e.target.style.transform = "skewX(-20deg)")}
-        >
-          QR-Code
-        </button>
+       <button
+  onClick={() => navigate("/qrcode")}
+  className="qr-bottom-button"
+  onMouseEnter={(e) =>
+    (e.target.style.transform = "skewX(-20deg) scale(1.1)")
+  }
+  onMouseLeave={(e) => (e.target.style.transform = "skewX(-20deg)")}
+>
+  QR-Code
+</button>
+       <button
+  onClick={() => navigate("/dashboard")}
+  className="dashboard-button"
+>
+  Dashboard
+</button>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          <button
-          onClick={() => navigate("/dashboard")}
-          style={{
-            padding: "10px 15px",
-            borderRadius: "10px",
-            border: " 1px solid rgb(255, 255, 255)",
-            cursor: "pointer",
-            position: "fixed",
-            left: "25px",
-            bottom: "65px",
-            color: "white",
-            fontSize: "15px",
-            fontWeight: "bold",
-            background: "transparent",
-            transform: "skewX(-20deg)", // Parallelogram effect
-            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)", // Depth effect
-            backdropFilter: "blur(5px)", // Glassmorphism effect
-            transition: "0.3s",
-            zIndex: "3",
-          }}
-        >
-          Dashboard
-        </button>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <button
-          onClick={() => navigate("/ownerdashboard")}
-          style={{
-            padding: "10px 15px",
-            borderRadius: "10px",
-            cursor: "pointer",
-            position: "fixed",
-            left: "25px",
-            fontFamily: "Rajdhani, sans-serif",
-            bottom: "17px",
-            color: "white",
-            fontSize: "15px",
-            fontWeight: "bold",
-            border: " 1px solid rgb(255, 255, 255)",
-            background: "transparent",
-            transform: "skewX(-20deg)",
-            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-            backdropFilter: "blur(5px)",
-            transition: "0.3s",
-            zIndex: "3",
-          }}
-          onMouseEnter={(e) =>
-            (e.target.style.transform = "skewX(-20deg) scale(1.1)")
-          }
-          onMouseLeave={(e) => (e.target.style.transform = "skewX(-20deg)")}
-        >
-          Switch To Edit Mode
-        </button>
-        <button
-          onClick={handleLogout}
-          style={{
-            padding: "9px",
-            transform: "skewX(-18deg)",
-            background: "rgba(231, 119, 115, 0.66)",
-            color: "#fff",
-            border: " 1px solid rgb(255, 255, 255)",
-            position: "fixed",
-            left: "300px",
-            bottom: "17px",
-            fontSize: "15px",
-            zIndex: "2",
-            borderRadius: "7px",
-            cursor: "pointer",
-            marginTop: "10px",
-          }}
-        >
-          Logout
-        </button>
+       <button
+  onClick={() => navigate("/ownerdashboard")}
+  className="edit-button"
+  onMouseEnter={(e) =>
+    (e.target.style.transform = "skewX(-20deg) scale(1.1)")
+  }
+  onMouseLeave={(e) => (e.target.style.transform = "skewX(-20deg)")}
+>
+  Switch To Edit Mode
+</button>
+       <button
+  onClick={handleLogout}
+  className="logout-button"
+>
+  Logout
+</button>
       </div>
 
       <div className="scroller-container">
@@ -353,8 +235,117 @@ const BrandDashboard = () => {
       </div>
 
       <style>{`
+
+.edit-button {
+  padding: 10px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  position: fixed;
+  left: 25px;
+  bottom: 17px;
+  font-family: 'Rajdhani', sans-serif;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  border: 1px solid rgb(255, 255, 255);
+  background: transparent;
+  transform: skewX(-20deg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+  transition: 0.3s;
+  z-index: 3;
+}
+
+.qr-bottom-button {
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1px solid rgb(255, 255, 255);
+  cursor: pointer;
+  position: fixed;
+  left: 192px;
+  bottom: 17px;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  background: transparent;
+  transform: skewX(-20deg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+  transition: 0.3s;
+  z-index: 3;
+}
+
+.dashboard-button {
+  padding: 10px 15px;
+  border-radius: 10px;
+  border: 1px solid rgb(255, 255, 255);
+  cursor: pointer;
+  position: fixed;
+  left: 25px;
+  bottom: 65px;
+  color: white;
+  font-size: 15px;
+  font-weight: bold;
+  background: transparent;
+  transform: skewX(-20deg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+  transition: 0.3s;
+  z-index: 3;
+}
+
+
+.logout-button {
+  padding: 9px;
+  transform: skewX(-18deg);
+  background: rgba(231, 119, 115, 0.66);
+  color: #fff;
+  border: 1px solid rgb(255, 255, 255);
+  position: fixed;
+  left: 300px;
+  bottom: 17px;
+  font-size: 15px;
+  z-index: 2;
+  border-radius: 7px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* ✅ Mobile View Media Query */
+@media only screen and (max-width: 600px) {
+  .edit-button {
+    font-size: 12px;
+    padding: 8px 12px;
+    left: 10px;
+    bottom: 10px;
+  }
+    .qr-bottom-button {
+    font-size: 12px;
+    padding: 8px 12px;
+    left: 145px;
+    bottom: 10px;
+  }
+
+  .dashboard-button {
+    font-size: 12px;
+    padding: 8px 12px;
+    bottom: 55px;
+    left: 10px;
+  }
+
+   .logout-button {
+    font-size: 12px;
+    bottom: 10px;
+    left: 235px;
+  }
+}
+
+
+
+
     body{
-    overflow: hidden;}
+    overflow: hidden;
+    }
     .scroller-container {
       height: 100vh;
       display: flex;
@@ -421,6 +412,58 @@ const BrandDashboard = () => {
         transform: translateX(-50%);
       }
     }
+
+   .search-input {
+  padding: 10px;
+  width: 60%;
+  margin-top: 20px;
+  border-radius: 5px;
+  color: white;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  background: transparent;
+  font-size: 16px;
+}
+
+.total-count {
+  text-align: center;
+  padding: 20px 0;
+  position: fixed;
+  bottom: 1px;
+  right: 20px;
+  font-size: 38px;
+  font-weight: bold;
+  color: white;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+/* ✅ Mobile view ke liye width kam kar di */
+@media only screen and (max-width: 693px) {
+  .search-input {
+    width: 90%;
+    position: relative;
+    top: 42px;
+    z-index: 10;
+    font-size: 14px;
+  }
+
+  .total-count {
+  text-align: center;
+  padding: 20px 0;
+  position: fixed;
+  bottom: 35px;
+  right: 10px;
+  font-size: 27px;
+  z-index: 10;
+  font-weight: bold;
+  color: white;
+  font-family: 'Rajdhani', sans-serif;
+}
+}
+
+
+
+
 }`}</style>
     </>
   );
