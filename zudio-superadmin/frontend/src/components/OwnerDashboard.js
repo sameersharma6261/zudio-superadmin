@@ -24,6 +24,10 @@ const OwnerDashboard = () => {
   },
   });
   const [editFood, setEditFood] = useState(null);
+  const [popupMessage, setPopupMessage] = useState("");
+const [showPopup, setShowPopup] = useState(false);
+const [showDeletePopup, setShowDeletePopup] = useState(false);
+const [deleteId, setDeleteId] = useState(null);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -63,57 +67,75 @@ const OwnerDashboard = () => {
 };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    if (editFood) {
-      axios
-        .put(
-          `${process.env.REACT_APP_API_BASE_URL}/api/shops/${editFood._id}`,
-          newFood
-        )
-        .then((res) => {
-          setFoods(
-            shops.map((shop) => (shop._id === editFood._id ? res.data : shop))
-          );
-          setNewFood({
-            title: "",
-            description: "",
-            image: "",
-            email: "",
-            password: "",
-            mallconpassword: "",
-            role: "",
-            location: {
-            country: "",
-            state: "",
-            city: "",
-            street: "",
-          },
-          });
-          setEditFood(null);
-        });
-    } else {
-      axios
-        .post(`${process.env.REACT_APP_API_BASE_URL}/api/shops`, newFood)
-        .then((res) => {
-          setFoods([...shops, res.data]);
-          setNewFood({
-            title: "",
-            description: "",
-            image: "",
-            email: "",
-            password: "",
-            mallconpassword: "",
-            role: "",
-            location: {
-            country: "",
-            state: "",
-            city: "",
-            street: "",
-          },
-          });
-        });
-    }
+  e.preventDefault();
+  const showPopup = (message) => {
+    setPopupMessage(message);
+    setShowPopup(true);
+    setTimeout(() => setShowPopup(false), 2000);
   };
+
+  if (editFood) {
+    axios
+      .put(
+        `${process.env.REACT_APP_API_BASE_URL}/api/shops/${editFood._id}`,
+        newFood
+      )
+      .then((res) => {
+        setFoods(
+          shops.map((shop) => (shop._id === editFood._id ? res.data : shop))
+        );
+        setNewFood({
+          title: "",
+          description: "",
+          image: "",
+          email: "",
+          password: "",
+          mallconpassword: "",
+          role: "",
+          location: {
+            country: "",
+            state: "",
+            city: "",
+            street: "",
+            latitude: "",
+            longitude: "",
+          },
+        });
+        setEditFood(null);
+        showPopup("✅ Zudio updated successfully!");
+      })
+      .catch(() => {
+        showPopup("❌ Failed to update Zudio.");
+      });
+  } else {
+    axios
+      .post(`${process.env.REACT_APP_API_BASE_URL}/api/shops`, newFood)
+      .then((res) => {
+        setFoods([...shops, res.data]);
+        setNewFood({
+          title: "",
+          description: "",
+          image: "",
+          email: "",
+          password: "",
+          mallconpassword: "",
+          role: "",
+          location: {
+            country: "",
+            state: "",
+            city: "",
+            street: "",
+            latitude: "",
+            longitude: "",
+          },
+        });
+        showPopup("✅ Zudio added successfully!");
+      })
+      .catch(() => {
+        showPopup("❌ Failed to add Zudio.");
+      });
+  }
+};
 
   const handleEdit = (shop) => {
   setNewFood({
@@ -134,13 +156,20 @@ const OwnerDashboard = () => {
   setEditFood(shop);
 };
 
-  const handleDelete = (id) => {
-    axios
-      .delete(`${process.env.REACT_APP_API_BASE_URL}/api/shops/${id}`)
-      .then(() => {
-        setFoods(shops.filter((shop) => shop._id !== id));
-      });
-  };
+ const confirmDelete = (id) => {
+  setDeleteId(id);
+  setShowDeletePopup(true);
+};
+
+const handleDelete = () => {
+  axios
+    .delete(`${process.env.REACT_APP_API_BASE_URL}/api/shops/${deleteId}`)
+    .then(() => {
+      setFoods(shops.filter((shop) => shop._id !== deleteId));
+      setShowDeletePopup(false);
+      setDeleteId(null);
+    });
+};
 
   console.log({ shops });
 
@@ -417,6 +446,31 @@ const OwnerDashboard = () => {
             {editFood ? "Update Zudio" : "Add Zudio"}
           </button>
         </form>
+        {showPopup && (
+  <div style={{
+    position: "fixed",
+    top: 0, left: 0,
+    width: "100vw",
+    height: "100vh",
+    backgroundColor: "rgba(0,0,0,0.5)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 9999
+  }}>
+    <div style={{
+      backgroundColor: "#fff",
+      padding: "30px 40px",
+      borderRadius: "12px",
+      boxShadow: "0 5px 15px rgba(0,0,0,0.3)",
+      color: popupMessage.startsWith("✅") ? "green" : "red",
+      fontSize: "18px",
+      textAlign: "center"
+    }}>
+      {popupMessage}
+    </div>
+  </div>
+)}
 
         <div className="scroll-container">
           {filteredShops.map((shop) => (
@@ -465,11 +519,60 @@ const OwnerDashboard = () => {
                     Visit Zudio
                   </button>
                   <button onClick={() => handleEdit(shop)}>Edit</button>
-                  <button onClick={() => handleDelete(shop._id)}>Delete</button>
+                 <button onClick={() => confirmDelete(shop._id)}>Delete</button>
                 </div>
               </div>
             </div>
           ))}
+          {showDeletePopup && (
+  <div style={{
+    position: "fixed",
+    top: 0, left: 0,
+    width: "100vw",
+    height: "100vh",
+    backgroundColor: "rgba(0,0,0,0.5)",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 1000
+  }}>
+    <div style={{
+      backgroundColor: "#fff",
+      padding: "30px",
+      borderRadius: "10px",
+      textAlign: "center",
+      boxShadow: "0 5px 15px rgba(0,0,0,0.3)"
+    }}>
+      <h3>❗ Are you sure you want to delete this?</h3>
+      <div style={{ marginTop: "20px" }}>
+        <button
+          onClick={() => setShowDeletePopup(false)}
+          style={{
+            marginRight: "10px",
+            padding: "10px 20px",
+            backgroundColor: "#ccc",
+            border: "none",
+            borderRadius: "5px"
+          }}
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleDelete}
+          style={{
+            padding: "10px 20px",
+            backgroundColor: "#e74c3c",
+            color: "white",
+            border: "none",
+            borderRadius: "5px"
+          }}
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+)}
         </div>
 
        <button

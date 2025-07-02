@@ -14,12 +14,9 @@ import {
 } from "recharts";
 import MallMap from "../components/MallMap";
 
-
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
 
-
 const Dashboard = () => {
-  
   const [stats, setStats] = useState({});
   const [searchTerm, setSearchTerm] = useState("");
   const [data, setData] = useState([]);
@@ -28,10 +25,10 @@ const Dashboard = () => {
   const [mallInfo, setMallInfo] = useState([]);
 
   const locationTree = stats.locations?.countries || {};
-//   const calculateCounters = (location) => {
-//   if (typeof location === "number") return location; // street count
-//   return Object.values(location).reduce((sum, val) => sum + calculateCounters(val), 0);
-// };
+  //   const calculateCounters = (location) => {
+  //   if (typeof location === "number") return location; // street count
+  //   return Object.values(location).reduce((sum, val) => sum + calculateCounters(val), 0);
+  // };
 
   // its for pi-chart
   useEffect(() => {
@@ -56,16 +53,18 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-  const fetchMallInfo = async () => {
-    try {
-      const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/dashboard/malls-info`);
-      setMallInfo(res.data.mallDetails || []);
-    } catch (err) {
-      console.error("Error fetching mall info:", err);
-    }
-  };
-  fetchMallInfo();
-}, []);
+    const fetchMallInfo = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_API_BASE_URL}/api/dashboard/malls-info`
+        );
+        setMallInfo(res.data.mallDetails || []);
+      } catch (err) {
+        console.error("Error fetching mall info:", err);
+      }
+    };
+    fetchMallInfo();
+  }, []);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -91,8 +90,6 @@ const Dashboard = () => {
     { name: "Counters", value: stats.totalCounters },
   ];
 
-
-
   const allCounters =
     stats.mallCounters?.flatMap((mall) =>
       mall.counters.map((counter) => ({
@@ -114,71 +111,70 @@ const Dashboard = () => {
     (a, b) => b.userCount - a.userCount
   );
 
+  const filterLocationTree = (tree, searchTerm) => {
+    if (!searchTerm) return tree;
 
+    const lowerSearch = searchTerm.toLowerCase();
 
-const filterLocationTree = (tree, searchTerm) => {
-  if (!searchTerm) return tree;
+    const result = {};
 
-  const lowerSearch = searchTerm.toLowerCase();
+    for (const [country, states] of Object.entries(tree)) {
+      const matchedStates = {};
 
-  const result = {};
+      for (const [state, cities] of Object.entries(states)) {
+        const matchedCities = {};
 
-  for (const [country, states] of Object.entries(tree)) {
-    const matchedStates = {};
+        for (const [city, streets] of Object.entries(cities)) {
+          const matchedStreets = {};
 
-    for (const [state, cities] of Object.entries(states)) {
-      const matchedCities = {};
+          for (const [street, count] of Object.entries(streets)) {
+            const fullPath =
+              `${country} ${state} ${city} ${street}`.toLowerCase();
+            if (fullPath.includes(lowerSearch)) {
+              matchedStreets[street] = count;
+            }
+          }
 
-      for (const [city, streets] of Object.entries(cities)) {
-        const matchedStreets = {};
-
-        for (const [street, count] of Object.entries(streets)) {
-          const fullPath = `${country} ${state} ${city} ${street}`.toLowerCase();
-          if (fullPath.includes(lowerSearch)) {
-            matchedStreets[street] = count;
+          if (Object.keys(matchedStreets).length > 0) {
+            matchedCities[city] = matchedStreets;
           }
         }
 
-        if (Object.keys(matchedStreets).length > 0) {
-          matchedCities[city] = matchedStreets;
+        if (Object.keys(matchedCities).length > 0) {
+          matchedStates[state] = matchedCities;
         }
       }
 
-      if (Object.keys(matchedCities).length > 0) {
-        matchedStates[state] = matchedCities;
+      if (Object.keys(matchedStates).length > 0) {
+        result[country] = matchedStates;
       }
     }
 
-    if (Object.keys(matchedStates).length > 0) {
-      result[country] = matchedStates;
-    }
-  }
-
-  return result;
-};
+    return result;
+  };
 
   const filteredTree = filterLocationTree(locationTree, searchTerm);
 
-
   const filteredMallInfo = mallInfo
-  .map((mall) => {
-    const filteredShops = mall.shopDetails.filter((shop) =>
-      shop.shopName.toLowerCase().includes(searchTerm) ||
-      shop.description.toLowerCase().includes(searchTerm)
-    );
+    .map((mall) => {
+      const filteredShops = mall.shopDetails.filter(
+        (shop) =>
+          shop.shopName.toLowerCase().includes(searchTerm) ||
+          shop.description.toLowerCase().includes(searchTerm)
+      );
 
-    const matchesMall = mall.mallName.toLowerCase().includes(searchTerm);
+      const matchesMall = mall.mallName.toLowerCase().includes(searchTerm);
 
-    if (matchesMall || filteredShops.length > 0) {
-      return {
-        ...mall,
-        shopDetails: matchesMall ? mall.shopDetails : filteredShops,
-      };
-    }
+      if (matchesMall || filteredShops.length > 0) {
+        return {
+          ...mall,
+          shopDetails: matchesMall ? mall.shopDetails : filteredShops,
+        };
+      }
 
-    return null;
-  })
-  .filter((mall) => mall !== null);
+      return null;
+    })
+    .filter((mall) => mall !== null);
   return (
     <>
       <video
@@ -216,11 +212,6 @@ const filterLocationTree = (tree, searchTerm) => {
         >
           Zudio
         </p>
-
-
-
-
-
 
         {/* first section */}
         <div
@@ -312,11 +303,11 @@ const filterLocationTree = (tree, searchTerm) => {
                       style={{
                         fontSize: "16px",
                         color: "#888",
-                          position: "relative",
-                      bottom: "305px",
+                        position: "relative",
+                        bottom: "305px",
                         width: "80px",
                         padding: "4px 12px",
-                         left: "70px",
+                        left: "70px",
                         margin: "5px",
                         border: "1px solid #ccc",
                         borderRadius: "6px",
@@ -394,26 +385,6 @@ const filterLocationTree = (tree, searchTerm) => {
             </div>
           </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
           {/* Sorted/Filtered Results */}
           <div>
             {sortedCounters.length === 0 ? (
@@ -423,18 +394,15 @@ const filterLocationTree = (tree, searchTerm) => {
             ) : (
               <div
                 style={{
-                    display: "flex",
-                    overflowX: "auto",                // ✅ allow horizontal scroll if needed
-                    gap: "20px",
-                    paddingTop: "20px",
-                    scrollBehavior: "smooth",
-                    flexWrap: "nowrap",              // ✅ important for horizontal layout
-                    width: "100%",
+                  display: "flex",
+                  overflowX: "auto", // ✅ allow horizontal scroll if needed
+                  gap: "20px",
+                  paddingTop: "20px",
+                  scrollBehavior: "smooth",
+                  flexWrap: "nowrap", // ✅ important for horizontal layout
+                  width: "100%",
                 }}
               >
-
-
-                
                 {sortedCounters.map((counter, idx) => (
                   <div
                     key={idx}
@@ -500,21 +468,6 @@ const filterLocationTree = (tree, searchTerm) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         {/* second section */}
         <div className="location-section">
           <h2 className="section-heading">🛍️ Counter-wise User Chart</h2>
@@ -528,8 +481,6 @@ const filterLocationTree = (tree, searchTerm) => {
             />
           </div>
         </div>
-
-
 
 
 
@@ -650,6 +601,8 @@ const filterLocationTree = (tree, searchTerm) => {
             </ResponsiveContainer>
           </div>
         </div>
+
+
         <div className="location-card-grid">
           {Object.entries(filteredTree).map(([country, states]) => {
             // const countryCount = calculateCounters(states);
@@ -679,12 +632,14 @@ const filterLocationTree = (tree, searchTerm) => {
                               📌 {city}
                             </h4>
                             <div className="street-badges">
-                              {Object.entries(streets).map(([street, count]) => (
-                            <div key={street} className="street-badge">
-                              {/* {street} - {count} Counter */}
-                              {street} - Counter
-                            </div>
-                          ))}
+                              {Object.entries(streets).map(
+                                ([street, count]) => (
+                                  <div key={street} className="street-badge">
+                                    {/* {street} - {count} Counter */}
+                                    {street} - Counter
+                                  </div>
+                                )
+                              )}
                             </div>
                           </div>
                         );
@@ -697,158 +652,33 @@ const filterLocationTree = (tree, searchTerm) => {
           })}
         </div>
 
-
-
-
-
-
-
-<div className="mall-info-section">
-  <div className="mall-cards">
-    {filteredMallInfo.map((mall) => (
-      <div className="mall-cardd" key={mall.mallId}>
-        <h3>{mall.mallName}</h3>
-        <ul>
-          {mall.shopDetails.map((shop) => (
-            <li key={shop.shopId}>
-              <strong>{shop.shopName}</strong><br />
-              <span>{shop.description}</span><br />
-              <a
-                href={`/${shop.shopId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Visit Shop
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    ))}
-  </div>
-</div>
-<style>
-  {`
-  .mall-info-section {
-  // padding: 0.2rem;
-  background-color: rgba(183, 183, 183, 0.227);
-  width: 100vw;
-  position: relative;
-  bottom: 160px;
-}
-
-.mall-info-section h2 {
-  font-size: 1.8rem;
-  // margin-bottom: 1rem;
-  text-align: center;
-  color: #333;
-}
-
-.mall-cards {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  align-item: center;
-  justify-content: start;
-  padding-left: 0.8rem;
-  gap: 2.6rem;
-  // padding-bottom: 1rem;
-  scrollbar-width: thin;
-  scrollbar-color: #ccc transparent;
-}
-
-.mall-cards::-webkit-scrollbar {
-  height: 8px;
-}
-.mall-cards::-webkit-scrollbar-thumb {
-  // background-color: #bbb;
-  border-radius: 10px;
-}
-
-.mall-cardd {
-  flex: 0 0 auto;
-  width: 411px;
-  background-color: rgba(183, 183, 183, 0.427);
-  margin-top: 20px;
-  margin-bottom: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  padding: 0.5rem;
-  transition: transform 0.3s ease;
-}
-
-.mall-cardd:hover {
-  transform: translateY(-5px);
-}
-
-.mall-cardd h3 {
-  font-size: 1.4rem;
-  margin-bottom: 0.2rem;
-  color: rgb(74, 144, 226);
-}
-
-.mall-cardd p {
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
-  color: #666;
-}
-
-.mall-cardd ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.mall-cardd li {
-  // margin-bottom: 0.5rem;
-  border-top: 1px solid #eee;
-  // padding-top: 0.5rem;
-}
-
-.mall-cardd strong {
-  font-size: 1rem;
-  color: white;
-}
-
-.mall-cardd span {
-  font-size: 0.9rem;
-  color: white;
-}
-
-.mall-cardd a {
-  display: inline-block;
-  margin-top: 4px;
-  padding: 6px 12px;
-  background-color: #007bff;
-  color: white;
-  text-decoration: none;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  transition: background-color 0.3s ease;
-}
-
-.location-card-grid{
-margin: 0;
-padding-top: 50px;
-padding-bottom: 50px;
-padding-left: 0;
-padding-right: 0;
-}
-
-.mall-cardd a:hover {
-  background-color: #0056b3;
-}`
-
-
-}
-</style>
-
-
-
-
-
-
-
+        <div className="mall-info-section">
+          <div className="mall-cards">
+            {filteredMallInfo.map((mall) => (
+              <div className="mall-cardd" key={mall.mallId}>
+                <h3>{mall.mallName}</h3>
+                <ul>
+                  {mall.shopDetails.map((shop) => (
+                    <li key={shop.shopId}>
+                      <strong>{shop.shopName}</strong>
+                      <br />
+                      <span>{shop.description}</span>
+                      <br />
+                      <a
+                        href={`/${shop.shopId}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Visit Shop
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+       
 
         {/* forth part */}
         <div className="whole-map">
@@ -873,7 +703,119 @@ padding-right: 0;
       </div>
 
 
-      
+
+       <style>
+          {`
+        .mall-info-section {
+        // padding: 0.2rem;
+        background-color: rgba(183, 183, 183, 0.227);
+        width: 100vw;
+        position: relative;
+        bottom: 160px;
+      }
+
+      .mall-info-section h2 {
+        font-size: 1.8rem;
+        // margin-bottom: 1rem;
+        text-align: center;
+        color: #333;
+      }
+
+      .mall-cards {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        align-item: center;
+        justify-content: start;
+        padding-left: 0.8rem;
+        gap: 2.6rem;
+        // padding-bottom: 1rem;
+        scrollbar-width: thin;
+        scrollbar-color: #ccc transparent;
+      }
+
+      .mall-cards::-webkit-scrollbar {
+        height: 8px;
+      }
+      .mall-cards::-webkit-scrollbar-thumb {
+        // background-color: #bbb;
+        border-radius: 10px;
+      }
+
+      .mall-cardd {
+        flex: 0 0 auto;
+        width: 411px;
+        background-color: rgba(183, 183, 183, 0.427);
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 0.5rem;
+        transition: transform 0.3s ease;
+      }
+
+      .mall-cardd:hover {
+        transform: translateY(-5px);
+      }
+
+      .mall-cardd h3 {
+        font-size: 1.4rem;
+        margin-bottom: 0.2rem;
+        color: rgb(74, 144, 226);
+      }
+
+      .mall-cardd p {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        color: #666;
+      }
+
+      .mall-cardd ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .mall-cardd li {
+        // margin-bottom: 0.5rem;
+        border-top: 1px solid #eee;
+        // padding-top: 0.5rem;
+      }
+
+      .mall-cardd strong {
+        font-size: 1rem;
+        color: white;
+      }
+
+      .mall-cardd span {
+        font-size: 0.9rem;
+        color: white;
+      }
+
+      .mall-cardd a {
+        display: inline-block;
+        margin-top: 4px;
+        padding: 6px 12px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        transition: background-color 0.3s ease;
+      }
+
+      .location-card-grid{
+      margin: 0;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      padding-left: 0;
+      padding-right: 0;
+      }
+
+      .mall-cardd a:hover {
+        background-color: #0056b3;
+      }`}
+        </style>
 
       <style>{`
         .whole{
@@ -1203,12 +1145,6 @@ scrollbar-color: #ccc #f9f9f9; /* For Chrome and Safari */
 
 
 
-
-
-
-
-
-
 .circle {
   width: 35vw;
   // height: 290px;
@@ -1255,6 +1191,7 @@ scrollbar-color: #ccc #f9f9f9; /* For Chrome and Safari */
   }
 }
       `}</style>
+      
     </>
   );
 };

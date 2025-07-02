@@ -17,6 +17,8 @@ const ShopDetail = () => {
   const [editedRole, setEditedRole] = useState("");
   const [selectedFood, setSelectedFood] = useState(null);
   const [searchQuery, setSearchQuery] = useState(""); // State for search input
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
 
   useEffect(() => {
     const fetchShopDetails = async () => {
@@ -85,19 +87,23 @@ const ShopDetail = () => {
     }
   };
 
-  const handleDelete = async (menuItem) => {
+  const confirmDelete = async () => {
+    if (!itemToDelete) return;
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_API_BASE_URL}/api/shops/delete-menu-item/${id}/${menuItem.name}`
+        `${process.env.REACT_APP_API_BASE_URL}/api/shops/delete-menu-item/${id}/${itemToDelete.name}`
       );
       if (response.data.success) {
         const updatedItems = shop.shopss.filter(
-          (item) => item.name !== menuItem.name
+          (item) => item.name !== itemToDelete.name
         );
         setShop({ ...shop, shopss: updatedItems });
       }
     } catch (error) {
       console.error("Error deleting menu item:", error);
+    } finally {
+      setShowDeletePopup(false);
+      setItemToDelete(null);
     }
   };
 
@@ -249,7 +255,10 @@ const ShopDetail = () => {
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(menuItem)}
+                        onClick={() => {
+                          setItemToDelete(menuItem);
+                          setShowDeletePopup(true);
+                        }}
                         style={styles.deleteButton}
                       >
                         Delete
@@ -263,6 +272,61 @@ const ShopDetail = () => {
         </div>
       ) : (
         <p style={styles.loading}>Loading...</p>
+      )}
+     {showDeletePopup && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "#fff",
+              padding: "30px",
+              borderRadius: "10px",
+              textAlign: "center",
+              boxShadow: "0 5px 15px rgba(0,0,0,0.3)",
+            }}
+          >
+            <h3>Are you sure you want to delete this menu item?</h3>
+            <p style={{ color: "#888" }}>{itemToDelete?.name}</p>
+            <div style={{ marginTop: "20px" }}>
+              <button
+                onClick={() => setShowDeletePopup(false)}
+                style={{
+                  marginRight: "10px",
+                  padding: "10px 20px",
+                  backgroundColor: "#ccc",
+                  border: "none",
+                  borderRadius: "5px",
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                style={{
+                  padding: "10px 20px",
+                  backgroundColor: "#e74c3c",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

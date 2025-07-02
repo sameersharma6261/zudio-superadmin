@@ -27,7 +27,7 @@ const MenuModal = ({ shop, onClose }) => {
 
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/shops/${shop._id}/menu`, menuItem);
-      alert("Menu item added successfully!");
+      alert("counter added successfully!");
       console.log("Success:", response.data);
       window.location.reload();
       onClose();
