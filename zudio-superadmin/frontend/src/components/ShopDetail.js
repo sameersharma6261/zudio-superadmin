@@ -118,6 +118,14 @@ const ShopDetail = () => {
       )
     : [];
 
+
+
+
+
+
+
+
+
   return (
     <div style={styles.container}>
       <h2 style={styles.heading}>Zudio</h2>
@@ -131,11 +139,11 @@ const ShopDetail = () => {
           padding: "10px",
           position: "fixed",
           width: "60%",
-          marginTop: "20px",
           borderRadius: "5px",
           color: "white",
           border: "1px solid #ccc",
-          marginBottom: "20px",
+          // marginBottom: "20px",
+          marginTop: "60px",
           background: "transparent",
           fontSize: "16px",
         }}
@@ -170,109 +178,54 @@ const ShopDetail = () => {
           <h3 style={styles.shopName}>{shop.name}</h3>
           <img src={shop.imageUrl} alt={shop.name} style={styles.shopImage} />
           <ul style={styles.list}>
+
+
+
+
             {filteredshopss.map((menuItem, index) => (
-              <li key={index} style={styles.listItem}>
-                <div style={styles.textContainer}>
-                  <span style={styles.shopText}>
-                    {menuItem.name} - {menuItem.description} - {menuItem.image}{" "}
-                    - {menuItem.email} - {menuItem.password} -{" "}
-                    {menuItem.shopconpassword} - {menuItem.role}
-                  </span>
-                </div>
-                <div style={styles.actionContainer}>
-                  {editingItem === menuItem ? (
-                    <>
-                      <input
-                        type="text"
-                        value={editedName}
-                        onChange={(e) => setEditedName(e.target.value)}
-                        style={styles.input}
-                      />
-                      <input
-                        type="text"
-                        placeholder="description"
-                        value={editedDescription}
-                        onChange={(e) => setEditedDescription(e.target.value)}
-                        style={styles.input}
-                      />
-
-                      <input
-                        type="text"
-                        value={editedImage}
-                        onChange={(e) => setEditedImage(e.target.value)}
-                        style={styles.input}
-                      />
-
-                      <input
-                        type="text"
-                        placeholder="email"
-                        value={editedEmail}
-                        onChange={(e) => setEditedEmail(e.target.value)}
-                        style={styles.input}
-                      />
-                      <input
-                        type="text"
-                        placeholder="password"
-                        value={editedPassword}
-                        onChange={(e) => setEditedPassword(e.target.value)}
-                        style={styles.input}
-                      />
-                      <input
-                        type="text"
-                        placeholder="conferm password"
-                        value={editedShopConPassword}
-                        onChange={(e) =>
-                          setEditedShopConPassword(e.target.value)
-                        }
-                        style={styles.input}
-                      />
-                      <input
-                        type="text"
-                        placeholder="role"
-                        value={editedRole}
-                        onChange={(e) => setEditedRole(e.target.value)}
-                        style={styles.input}
-                      />
-                      <button
-                        onClick={() => handleSave(menuItem)}
-                        style={styles.saveButton}
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={() => setEditingItem(null)}
-                        style={styles.cancelButton}
-                      >
-                        Cancel
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        onClick={() => handleEdit(menuItem)}
-                        style={styles.editButton}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => {
-                          setItemToDelete(menuItem);
-                          setShowDeletePopup(true);
-                        }}
-                        style={styles.deleteButton}
-                      >
-                        Delete
-                      </button>
-                    </>
-                  )}
-                </div>
-              </li>
+             <li key={index} className="list-item">
+  <div className="text-container">
+    <div className="shop-text">
+  <p><strong>Name:</strong> {menuItem.name}</p>
+  <p><strong>Description:</strong> {menuItem.description}</p>
+  <p><strong>Image:</strong> {menuItem.image}</p>
+  <p><strong>Email:</strong> {menuItem.email}</p>
+  <p><strong>Password:</strong> {menuItem.password}</p>
+  <p><strong>Confirm Password:</strong> {menuItem.shopconpassword}</p>
+  <p><strong>Role:</strong> {menuItem.role}</p>
+</div>
+  </div>
+  <div className="action-container">
+    {editingItem === menuItem ? (
+      <>
+        <input type="text" value={editedName} onChange={(e) => setEditedName(e.target.value)} className="input-field" />
+        <input type="text" placeholder="description" value={editedDescription} onChange={(e) => setEditedDescription(e.target.value)} className="input-field" />
+        <input type="text" value={editedImage} onChange={(e) => setEditedImage(e.target.value)} className="input-field" />
+        <input type="text" placeholder="email" value={editedEmail} onChange={(e) => setEditedEmail(e.target.value)} className="input-field" />
+        <input type="text" placeholder="password" value={editedPassword} onChange={(e) => setEditedPassword(e.target.value)} className="input-field" />
+        <input type="text" placeholder="confirm password" value={editedShopConPassword} onChange={(e) => setEditedShopConPassword(e.target.value)} className="input-field" />
+        <input type="text" placeholder="role" value={editedRole} onChange={(e) => setEditedRole(e.target.value)} className="input-field" />
+        <button onClick={() => handleSave(menuItem)} className="save-button">Save</button>
+        <button onClick={() => setEditingItem(null)} className="cancel-button">Cancel</button>
+      </>
+    ) : (
+      <>
+        <button onClick={() => handleEdit(menuItem)} className="edit-button">Edit</button>
+        <button onClick={() => { setItemToDelete(menuItem); setShowDeletePopup(true); }} className="delete-button">Delete</button>
+      </>
+    )}
+  </div>
+</li>
             ))}
+
+            
           </ul>
         </div>
       ) : (
         <p style={styles.loading}>Loading...</p>
       )}
+
+
      {showDeletePopup && (
         <div
           style={{
@@ -328,9 +281,127 @@ const ShopDetail = () => {
           </div>
         </div>
       )}
+      <style>{`
+      .list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 15px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+}
+
+.text-container {
+  flex: 1 1 300px;
+  font-size: 16px;
+  color: #333;
+  word-break: break-word;
+}
+
+.shop-text {
+  display: block;
+  line-height: 1.5;
+}
+
+.action-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+  flex: 1 1 300px;
+}
+
+.input-field {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+  max-width: 280px;
+  font-size: 14px;
+}
+
+.save-button,
+.cancel-button,
+.edit-button,
+.delete-button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.save-button {
+  background-color: #28a745;
+}
+
+.cancel-button {
+  background-color: #6c757d;
+}
+
+.edit-button {
+  background-color: #007bff;
+}
+
+.delete-button {
+  background-color: #dc3545;
+}
+
+/* ✅ Mobile View */
+@media (max-width: 768px) {
+  .list-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .text-container,
+  .action-container {
+    flex: 1 1 100%;
+  }
+
+  .action-container {
+    justify-content: flex-start;
+  }
+
+  .input-field,
+  .save-button,
+  .cancel-button,
+  .edit-button,
+  .delete-button {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+      `}</style>
     </div>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 const styles = {
   container: {
@@ -342,6 +413,7 @@ const styles = {
     minHeight: "100vh",
     position: "absolute",
     backgroundAttachment: "fixed",
+    // background: "red",
     overflow: "auto",
     left: 0,
     zIndex: 1,
@@ -364,12 +436,13 @@ const styles = {
     boxShadow: "0 10px 30px gray",
     padding: "20px",
     backgroundAttachment: "fixed",
+    background: " white",
     overflow: "auto",
     minHeight: "80vh",
     width: "80%",
     borderRadius: "10px",
     position: "absolute",
-    top: "200px",
+    top: "142px",
   },
   shopName: {
     fontSize: "22px",
@@ -392,8 +465,9 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
+
     padding: "12px",
-    background: "#f9f9f9",
+    background: "red",
     borderRadius: "8px",
     marginBottom: "10px",
     boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
@@ -450,6 +524,8 @@ const styles = {
     cursor: "pointer",
     borderRadius: "5px",
   },
+
+  
 };
 
 export default ShopDetail;

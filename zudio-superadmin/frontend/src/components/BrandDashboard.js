@@ -119,18 +119,18 @@ const BrandDashboard = () => {
             <div
               key={shop._id}
               onClick={() => navigate(`/branddashboard2/${shop._id}`)}
-              style={{
-                position: "relative",
-                borderRadius: "15px",
-                // width: "100%",
-                minWidth: "750px",
-                height: "500px",
-                border: "1px solid white",
-                overflow: "hidden",
-                cursor: "pointer",
-                transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
-              }}
+              className="shop-carddddd"
+              // style={{
+              //   position: "relative",
+              //   borderRadius: "15px",
+              //   minWidth: "750px",
+              //   height: "500px",
+              //   border: "1px solid white",
+              //   overflow: "hidden",
+              //   cursor: "pointer",
+              //   transition: "transform 0.3s ease, box-shadow 0.3s ease",
+              //   boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
+              // }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "scale(1.03)";
                 e.currentTarget.style.boxShadow =
@@ -294,6 +294,17 @@ const BrandDashboard = () => {
   z-index: 3;
 }
 
+.shop-carddddd {
+  position: relative;
+  border-radius: 15px;
+  min-width: 750px;
+  height: 500px;
+  border: 1px solid white;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
 
 .logout-button {
   padding: 9px;
@@ -314,7 +325,7 @@ const BrandDashboard = () => {
 /* ✅ Mobile View Media Query */
 @media only screen and (max-width: 600px) {
   .edit-button {
-    font-size: 12px;
+    font-size: 16px;
     padding: 8px 12px;
     left: 10px;
     bottom: 10px;
@@ -322,12 +333,12 @@ const BrandDashboard = () => {
     .qr-bottom-button {
     font-size: 12px;
     padding: 8px 12px;
-    left: 145px;
+    left: 173px;
     bottom: 10px;
   }
 
   .dashboard-button {
-    font-size: 12px;
+    font-size: 16px;
     padding: 8px 12px;
     bottom: 55px;
     left: 10px;
@@ -336,7 +347,11 @@ const BrandDashboard = () => {
    .logout-button {
     font-size: 12px;
     bottom: 10px;
-    left: 235px;
+    left: 258px;
+  }
+
+  .shop-carddddd{
+  min-width: 350px; /* Adjusted for mobile */
   }
 }
 

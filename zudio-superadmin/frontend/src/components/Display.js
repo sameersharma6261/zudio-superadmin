@@ -29,7 +29,6 @@ function Display() {
       
       .catch((error) =>{
          console.error("Error fetching data:", error)
-
       });
   }, [id]); // Runs once on component mount
 
@@ -52,7 +51,7 @@ function Display() {
       console.error("Error updating:", error);
       alert("Error updating. Please check console for details.");
     }
-  };
+  }; 
 
   // Handle image selection
   const handleImageChange = (e) => {

@@ -14,27 +14,28 @@ const OwnerDashboard = () => {
     password: "",
     mallconpassword: "",
     role: "",
-     location: {
-    country: "",
-    state: "",
-    city: "",
-    street: "",
-    latitude: Number,
-    longitude: Number
-  },
+    location: {
+      country: "",
+      state: "",
+      city: "",
+      street: "",
+      latitude: Number,
+      longitude: Number,
+    },
   });
   const [editFood, setEditFood] = useState(null);
   const [popupMessage, setPopupMessage] = useState("");
-const [showPopup, setShowPopup] = useState(false);
-const [showDeletePopup, setShowDeletePopup] = useState(false);
-const [deleteId, setDeleteId] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [showDeletePopup, setShowDeletePopup] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+   const [showForm, setShowForm] = useState(false); // 👈 form toggle for mobile
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-    localStorage.removeItem("shopId");
-    navigate("/");
-  };
+  // const handleLogout = () => {
+  //   localStorage.removeItem("token");
+  //   localStorage.removeItem("role");
+  //   localStorage.removeItem("shopId");
+  //   navigate("/");
+  // };
 
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/shops`).then((res) => {
@@ -49,127 +50,126 @@ const [deleteId, setDeleteId] = useState(null);
     }
   }, [role, navigate]);
 
- const handleChange = (e) => {
-  const { name, value } = e.target;
+  const handleChange = (e) => {
+    const { name, value } = e.target;
 
-  if (name.startsWith("location.")) {
-    const field = name.split(".")[1];
-    setNewFood((prev) => ({
-      ...prev,
-      location: {
-        ...prev.location,
-        [field]: value
-      }
-    }));
-  } else {
-    setNewFood((prev) => ({ ...prev, [name]: value }));
-  }
-};
-
-  const handleSubmit = (e) => {
-  e.preventDefault();
-  const showPopup = (message) => {
-    setPopupMessage(message);
-    setShowPopup(true);
-    setTimeout(() => setShowPopup(false), 2000);
+    if (name.startsWith("location.")) {
+      const field = name.split(".")[1];
+      setNewFood((prev) => ({
+        ...prev,
+        location: {
+          ...prev.location,
+          [field]: value,
+        },
+      }));
+    } else {
+      setNewFood((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
-  if (editFood) {
-    axios
-      .put(
-        `${process.env.REACT_APP_API_BASE_URL}/api/shops/${editFood._id}`,
-        newFood
-      )
-      .then((res) => {
-        setFoods(
-          shops.map((shop) => (shop._id === editFood._id ? res.data : shop))
-        );
-        setNewFood({
-          title: "",
-          description: "",
-          image: "",
-          email: "",
-          password: "",
-          mallconpassword: "",
-          role: "",
-          location: {
-            country: "",
-            state: "",
-            city: "",
-            street: "",
-            latitude: "",
-            longitude: "",
-          },
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const showPopup = (message) => {
+      setPopupMessage(message);
+      setShowPopup(true);
+      setTimeout(() => setShowPopup(false), 2000);
+    };
+    if (editFood) {
+      axios
+        .put(
+          `${process.env.REACT_APP_API_BASE_URL}/api/shops/${editFood._id}`,
+          newFood
+        )
+        .then((res) => {
+          setFoods(
+            shops.map((shop) => (shop._id === editFood._id ? res.data : shop))
+          );
+          setNewFood({
+            title: "",
+            description: "",
+            image: "",
+            email: "",
+            password: "",
+            mallconpassword: "",
+            role: "",
+            location: {
+              country: "",
+              state: "",
+              city: "",
+              street: "",
+              latitude: "",
+              longitude: "",
+            },
+          });
+          setEditFood(null);
+          showPopup("✅ Zudio updated successfully!");
+        })
+        .catch(() => {
+          showPopup("❌ Failed to update Zudio.");
         });
-        setEditFood(null);
-        showPopup("✅ Zudio updated successfully!");
-      })
-      .catch(() => {
-        showPopup("❌ Failed to update Zudio.");
-      });
-  } else {
-    axios
-      .post(`${process.env.REACT_APP_API_BASE_URL}/api/shops`, newFood)
-      .then((res) => {
-        setFoods([...shops, res.data]);
-        setNewFood({
-          title: "",
-          description: "",
-          image: "",
-          email: "",
-          password: "",
-          mallconpassword: "",
-          role: "",
-          location: {
-            country: "",
-            state: "",
-            city: "",
-            street: "",
-            latitude: "",
-            longitude: "",
-          },
+    } else {
+      axios
+        .post(`${process.env.REACT_APP_API_BASE_URL}/api/shops`, newFood)
+        .then((res) => {
+          setFoods([...shops, res.data]);
+          setNewFood({
+            title: "",
+            description: "",
+            image: "",
+            email: "",
+            password: "",
+            mallconpassword: "",
+            role: "",
+            location: {
+              country: "",
+              state: "",
+              city: "",
+              street: "",
+              latitude: "",
+              longitude: "",
+            },
+          });
+          showPopup("✅ Zudio added successfully!");
+        })
+        .catch(() => {
+          showPopup("❌ Failed to add Zudio.");
         });
-        showPopup("✅ Zudio added successfully!");
-      })
-      .catch(() => {
-        showPopup("❌ Failed to add Zudio.");
-      });
-  }
-};
+    }
+  };
 
   const handleEdit = (shop) => {
-  setNewFood({
-    title: shop.title || "",
-    description: shop.description || "",
-    image: shop.image || "",
-    email: shop.email || "",
-    password: shop.password || "",
-    mallconpassword: shop.mallconpassword || "",
-    role: shop.role || "",
-    location: {
-      country: shop.location?.country || "",
-      state: shop.location?.state || "",
-      city: shop.location?.city || "",
-      street: shop.location?.street || "",
-    },
-  });
-  setEditFood(shop);
-};
-
- const confirmDelete = (id) => {
-  setDeleteId(id);
-  setShowDeletePopup(true);
-};
-
-const handleDelete = () => {
-  axios
-    .delete(`${process.env.REACT_APP_API_BASE_URL}/api/shops/${deleteId}`)
-    .then(() => {
-      setFoods(shops.filter((shop) => shop._id !== deleteId));
-      setShowDeletePopup(false);
-      setDeleteId(null);
+    setNewFood({
+      title: shop.title || "",
+      description: shop.description || "",
+      image: shop.image || "",
+      email: shop.email || "",
+      password: shop.password || "",
+      mallconpassword: shop.mallconpassword || "",
+      role: shop.role || "",
+      location: {
+        country: shop.location?.country || "",
+        state: shop.location?.state || "",
+        city: shop.location?.city || "",
+        street: shop.location?.street || "",
+      },
     });
-};
+    setEditFood(shop);
+  };
+
+  const confirmDelete = (id) => {
+    setDeleteId(id);
+    setShowDeletePopup(true);
+  };
+
+  const handleDelete = () => {
+    axios
+      .delete(`${process.env.REACT_APP_API_BASE_URL}/api/shops/${deleteId}`)
+      .then(() => {
+        setFoods(shops.filter((shop) => shop._id !== deleteId));
+        setShowDeletePopup(false);
+        setDeleteId(null);
+      });
+  };
 
   console.log({ shops });
 
@@ -299,14 +299,27 @@ const handleDelete = () => {
         >
           zudio
         </h1>
-      <input
-  type="text"
-  placeholder="Search Zudio..."
-  value={search}
-  onChange={(e) => setSearch(e.target.value)}
-  className="search-input"
-/>
-        <form onSubmit={handleSubmit} className="shop-form">
+        <input
+          type="text"
+          placeholder="Search Zudio..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="search-input"
+        />
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <form onSubmit={handleSubmit} className={`shop-form ${showForm ? "show" : "hide"}`}>
           <input
             type="text"
             name="country"
@@ -322,7 +335,6 @@ const handleDelete = () => {
               })
             }
           />
-
           <input
             type="text"
             name="state"
@@ -338,7 +350,6 @@ const handleDelete = () => {
               })
             }
           />
-
           <input
             type="text"
             name="city"
@@ -354,7 +365,6 @@ const handleDelete = () => {
               })
             }
           />
-
           <input
             type="text"
             name="street"
@@ -376,8 +386,7 @@ const handleDelete = () => {
             placeholder="Latitude"
             value={newFood.location.latitude}
             onChange={handleChange}
-          />
-
+          /> 
           <input
             type="text"
             name="location.longitude"
@@ -441,36 +450,52 @@ const handleDelete = () => {
             onChange={handleChange}
             required
           />
-
           <button type="submit">
             {editFood ? "Update Zudio" : "Add Zudio"}
           </button>
         </form>
+
+         {/* Toggle button only in mobile */}
+          <button className="mobile-toggle-btn" onClick={() => setShowForm(!showForm)}>
+            {showForm ? "Back" : "Add Mall"}
+          </button>
+
+
+
+
+
+
+
         {showPopup && (
-  <div style={{
-    position: "fixed",
-    top: 0, left: 0,
-    width: "100vw",
-    height: "100vh",
-    backgroundColor: "rgba(0,0,0,0.5)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 9999
-  }}>
-    <div style={{
-      backgroundColor: "#fff",
-      padding: "30px 40px",
-      borderRadius: "12px",
-      boxShadow: "0 5px 15px rgba(0,0,0,0.3)",
-      color: popupMessage.startsWith("✅") ? "green" : "red",
-      fontSize: "18px",
-      textAlign: "center"
-    }}>
-      {popupMessage}
-    </div>
-  </div>
-)}
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100vw",
+              height: "100vh",
+              backgroundColor: "rgba(0,0,0,0.5)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 9999,
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: "#fff",
+                padding: "30px 40px",
+                borderRadius: "12px",
+                boxShadow: "0 5px 15px rgba(0,0,0,0.3)",
+                color: popupMessage.startsWith("✅") ? "green" : "red",
+                fontSize: "18px",
+                textAlign: "center",
+              }}
+            >
+              {popupMessage}
+            </div>
+          </div>
+        )}
 
         <div className="scroll-container">
           {filteredShops.map((shop) => (
@@ -496,10 +521,12 @@ const handleDelete = () => {
                     <strong>Street:</strong> {shop.location?.street || "N/A"}
                   </p>
                   <p>
-                    <strong>Latitude:</strong> {shop.location?.latitude || "N/A"}
+                    <strong>Latitude:</strong>{" "}
+                    {shop.location?.latitude || "N/A"}
                   </p>
                   <p>
-                    <strong>Longitude:</strong> {shop.location?.longitude || "N/A"}
+                    <strong>Longitude:</strong>{" "}
+                    {shop.location?.longitude || "N/A"}
                   </p>
                   <p>
                     <strong>Email:</strong> {shop.email}
@@ -519,103 +546,109 @@ const handleDelete = () => {
                     Visit Zudio
                   </button>
                   <button onClick={() => handleEdit(shop)}>Edit</button>
-                 <button onClick={() => confirmDelete(shop._id)}>Delete</button>
+                  <button onClick={() => confirmDelete(shop._id)}>
+                    Delete
+                  </button>
                 </div>
               </div>
             </div>
           ))}
           {showDeletePopup && (
-  <div style={{
-    position: "fixed",
-    top: 0, left: 0,
-    width: "100vw",
-    height: "100vh",
-    backgroundColor: "rgba(0,0,0,0.5)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1000
-  }}>
-    <div style={{
-      backgroundColor: "#fff",
-      padding: "30px",
-      borderRadius: "10px",
-      textAlign: "center",
-      boxShadow: "0 5px 15px rgba(0,0,0,0.3)"
-    }}>
-      <h3>❗ Are you sure you want to delete this?</h3>
-      <div style={{ marginTop: "20px" }}>
-        <button
-          onClick={() => setShowDeletePopup(false)}
-          style={{
-            marginRight: "10px",
-            padding: "10px 20px",
-            backgroundColor: "#ccc",
-            border: "none",
-            borderRadius: "5px"
-          }}
-        >
-          Cancel
-        </button>
-        <button
-          onClick={handleDelete}
-          style={{
-            padding: "10px 20px",
-            backgroundColor: "#e74c3c",
-            color: "white",
-            border: "none",
-            borderRadius: "5px"
-          }}
-        >
-          Delete
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+            <div
+              style={{
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100vw",
+                height: "100vh",
+                backgroundColor: "rgba(0,0,0,0.5)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 1000,
+              }}
+            >
+              <div
+                style={{
+                  backgroundColor: "#fff",
+                  padding: "30px",
+                  borderRadius: "10px",
+                  textAlign: "center",
+                  boxShadow: "0 5px 15px rgba(0,0,0,0.3)",
+                }}
+              >
+                <h3>❗ Are you sure you want to delete this?</h3>
+                <div style={{ marginTop: "20px" }}>
+                  <button
+                    onClick={() => setShowDeletePopup(false)}
+                    style={{
+                      marginRight: "10px",
+                      padding: "10px 20px",
+                      backgroundColor: "#ccc",
+                      border: "none",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    style={{
+                      padding: "10px 20px",
+                      backgroundColor: "#e74c3c",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "5px",
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
-       <button
-  onClick={() => navigate("/qrcode")}
-  className="qr-button"
-  onMouseEnter={(e) =>
-    (e.target.style.transform = "skewX(-20deg) scale(1.1)")
-  }
-  onMouseLeave={(e) =>
-    (e.target.style.transform = "skewX(-20deg)")
-  }
->
-  QR-Code
-        </button>
-
-
-
+        {/* <button
+          onClick={() => navigate("/qrcode")}
+          className="qr-button"
+          onMouseEnter={(e) =>
+            (e.target.style.transform = "skewX(-20deg) scale(1.1)")
+          }
+          onMouseLeave={(e) => (e.target.style.transform = "skewX(-20deg)")}
+        >
+          QR-Code
+        </button> */}
 
         <button
-  onClick={() => navigate("/branddashboard")}
-  className="switch-button"
-  onMouseEnter={(e) =>
-    (e.target.style.transform = "skewX(-20deg) scale(1.1)")
-  }
-  onMouseLeave={(e) =>
-    (e.target.style.transform = "skewX(-20deg)")
-  }
->
-  Switch To View Mode
+          onClick={() => navigate("/branddashboard")}
+          className="switch-button"
+          onMouseEnter={(e) =>
+            (e.target.style.transform = "skewX(-20deg) scale(1.1)")
+          }
+          onMouseLeave={(e) => (e.target.style.transform = "skewX(-20deg)")}
+        >
+          Switch To View Mode
+        </button>
+         <button
+          onClick={() => navigate("/branddashboard")}
+          className="switch-buttonnnnn"
+          onMouseEnter={(e) =>
+            (e.target.style.transform = "skewX(-20deg) scale(1.1)")
+          }
+          onMouseLeave={(e) => (e.target.style.transform = "skewX(-20deg)")}
+        >
+          Switch To View Mode
         </button>
 
-
-
-
-        <button
-  onClick={handleLogout}
-  className="logout-button"
->
-  Logout
-</button>
+        {/* <button onClick={handleLogout} className="logout-buttonn">
+          Logout
+        </button> */}
       </div>
-      
-        <style>{`
+
+      <style>{`
+
+
 
        
 
@@ -638,18 +671,19 @@ const handleDelete = () => {
         transition: 0.3s;
         z-index: 3;
       }
-
-      .qr-button {
+          .switch-buttonnnnn {
         padding: 10px 15px;
         border-radius: 10px;
-        border: 1px solid rgb(255, 255, 255);
         cursor: pointer;
         position: fixed;
-        left: 192px;
-        top: 85px;
+        left: 120px;
+        display: none;
+        bottom: 25px;
+        font-family: 'Rajdhani', sans-serif;
         color: white;
         font-size: 15px;
         font-weight: bold;
+        border: 1px solid rgb(255, 255, 255);
         background: transparent;
         transform: skewX(-20deg);
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -657,6 +691,25 @@ const handleDelete = () => {
         transition: 0.3s;
         z-index: 3;
       }
+
+      // .qr-button {
+      //   padding: 10px 15px;
+      //   border-radius: 10px;
+      //   border: 1px solid rgb(255, 255, 255);
+      //   cursor: pointer;
+      //   position: fixed;
+      //   left: 192px;
+      //   top: 85px;
+      //   color: white;
+      //   font-size: 15px;
+      //   font-weight: bold;
+      //   background: transparent;
+      //   transform: skewX(-20deg);
+      //   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      //   backdrop-filter: blur(5px);
+      //   transition: 0.3s;
+      //   z-index: 3;
+      // }
 
        .search-input {
         padding: 10px;
@@ -670,56 +723,38 @@ const handleDelete = () => {
         margin-bottom: 20px;
         background: transparent;
         font-size: 16px;
-        left: 53%;
-        transform: translateX(-50%);
+        // left: 53%;
+        // transform: translateX(-50%);
       }
-
-      .logout-button {
-      padding: 9px;
-      transform: skewX(-18deg);
-      background: rgba(231, 119, 115, 0.66);
-      color: #fff;
-      border: 1px solid rgb(255, 255, 255);
-      position: fixed;
-      right: 30px;
-      top: 82px;
-      font-size: 15px;
-      z-index: 2;
-      border-radius: 7px;
-      cursor: pointer;
-    }
 
       /* ✅ Mobile Responsive View */
-      @media only screen and (max-width: 600px) {
+      @media only screen and (max-width: 770px) {
         .switch-button {
-          font-size: 12px;
-          padding: 8px 12px;
-          top: 100px;
-          left: 10px;
+          // font-size: 12px;
+          // padding: 8px 12px;
+          // top: 100px;
+          // left: 10px;
+          display: none; /* Hide switch button on mobile */
         }
-          .qr-button {
-          font-size: 12px;
-          padding: 8px 12px;
-          top: 100px;
-          left: 145px; /* Adjusted for mobile screen */
-        }
+          .switch-buttonnnnn{
+          display: inherit;
+          }
+        //   .qr-button {
+        //   font-size: 12px;
+        //   padding: 8px 12px;
+        //   top: 100px;
+        //   left: 145px; /* Adjusted for mobile screen */
+        // }
           .search-input {
-        width: 250px;
-        // margin: 0;
+        width: 90%;
+        // margin: 0; 
+        margin-top: 63px;
+        // padding: 0;
         font-size: 14px;
-        left: 155px;
-        top: 38px;
-      }
-        .logout-button {
-        font-size: 12px;
-        padding: 7px;
-        right: 9px;
-        top: 100px;
-        height: 32px;
+        // left: 155px;
+        // top: 42px;
       }
       }
-
-
 
 
       /* Scrollable row */
@@ -729,7 +764,7 @@ const handleDelete = () => {
         align-items: center;
         overflow-x: auto;
         gap: 24px;
-        width: 96%;
+        width: 100%;
         height: 100vh;
         padding: 20px;
         position: relative;
@@ -930,18 +965,17 @@ const handleDelete = () => {
 
         .shop-form {
           display: flex;
-          width: 97%;
+          width: 100%;
+          // height: 100%;
           justify-content: start;
           left: 25px;
           gap: 10px;
-          // margin-top: 0;
-          // margin-bottom: 20px;
           position: absolute;
             scrollbar-width: none; /* Firefox */
           -ms-overflow-style: none;  /* IE and Edge */
           bottom: 60px;
           overflow-x: auto;
-          z-index: 5;
+          z-index: 10;
         }
         .shop-form input, .shop-form button {
           padding: 10px;
@@ -967,29 +1001,82 @@ const handleDelete = () => {
           justify-content: center;
           gap: 20px;
           // min-height: 100vh;
-          position: absolute;
-          top: 160px;
           width: 100%;
         }
 
 
+        /* Hide/show button only for mobile */
+    .mobile-toggle-btn {
+      display: none;
+       padding: 10px 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        position: fixed;
+        left: 15px;
+        bottom: 25px;
+        font-family: 'Rajdhani', sans-serif;
+        color: white;
+        font-size: 15px;
+        font-weight: bold;
+        border: 1px solid rgb(255, 255, 255);
+        background: transparent;
+        transform: skewX(-20deg);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(5px);
+        transition: 0.3s;
+        z-index: 10;
+    }
+
+    @media screen and (max-width: 768px) {
+      .mobile-toggle-btn {
+        display: block;
+      }
+
+      .shop-form input, .shop-form button {
+      margin-left: 0;
+      width: 80%;
+      }
+
+      .shop-form {
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+        background: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100vw;
+        position: fixed;
+        top: 0;
+        padding-top: 15px;
+        // padding-top: 60px;
+        left: 0;
+      }
+
+
+
+      .shop-form.show {
+        display: flex;
+      }
+
+      .shop-form.hide {
+        display: none;
+      }
+    }
+
+
+
     
-          @media (max-width: 677px) {
-           .shop-form input, .shop-form button {
-           padding: 10px;
-           margin-left: 5px;
-           margin-right: 5px;
-           width: 100%;
-           gap: 15px;
-        }
-
-
-      background: linear-gradient(to right, #00f2fe, #4facfe);
-        }
       `}</style>
-
     </>
   );
 };
 
 export default OwnerDashboard;
+
+
+
+
+
+

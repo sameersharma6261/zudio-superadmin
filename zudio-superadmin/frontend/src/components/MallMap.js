@@ -36,7 +36,6 @@ const MallMap = ({ mallCounters }) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution="&copy; OpenStreetMap contributors"
         />
-
         {mallCounters.map((mall, index) => {
           const lat = mall.location?.latitude;
           const lng = mall.location?.longitude;

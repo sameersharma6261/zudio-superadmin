@@ -186,8 +186,8 @@ const Dashboard = () => {
           position: "fixed",
           top: 0,
           left: 0,
-          width: "100%",
-          height: "100%",
+          width: "100vw",
+          height: "100vh",
           objectFit: "cover",
           zIndex: -1,
         }}
@@ -222,130 +222,133 @@ const Dashboard = () => {
             margin: "0",
           }}
         >
-          <h1
-            style={{
-              textAlign: "center",
-              marginBottom: "15px",
-              marginTop: "15px",
-              color: "white",
-              fontFamily: "rajdhani",
-            }}
-          >
-            Dashboard For Zudio
-          </h1>
+         <h1 className="dashboard-heading">Dashboard For Zudio</h1>
 
           {/* Chart */}
           <div
             style={{
-              // background: "red",
               width: "100vw",
               display: "flex",
-              flexDirection: "row",
+              flexWrap: "wrap",
               justifyContent: "center",
-              alignItems: "center",
+              alignItems: "flex-start",
+              gap: "20px",
+              padding: "20px",
+              boxSizing: "border-box",
             }}
           >
+            {/* Left Side: Bar Chart */}
             <div
               style={{
-                width: "70vw",
-                // background: "red",
-                height: "320px",
+                flex: "1 1 600px",
+                minWidth: "300px",
+                // maxWidth: "1300px",
+                padding: "20px",
                 borderRadius: "10px",
                 boxShadow: "0 6px 18px rgba(0, 0, 0, 0.1)",
-                marginBottom: "20px",
+                background: "rgba(128, 128, 128, 0.527)",
+                boxSizing: "border-box",
               }}
             >
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis allowDecimals={false} />
-                  <Tooltip />
-                  <Bar dataKey="value" fill="#00c49f" radius={[8, 8, 0, 0]}>
-                    <LabelList
-                      dataKey="value"
-                      position="top"
-                      style={{
-                        fill: "white",
-                        fontSize: "20px",
-                        fontWeight: "bold",
-                      }}
-                    />
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-
-              {/* for all,day,month,year */}
-              {filterType !== "all" && (
-                <>
-                  <input
-                    type={
-                      filterType === "day"
-                        ? "date"
-                        : filterType === "month"
-                        ? "month"
-                        : "number"
-                    }
-                    placeholder="Enter value"
-                    onChange={(e) => setFilterValue(e.target.value)}
-                    style={{
-                      padding: "8px 12px",
-                      position: "relative",
-                      bottom: "305px",
-                      left: "70px",
-                      borderRadius: "6px",
-                      border: "1px solid #ccc",
-                      minWidth: filterType === "year" ? "80px" : "150px",
-                    }}
-                  />
-                  {filterType === "month" && (
-                    <p
-                      style={{
-                        fontSize: "16px",
-                        color: "#888",
-                        position: "relative",
-                        bottom: "305px",
-                        width: "80px",
-                        padding: "4px 12px",
-                        left: "70px",
-                        margin: "5px",
-                        border: "1px solid #ccc",
-                        borderRadius: "6px",
-                      }}
-                    >
-                      YYYY-MM
-                    </p>
-                  )}
-                </>
-              )}
-              <select
-                onChange={(e) => setFilterType(e.target.value)}
+              <div
                 style={{
-                  padding: "8px 12px",
-                  marginLeft: "15px",
-                  position: "relative",
-                  bottom: "305px",
-                  left: "60px",
-                  borderRadius: "6px",
-                  border: "1px solid #ccc",
-                  minWidth: "120px",
-                  cursor: "pointer",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "10px",
+                  justifyContent: "flex-start",
+                  marginBottom: "15px",
                 }}
               >
-                <option value="all">All</option>
-                <option value="day">Day</option>
-                <option value="month">Month</option>
-                <option value="year">Year</option>
-              </select>
+                <select
+                  onChange={(e) => setFilterType(e.target.value)}
+                  style={{
+                    padding: "8px 12px",
+                    borderRadius: "6px",
+                    border: "1px solid #ccc",
+                    minWidth: "120px",
+                    cursor: "pointer",
+                  }}
+                >
+                  <option value="all">All</option>
+                  <option value="day">Day</option>
+                  <option value="month">Month</option>
+                  <option value="year">Year</option>
+                </select>
+
+                {filterType !== "all" && (
+                  <>
+                    <input
+                      type={
+                        filterType === "day"
+                          ? "date"
+                          : filterType === "month"
+                          ? "month"
+                          : "number"
+                      }
+                      placeholder="Enter value"
+                      onChange={(e) => setFilterValue(e.target.value)}
+                      style={{
+                        padding: "8px 12px",
+                        borderRadius: "6px",
+                        border: "1px solid #ccc",
+                        minWidth: filterType === "year" ? "80px" : "150px",
+                      }}
+                    />
+                    {filterType === "month" && (
+                      <p
+                        style={{
+                          fontSize: "14px",
+                          color: "#888",
+                          padding: "4px 12px",
+                          border: "1px solid #ccc",
+                          borderRadius: "6px",
+                          // height: "40px",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        YYYY-MM
+                      </p>
+                    )}
+                  </>
+                )}
+              </div>
+
+              <div style={{ width: "100%", height: "320px" }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={chartData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis allowDecimals={false} />
+                    <Tooltip />
+                    <Bar dataKey="value" fill="#00c49f" radius={[8, 8, 0, 0]}>
+                      <LabelList
+                        dataKey="value"
+                        position="top"
+                        style={{
+                          fill: "white",
+                          fontSize: "16px",
+                          fontWeight: "bold",
+                        }}
+                      />
+                    </Bar>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </div>
 
+            {/* Right Side: Pie Chart */}
             <div
               style={{
-                width: "30vw",
-                height: "280px",
-                marginRight: "50px",
+                flex: "1 1 300px",
+                minWidth: "280px",
+                maxWidth: "400px",
                 background: "rgba(128, 128, 128, 0.527)",
-                marginBottom: "50px",
+                borderRadius: "10px",
+                padding: "20px",
+                boxSizing: "border-box",
+                height: "auto",
+                marginTop: "8px",
               }}
             >
               <h2
@@ -353,35 +356,38 @@ const Dashboard = () => {
                   color: "white",
                   textAlign: "center",
                   fontFamily: "rajdhani",
-                  fontSize: "30px",
-                  marginTop: "3px",
+                  fontSize: "24px",
+                  marginTop: "0",
+                  marginBottom: "20px",
                 }}
               >
                 Overall Stats
               </h2>
-              <ResponsiveContainer>
-                <PieChart>
-                  <Pie
-                    data={data}
-                    dataKey="value"
-                    nameKey="name"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={95}
-                    fill="#8884d8"
-                    label
-                  >
-                    {data.map((entry, index) => (
-                      <Cell
-                        key={entry.name}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
+              <div style={{ width: "100%", height: "300px" }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={data}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius="80%"
+                      fill="#8884d8"
+                      label
+                    >
+                      {data.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
             </div>
           </div>
 
@@ -395,12 +401,13 @@ const Dashboard = () => {
               <div
                 style={{
                   display: "flex",
-                  overflowX: "auto", // ✅ allow horizontal scroll if needed
+                  overflowX: "auto", // ✅ allow horizontal scroll if needed 
                   gap: "20px",
                   paddingTop: "20px",
                   scrollBehavior: "smooth",
                   flexWrap: "nowrap", // ✅ important for horizontal layout
                   width: "100%",
+                  // marginLeft: "15px",
                 }}
               >
                 {sortedCounters.map((counter, idx) => (
@@ -465,9 +472,6 @@ const Dashboard = () => {
           </div>
         </div>
 
-
-
-
         {/* second section */}
         <div className="location-section">
           <h2 className="section-heading">🛍️ Counter-wise User Chart</h2>
@@ -486,121 +490,187 @@ const Dashboard = () => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         {/*third part...............................................cart and counter wise user chart part */}
-        <div className="leftright">
-          {/* here is pichart ishi ka */}
-          <div
-            style={{
-              width: "40%",
-              maxWidth: "100%",
-              paddingRight: "1.5rem",
-              // marginTop: "2rem",
-              background: "rgba(128, 128, 128, 0.527)",
-              height: "340px",
-              position: "relative",
-              bottom: "43px",
-              marginLeft: "15px",
-              // paddingTop: "1rem",
-            }}
-          >
-            <h2
-              style={{
-                textAlign: "center",
-                color: "white",
-                fontFamily: "rajdhani",
-                fontSize: "clamp(1.2rem, 2vw, 2rem)",
-              }}
-            >
-              🥧 User Distribution by Counter
-            </h2>
+        <div
+  className="leftright"
+  style={{
+    width: "100%",
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    gap: "20px",
+    //  height: "360px",
+    padding: "20px",
+    boxSizing: "border-box",
+    marginBottom: "70px",
+  }}
+>
+  {/* Pie Chart Section */}
+  <div
+    style={{
+      flex: "1 1 300px",
+      maxWidth: "450px",
+      background: "rgba(128, 128, 128, 0.527)",
+      borderRadius: "10px",
+      padding: "20px",
+      boxSizing: "border-box",
+      height: "390px",
+    }}
+  >
+    <h2
+      style={{
+        textAlign: "center",
+        color: "white",
+        fontFamily: "rajdhani",
+        fontSize: "clamp(1.2rem, 2vw, 2rem)",
+        marginBottom: "10px",
+      }}
+    >
+      🥧 User Distribution by Counter
+    </h2>
 
-            <ResponsiveContainer width="100%" height={290}>
-              <PieChart>
-                <Pie
-                  data={sortedCounters}
-                  dataKey="userCount"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={100}
-                  fill="#00c49f"
-                  label={({ name, percent }) =>
-                    `${name} (${(percent * 100).toFixed(1)}%)`
-                  }
-                >
-                  {sortedCounters.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={
-                        ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#AA00FF"][
-                          index % 5
-                        ]
-                      }
-                    />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(value) => [`${value} users`, "Users"]}
-                  labelFormatter={(label) => `Counter: ${label}`}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
+    <ResponsiveContainer width="100%" height={280}>
+      <PieChart>
+        <Pie
+          data={sortedCounters}
+          dataKey="userCount"
+          nameKey="name"
+          cx="50%"
+          cy="50%"
+          outerRadius={100}
+          fill="#00c49f"
+          label={({ name, percent }) =>
+            `${name} (${(percent * 100).toFixed(1)}%)`
+          }
+        >
+          {sortedCounters.map((entry, index) => (
+            <Cell
+              key={`cell-${index}`}
+              fill={
+                ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#AA00FF"][
+                  index % 5
+                ]
+              }
+            />
+          ))}
+        </Pie>
+        <Tooltip
+          formatter={(value) => [`${value} users`, "Users"]}
+          labelFormatter={(label) => `Counter: ${label}`}
+        />
+      </PieChart>
+    </ResponsiveContainer>
+  </div>
 
-          {/* here is second part */}
-          <div
-            style={{
-              width: "90%",
-              height: "490px",
-              // background: "rgba(128, 128, 128, 0.527)",
-              maxWidth: "100%",
-              paddingRight: "1.5rem",
-            }}
-          >
-            <ResponsiveContainer width="102%" height={570}>
-              <BarChart
-                data={sortedCounters}
-                margin={{ top: 30, right: 30, left: 10, bottom: 100 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
+  {/* Bar Chart Section */}
+  <div
+    style={{
+      flex: "1 1 600px",
+      // maxWidth: "1000px",
+      borderRadius: "10px",
+      boxShadow: "0 6px 18px rgba(0, 0, 0, 0.1)",
+      padding: "20px",
+      background: "#fff",
+      height: "390px",
+      boxSizing: "border-box",
+    }}
+  >
+    <ResponsiveContainer width="100%" height={500}>
+      <BarChart
+        data={sortedCounters}
+        margin={{ top: 30, right: 30, left: 10, bottom: 100 }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis
+          dataKey="name"
+          interval={0}
+          height={100}
+          tick={{ fontSize: 15 }}
+          textAnchor="end"
+        />
+        <YAxis />
 
-                <XAxis
-                  dataKey="name"
-                  interval={0}
-                  height={100}
-                  tick={{ fontSize: 15 }}
-                  textAnchor="end"
-                />
+        <Tooltip
+          formatter={(value) => [`${value} users`, "Users"]}
+          labelFormatter={(label, payload) =>
+            `Counter: ${label}\nMall: ${payload[0]?.payload?.mallTitle}`
+          }
+        />
 
-                <YAxis />
-
-                <Tooltip
-                  formatter={(value) => [`${value} users`, "Users"]}
-                  labelFormatter={(label, payload) =>
-                    `Counter: ${label}\nMall: ${payload[0]?.payload?.mallTitle}`
-                  }
-                />
-
-                <Bar dataKey="userCount" fill="#00c49f" radius={[8, 8, 0, 0]}>
-                  <LabelList
-                    dataKey="mallTitle"
-                    position="insideTop"
-                    style={{
-                      fill: "white",
-                      fontSize: "14px",
-                    }}
-                  />
-                  <LabelList
-                    dataKey="userCount"
-                    position="top"
-                    formatter={(value) => `${value} users`}
-                    style={{ fill: "white", fontSize: "14px" }}
-                  />
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+        <Bar dataKey="userCount" fill="#00c49f" radius={[8, 8, 0, 0]}>
+          <LabelList
+            dataKey="mallTitle"
+            position="insideTop"
+            style={{ fill: "white", fontSize: "14px" }}
+          />
+          <LabelList
+            dataKey="userCount"
+            position="top"
+            formatter={(value) => `${value} users`}
+            style={{ fill: "white", fontSize: "14px" }}
+          />
+        </Bar>
+      </BarChart>
+    </ResponsiveContainer>
+  </div>
         </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         <div className="location-card-grid">
@@ -678,7 +748,6 @@ const Dashboard = () => {
             ))}
           </div>
         </div>
-       
 
         {/* forth part */}
         <div className="whole-map">
@@ -702,10 +771,8 @@ const Dashboard = () => {
         </div>
       </div>
 
-
-
-       <style>
-          {`
+      <style>
+        {`
         .mall-info-section {
         // padding: 0.2rem;
         background-color: rgba(183, 183, 183, 0.227);
@@ -815,7 +882,7 @@ const Dashboard = () => {
       .mall-cardd a:hover {
         background-color: #0056b3;
       }`}
-        </style>
+      </style>
 
       <style>{`
         .whole{
@@ -848,18 +915,20 @@ const Dashboard = () => {
           margin-bottom: 20px;
         }
 
-        .dashboard-heading {
-          font-size: 2.4rem;
-           font-family: "rajdhani";
-          font-weight: bold;
-            backdrop-filter: blur(5px);
-           background: linear-gradient(90deg, rgba(0, 0, 0, 0.301), rgba(159, 159, 159, 0.334));
-          margin-left: 20px;
-          text-align: center;
-          // width: 80vw;
-          color:rgb(255, 255, 255);
-        }
+      .dashboard-heading {
+      text-align: center;
+      margin-bottom: 15px;
+      margin-top: 15px;
+      color: white;
+      font-family: 'rajdhani';
+    }
 
+    @media (max-width: 600px) {
+      .dashboard-heading {
+      margin-top: 65px;
+      margin-bottom: -12px;
+      }
+    }
         .cards-container {
           display: flex;
           gap: 20px;
@@ -892,17 +961,17 @@ const Dashboard = () => {
           box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
         }
 
-        .leftright{
-        // background: gray;
-        width: 100vw;
-        border-radius: 20px;
-        // margin-top: 20px;
-        display: flex;
-        overflow: hidden;
-        justify-content: space-between;
-        align-items: center;
+        // .leftright{
+        // // background: gray;
+        // width: 100vw;
+        // border-radius: 20px;
+        // // margin-top: 20px;
+        // display: flex;
+        // overflow: hidden;
+        // justify-content: space-between;
+        // align-items: center;
 
-        }
+        // }
 
 
 
@@ -1022,6 +1091,7 @@ const Dashboard = () => {
 
   .location-card {
       min-width: 170px;
+      padding: 15px 40px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -1191,7 +1261,6 @@ scrollbar-color: #ccc #f9f9f9; /* For Chrome and Safari */
   }
 }
       `}</style>
-      
     </>
   );
 };

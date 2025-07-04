@@ -1,5 +1,7 @@
 .whole{
     background-color: rgba(0, 0, 0, 0.631);
+    width: 100vw;
+    overflow-x: hidden;
 }
 
 /* .dashboard-container{
@@ -30,6 +32,7 @@
     .location-card.country {
     font-family: "rajdhani";
     color:rgb(49, 49, 49);
+    
     background-color:rgba(66, 66, 66, 0.527); /* Medium Brown (natural blend) */
     }
 
